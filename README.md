@@ -1,8 +1,6 @@
-# tech_portfolio
+**컴공 주요 5과목에 대한 주요 개념 정리**
 
-컴공 주요 5과목에 대한 주요 개념 정리  
-
-- [tech_portfolio](#tech_portfolio)
+- [FRONT-END](#front-end)
 - [DATABASE](#database)
   - [Transaction](#transaction)
     - [ACID](#acid)
@@ -14,11 +12,13 @@
       - [Advantages](#advantages)
       - [Disadvantages](#disadvantages)
     - [COMMIT과 ROLLBACK](#commit과-rollback)
-- [Operating System](#operating-system)
-- [Network](#network)
-- [Computer Achitecture](#computer-achitecture)
-- [Algorithm](#algorithm)
+- [OPERATING SYSTEM](#operating-system)
+- [NETWORK](#network)
+- [COMPUTER ARCHITECTURE](#computer-architecture)
+- [ALGORITHM](#algorithm)
 
+
+# FRONT-END
 
 # DATABASE
 
@@ -79,10 +79,10 @@ _references_
 Transaction의 구분은 commit을 이용하여 가능하다. commit은 모든 일의 과정이 정상적으로 진행되었으므로 모든 사항을 database에 반영하라는 의미이다. 이와 대응되는 개념은 rollback으로 data처리 과정에서 하나의 transaction을 마무리 할 수 없으므로, transaction을 되돌려 없던 일로 만들겠다는 의미이다. 이 commit과 rollback은 transaction이 가능하게 해주는 명령어이다. 비교하자면 문서작업을 할때 ctrl+z를 눌러서 일을 되돌리는 것을 rollback에, 문서작업이 어느정도 진행되면 ctrl+s를 눌러 저장하는 것을 commit에 비유할 수 있다. 다만 둘간에 매우 큰 차이가 있다면 ctrl+s를 누르면 더이상 ctrl+z를 사용하지 못하게 된다는 점이 다르다. 
 commit을 하게되면 rollback으로 정보를 되돌릴 수 없다. 
 
-# Operating System
+# OPERATING SYSTEM
 
-# Network
+# NETWORK
 
-# Computer Achitecture
+# COMPUTER ARCHITECTURE
 
-# Algorithm
+# ALGORITHM
