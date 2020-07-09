@@ -142,8 +142,6 @@ TCP연결은 전이중(Full-duplex) 서비스를 제공한다. 또한 TCP 연결
     clientSocket.connect((serverName, serverPort));
 
 
-
-
 #### Congestion Control
 
 #### 
