@@ -22,8 +22,8 @@
       - [web-server와 TCP](#web-server와-tcp)
     - [UDP](#udp)
       - [UDP가 TCP보다 좋은점](#udp가-tcp보다-좋은점)
-        - [UDP segment 구조](#udp-segment-구조)
-          - [UDP check-sum](#udp-check-sum)
+      - [UDP segment 구조](#udp-segment-구조)
+      - [UDP check-sum](#udp-check-sum)
     - [신뢰적인 데이터 전달(reliable data transfer)의 원리](#신뢰적인-데이터-전달reliable-data-transfer의-원리)
     - [TCP](#tcp)
       - [Congestion Control](#congestion-control)
@@ -189,7 +189,7 @@ TCP는 종단 시스템에서 연결 상태를 유지한다. 이 연결상태는
 **작은 packet header overhead**
 TCP가 segment마다 20bytes의 header overhead를 갖는 반면에 UDP는 단지 8bytes의 header overhead를 갖는다.
 
-##### UDP segment 구조
+#### UDP segment 구조
 
 <img width="213" alt="Screen Shot 2020-07-09 at 6 05 17 PM" src="https://user-images.githubusercontent.com/44011462/87020400-c34aa080-c20e-11ea-8e21-42dccc9db59f.png">
 
@@ -202,11 +202,9 @@ ISBN-13: 978-1292153599  <br>
 187Page, 그림3-7 UDP 세그먼트 구조<br> 
 </details>
 
-###### UDP check-sum
+#### UDP check-sum
 
 UDP check-sum은 error detection을 제공한다. segment가 출발지에서 목적지로 이동핸 후 UDP segment의 정보가 손실 또는 변경되었는지 확인하는 것이다. 매우 다양한 방식의 UPD check-sum이 존재한다. 그중 보수를 이용하여 모든 자리의 합이 1이 되는지 확인하는 방법이 있다. UDP는 TCP에 비해 가볍고 빠르며 신뢰성을 보장하는 것이 장점으로 여겨질 때가 많다. 또한 많은 링크 계층의 protocol이 error detection을 제공하는데 굳이 UDP가 check-sum을 제공하는 이유는 무엇일까. 바로 출발지와 목적지 사이에 있는 모든 링크가 error detection을 제공하는 것은 아니기 때문이다. 그러므로 segment가 정확하게 도착하였다고 하더라도 비트가 일부분 변경되어 전송되는 것이 가능하다. 이때 UDP header에 있는 check-sum을 확인하여 error를 detect한다. 하지만 이를 고치는 방법을 포함되어 있지 않아서 단순히 참고만 할수 있다. 
-
-
 
 
 ### 신뢰적인 데이터 전달(reliable data transfer)의 원리
@@ -246,7 +244,12 @@ TCP연결은 전이중(Full-duplex) 서비스를 제공한다. 또한 TCP 연결
 
 #### Congestion Control
 
+
+
 #### 
+
+
+
 # COMPUTER ARCHITECTURE
 
 
