@@ -109,7 +109,8 @@ UDP check-sum은 error detection을 제공한다. segment가 출발지에서 목
 
 
 ### 신뢰적인 데이터 전달(reliable data transfer)의 원리
-**비트 오류와 손실 있는 채널 상에어싀 신뢰적 데이터 전송: rdt3.0**
+**비트 오류와 손실 있는 채널 상에어싀 신뢰적 데이터 전송: rdt3.0**  
+
 <img width="528" alt="Screen Shot 2020-07-09 at 6 19 47 PM" src="https://user-images.githubusercontent.com/44011462/87021960-ca72ae00-c210-11ea-939c-b00583924adb.png">
 
 <details>
