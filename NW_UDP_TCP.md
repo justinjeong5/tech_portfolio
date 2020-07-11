@@ -51,7 +51,7 @@ server는 host의 연결 요청을 기다리고 있다가 요청을 받으면 �
 
 이제 host와 servet는 적절히 통신할 수 있다.
 
-#### web-server와 TCP
+### web-server와 TCP
 
 <img width="587" alt="Screen Shot 2020-07-08 at 2 07 00 PM" src="https://user-images.githubusercontent.com/44011462/86878623-5064fb00-c124-11ea-87c2-6e71c56caf3e.png">
 
@@ -168,11 +168,11 @@ ISBN-13: 978-1292153599  <br>
 
 TCP는 송신자가 **수신 윈도우 (Receive Window)** 를 두어 흐름제어를 제공한다. 수신 윈도우는 수신측에서 가용한 크기가 얼마인지 송신자에게 알려주는데 사용한다. TCP는 전이중(Full-duplex)이기 때문에 수신자와 통신하는 각각의 송신자는 **수신 윈도우rwnd**를 두어 흐름을 통제한다. 
 
-- LastByteRead: RcvBuffer로 부터 읽힌 data stream의 마지막 byte의 수
-- LastByteRcvd: RcvBuffer에 저장된 data stream의 마지막 byte의 수 
+LastByteRead: RcvBuffer로 부터 읽힌 data stream의 마지막 byte의 수  
+LastByteRcvd: RcvBuffer에 저장된 data stream의 마지막 byte의 수   
 
-    LastByteRcvd - LastByteRcvd >= RcvBuffer
-    cwnd = RcvBuffer - (LastByteRcvd - LastByteRead)
+    LastByteRcvd - LastByteRcvd >= RcvBuffer 
+    cwnd = RcvBuffer - (LastByteRcvd - LastByteRead)  
 
 위의 내용을 정리하면 아래와 같은 표를 얻을 수 있다.
 
@@ -188,13 +188,13 @@ ISBN-13: 978-1292153599  <br>
 232Page, 그림3-38 수신 윈도우(rwnd)와 수신 버퍼(RcvBuffer)<br> 
 </details>
 
-송신자는 LastByteSent, LastByteAcked라는 변수를 두어 흐름 제어에 활용한다. 두 변수의 차이인 LastByteSent - LastByteAcked는 아직 ACK을 받지 못한 data의 양을 뜻한다. 이 값이 rwnd보다 작다면 수신자측의 RcvBuffer가 overflow되지 않음이 보장된다.
+송신자는 LastByteSent, LastByteAcked라는 변수를 두어 흐름 제어에 활용한다. 두 변수의 차이인 LastByteSent - LastByteAcked는 아직 ACK을 받지 못한 data의 양을 뜻한다. 이 값이 rwnd보다 작다면 수신자측의 **RcvBuffer가 overflow되지 않음이 보장**된다.
 
     LastByteSent - LastByteAcked <= rwnd
 
-이 방식은 수신버퍼가 rwnd = 0으로서 가득 찼다고 가정하면 송신자는 data를 추가로 보내지 못하여 ACK을 받을수가 없게 된다. 이 경우에는 수신자 측에서 RcvBuffer를 비우게 되더라도 송신자측이 알 수 있는 방법이 없다. 따라서 rwnd = 0인 상황이 되면 송신자는 segment의 크기가 1byte인 작은 data를 지속적으로 보내어 ACK을 확인한다. 결과적으로 버퍼는 비워지며 문제를 해결한다.
+이 방식은 수신버퍼가 rwnd = 0으로서 가득 찼다고 가정하면 송신자는 data를 추가로 보내지 못하여 ACK을 받을수가 없게 된다. 이 경우에는 수신자 측에서 RcvBuffer를 비우게 되더라도 송신자측이 알 수 있는 방법이 없다. 따라서 ***rwnd = 0*** 인 상황이 되면 송신자는 segment의 크기가 1byte인 작은 data를 **지속적으로 보내어** ACK을 확인한다. 결과적으로 버퍼는 비워지며 문제를 해결한다.
 
-#### TCP 연결 관리
+#### TCP Three-way Handshake
 
 TCP는 UDP와 달리 연결 설정을 하며, 연결 상태를 유지하도록 되어있다. **세방향 핸드쉐이크 (three-way handshake)** 를 통해 TCP의 연결을 설정하고 상태를 유지한다.
 
@@ -215,9 +215,8 @@ ISBN-13: 978-1292153599  <br>
 2. TCP SYN segment를 포함하는 IP datagram이 server에 도착하면 server는 IP datagram으로부터 TCP SYN segment를 뽑아낸다. 이 정보를 가지고 TCP buffer와 변수를 할당한다. 이 과정후에 SYN에 대한 응답으로 **SYN-ACK segment**를 보낸다. SYN-ACK segment에도 SYN segment와 마찬가지로 application layer data를 포함하지 않는다. 앞서 받은 SYN segment의 header field 중에서 확인응답 필드(acknowledgement number field)의 값을 1만큼 증가시키고, 순서번호 필드 (sequence number field)에 server에 할당된 정보를 설정하여 보낸다. 
 3. SYN-ACK segment를 수신하면 client는 확인응답 필드의 값을 1만큼 증가시키고, 앞선 과정을 통해 이미 연결되었기 때문에 SYN은 0으로 설정된다. 이후 application layer data를 payload로 넣어 segment를 보내며 통신한다.
 
-이 과정을 three-way handshake라고 부른다. 이 방식은 암벽을 오르는 사람들이 줄을 이용하여 소통하는 방식과 매우 유사하다.
-연결을 끝맺음할때는 segment header field에서 FIN flag를 1로 설정하여 끝을 알린다. 
-
+이 과정을 **three-way handshake**라고 부른다. 이 방식은 암벽을 오르는 사람들이 줄을 이용하여 소통하는 방식과 매우 유사하다.
+연결을 끝맺음 할때는 segment header field에서 FIN flag를 1로 설정하여 끝을 알린다. 
 
 <img width="404" alt="Screen Shot 2020-07-10 at 3 32 23 PM" src="https://user-images.githubusercontent.com/44011462/87123872-91931180-c2c2-11ea-9052-9644f7220a78.png">
 
@@ -233,3 +232,17 @@ ISBN-13: 978-1292153599  <br>
 
 #### 혼잡 제어 (Congestion Control)
 
+TCP 흐름 제어는 수신자가 가진 RcvBuffer에서 일어나는 overflow에 의해 data소실이 발생하고, 그로 인한 재전송, 정보손실 등의 overhead를 막는 기능이다. 이에 반하여 TCP 혼잡 제어(Congestion Control)은 네트워크가 혼잡하면 라우터의 buffer에서 overflow가 일어나 정보가 소실되는 것을 막는다. 따라서 network 전체의 흐름을 제어하는 것과 유사한 효과가 일어나고 이를 **TCP 혼잡 제어(Congestion Control)** 이라고 한다. IP layer는 네트워크 혼잡에 대한 종단 시스템에게 어떤 정보도 알려주지 않으므로, TCP는 종단간의 제어방식을 이용한다. 
+TCP 혼잡제어는 송신자측에서 **혼잡 윈도우(Congestion Window, cwnd)** 변수를 두어 제어한다. 이 변수의 값을 이용하여 네트워크로 traffic을 발생시킬 수 있는 비율을 제한한다. 특히 송신하는 쪽에서 응답확인 (ACK)을 받지 못한 데이터의 양은 cwnd, rwnd의 최소값을 초과하지 않는다.
+
+    LastByteSent - LastByteAcked <= min(cwnd, rwnd)
+
+##### 슬로 스타트 (Slow Start)
+
+TCP 연결이 시작될 떄, cwnd의 값은 일반적을 1 MSS로 초기화 되고, 그 결과 초기 전송률은 대략적으로 MMS/RTT가 된다. 예를 들어 만약 MMS = 500 bytes이고 RTT = 200 msec, 이면 초기 전송률은 20 kbps정도가 된다. 슬로 스타ㅡ
+
+##### 혼잡 회피 (Congestion Avoidance)
+
+##### 빠른 회복 (Fast Recovery)
+
+##### TCP Tahoe, TCP Reno
