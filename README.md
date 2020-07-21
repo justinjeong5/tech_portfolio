@@ -1,17 +1,20 @@
 **컴공 주요 5과목에 대한 주요 개념 정리**
 
+**<목차>**
 - [FRONT-END](#front-end)
 - [ALGORITHM](#algorithm)
+  - [정렬 (sorting)](#정렬-sorting)
+    - [거품 정렬(bubble sort)](#거품-정렬bubble-sort)
+    - [삽입 정렬(insertion sort)](#삽입-정렬insertion-sort)
+    - [선택 정렬(selection sort)](#선택-정렬selection-sort)
+    - [병합 정렬(merge sort)](#병합-정렬merge-sort)
+    - [퀵 정렬(quick sort)](#퀵-정렬quick-sort)
+    - [힙 정렬(heap sort)](#힙-정렬heap-sort)
+    - [기수 정렬(radix sort)](#기수-정렬radix-sort)
 - [DATABASE](#database)
   - [Transaction](#transaction)
     - [ACID](#acid)
-      - [Atomicity](#atomicity)
-      - [Consistency](#consistency)
-      - [Isolation](#isolation)
-      - [Durability - Persistency](#durability---persistency)
     - [transaction의 장단점](#transaction의-장단점)
-      - [Advantages](#advantages)
-      - [Disadvantages](#disadvantages)
     - [COMMIT과 ROLLBACK](#commit과-rollback)
 - [OPERATING SYSTEM](#operating-system)
 - [NETWORK](#network)
@@ -19,7 +22,7 @@
     - [다중화(Multiplexing)와 역다중화(Demultiplexing)](#다중화multiplexing와-역다중화demultiplexing)
       - [비연결형 다중화](#비연결형-다중화)
       - [연결형 다중화](#연결형-다중화)
-      - [web-server와 TCP](#web-server와-tcp)
+    - [web-server와 TCP](#web-server와-tcp)
     - [UDP](#udp)
       - [UDP가 TCP보다 좋은점](#udp가-tcp보다-좋은점)
       - [UDP segment 구조](#udp-segment-구조)
@@ -28,14 +31,279 @@
     - [TCP](#tcp)
       - [TCP segment 구조](#tcp-segment-구조)
       - [흐름 제어 (Flow Control)](#흐름-제어-flow-control)
-      - [TCP 연결 관리](#tcp-연결-관리)
+      - [TCP Three-way Handshake](#tcp-three-way-handshake)
       - [혼잡 제어 (Congestion Control)](#혼잡-제어-congestion-control)
+        - [슬로 스타트 (Slow Start)](#슬로-스타트-slow-start)
+        - [혼잡 회피 (Congestion Avoidance)](#혼잡-회피-congestion-avoidance)
+        - [빠른 회복 (Fast Recovery)](#빠른-회복-fast-recovery)
 - [COMPUTER ARCHITECTURE](#computer-architecture)
 
 
 # FRONT-END
 
 # ALGORITHM
+
+## 정렬 (sorting)
+
+### 거품 정렬(bubble sort)
+
+![Bubble_sort_animation](https://user-images.githubusercontent.com/44011462/61772707-e75e7780-ae2d-11e9-8394-ec83d03749cc.gif)
+
+**거품 정렬(Bubble sort)** 은 두 인접한 원소를 검사하여 정렬하는 방법이다. 시간 복잡도가 *O(n^2)* 로 상당히 느리지만, 코드가 단순하기 때문에 자주 사용된다. 원소의 이동이 거품이 수면으로 올라오는 듯한 모습을 보이기 때문에 지어진 이름이다.
+
+    시간 복잡도: O(N^2)
+    공간 복잡도: extra O(1)
+
+```javascript
+const bubbleSort = (array) => {
+    let length = array.length;
+    let i, j, temp;
+    for (i = 0; i < length - 1; i++) { // 순차적으로 비교하기 위한 반복문
+        for (j = 0; j < length - 1 - i; j++) { // 끝까지 돌았을 때 다시 처음부터 비교하기 위한 반복문
+            if (array[j] <= array[j + 1]) continue // 두 수를 비교하여 앞 수가 뒷 수보다 작거나 같으면 통과
+            array[j] = [array[j + 1], array[j + 1] = array[j]][0]; //swap
+        }
+    }
+    return array;
+}
+```
+
+### 삽입 정렬(insertion sort)
+
+![Insertion_sort_animation](https://user-images.githubusercontent.com/44011462/61772654-c1d16e00-ae2d-11e9-9a0e-9aa5ea0807be.gif)
+
+
+**삽입 정렬(insertion sort)** 은 자료 배열의 모든 요소를 앞에서부터 차례대로 이미 정렬된 배열 부분과 비교하여, 자신의 위치를 찾아 삽입함으로써 정렬을 완성하는 알고리즘이다. k번째 반복 후의 결과 배열은, 앞쪽 k + 1 항목이 정렬된 상태이다.
+
+![Insertionsort-before](https://user-images.githubusercontent.com/44011462/61772339-f85ab900-ae2c-11e9-91c9-693c443848db.png)
+*Array prior to the insertion of x*
+
+각 반복에서 정렬되지 않은 나머지 부분 중 첫 번째 항목은 제거되어 정확한 위치에 삽입된다. 그러므로 다음과 같은 결과가 된다. 이는 **inplace 알고리즘**의 특성을 갖게 한다.
+
+![Insertionsort-after](https://user-images.githubusercontent.com/44011462/61772338-f85ab900-ae2c-11e9-856b-55f278903f3f.png)
+*Array after the insertion of x*
+
+배열이 길어질수록 효율이 떨어지지만, 구현이 간단하다는 장점이 있다. 선택 정렬이나 거품 정렬과 같은 같은 *O(n^2)* 알고리즘에 비교하여 빠르며, **안정(stable) 정렬**이다.
+
+    시간 복잡도: O(N^2)
+    공간 복잡도: extra O(1)
+
+
+```javascript
+const insertionSort = (array) => {
+    let length = array.length;
+    for (let i = 1; i < length; i++) {
+        const key = array[i];
+        let j = i - 1;
+        while (j >= 0 && array[j] > key) {
+            array[j + 1] = array[j];
+            j = j - 1;
+        }
+        array[j + 1] = key;
+    }
+    return array;
+};
+```
+
+
+### 선택 정렬(selection sort)
+
+![Selection-Sort-Animation](https://user-images.githubusercontent.com/44011462/61772691-d9105b80-ae2d-11e9-81af-ef19b2beed86.gif)
+
+
+**선택 정렬(selection sort)** 은 제자리 정렬 알고리즘의 하나로, 다음과 같은 순서로 이루어진다. 주어진 리스트 중에 최소값을 찾는다. 그 값을 맨 앞에 위치한 값과 교체한다. 맨 처음 위치를 뺀 나머지 리스트를 같은 방법으로 교체한다.
+비교하는 것이 상수 시간에 이루어진다는 가정 아래, n개의 주어진 리스트를 이와 같은 방법으로 정렬하는 데에는 *O(n^2)* 만큼의 시간이 걸린다. 선택 정렬은 알고리즘이 단순하며 사용할 수 있는 메모리가 제한적인 경우에 사용시 성능 상의 이점이 있습니다.
+
+    시간 복잡도: O(n^2)
+    공간 복잡도: extra O(1)
+
+```javascript
+const selectionSort = (array) => {
+    let length = array.length;
+    let minIndex, temp, i, j;
+    for (i = 0; i < length - 1; i++) { // 처음부터 훑으면서
+        minIndex = i;
+        for (j = i + 1; j < length; j++) { // 최솟값의 위치를 찾음
+            if (array[j] >= array[minIndex]) continue;
+            minIndex = j;
+        }
+        array[i] = [array[minIndex], array[minIndex] = array[i]][0]; // 최솟값을 제일 앞으로 보냄
+    }
+    return array;
+}
+```
+
+### 병합 정렬(merge sort)
+
+![220px-Merge-sort-example-300px](https://user-images.githubusercontent.com/44011462/61772622-acf4da80-ae2d-11e9-8798-d75ab2c0ffd7.gif)
+
+**병합 정렬(merge sort)** 은 *O(n log n)* 비교 기반 정렬 알고리즘이다. 일반적인 방법으로 구현했을 때 이 정렬은 안정 정렬에 속하며, **분할 정복(divide and conquer) 알고리즘**의 하나이다. 존 폰 노이만이 1945년에 개발했다.
+
+    시간 복잡도: O(n log n)
+    공간 복잡도: extra O(1)
+
+```javascript
+const mergeSort = (array) => {
+    if (array.length < 2) 
+        return array; // 원소가 하나일 때는 그대로 내보냅니다.
+    const pivot = Math.floor(array.length / 2); // 대략 반으로 쪼개는 코드
+    const left = array.slice(0, pivot); // 쪼갠 왼쪽
+    const right = array.slice(pivot, array.length); // 쪼갠 오른쪽
+    return merge(mergeSort(left), mergeSort(right)); // 재귀적으로 쪼개고 합칩니다.
+}
+
+const merge = (left, right) => {
+    const result = [];
+    while (left.length && right.length) {
+        if (left[0] <= right[0]) { // 두 배열의 첫 원소를 비교하여
+            result.push(left.shift()); // 더 작은 수를 결과에 넣어줍니다.
+        } else {
+            result.push(right.shift()); // 오른쪽도 마찬가지
+        }
+    }
+    while (left.length) result.push(left.shift()); // 어느 한 배열이 더 많이 남았다면 나머지를 다 넣어줍니다.
+    while (right.length) result.push(right.shift()); // 오른쪽도 마찬가지
+
+    return result;
+};
+
+```
+### 퀵 정렬(quick sort)
+
+![220px-Sorting_quicksort_anim](https://user-images.githubusercontent.com/44011462/61772579-977fb080-ae2d-11e9-92fe-44de99119834.gif)
+
+**퀵 정렬(quicksort)** 은 찰스 앤터니 리처드 호어가 개발한 정렬 알고리즘이다. 다른 원소와의 비교만으로 정렬을 수행하는 비교 정렬에 속한다. 퀵 정렬은 n개의 데이터를 정렬할 때, 최악의 경우에는 *O(n^2)* 번의 비교를 수행하고, 평균적으로 O(n log n)번의 비교를 수행한다.
+
+**메모리 참조가 지역화** 되어 있기 때문에 CPU 캐시의 히트율이 높아지기 때문에, 퀵 정렬의 내부 루프는 대부분의 컴퓨터 아키텍처에서 효율적으로 작동하도록 설계되어있다. 따라서 대부분의 실질적인 데이터를 정렬할 때 제곱 시간이 걸릴 확률이 거의 없도록 알고리즘을 설계하는 것이 가능하다. 때문에 일반적인 경우 퀵 정렬은 다른 *O(n log n)* 알고리즘에 비해 훨씬 빠르게 동작한다. 그리고 퀵 정렬은 정렬을 위해 *O(log n)* 만큼의 추가 공간을 필요로한다. 또한 퀵 정렬은 불안정 정렬에 속한다.
+
+    시간 복잡도: O(n log n)
+    공간 복잡도: extra O(log n)
+
+```javascript
+const partition = (array, left, right, pivotIndex) => { // 정렬하는 부분
+    let temp;
+    let pivot = array[pivotIndex];
+    while (left <= right) { // 왼쪽, 오른쪽 수를 규칙과 비교해 다음 수로 넘어갑니다.
+        while (array[left] < pivot)
+            left++;
+        while (array[right] > pivot)
+            right--;
+        if (left <= right) { // 왼쪽이 기준보다 크고, 오른쪽이 기준보다 작으면
+            temp = array[left];
+            array[left] = array[right];
+            array[right] = temp; // 서로 바꿔줍니다.
+            left++;
+            right--;
+        }
+    }
+    array[left] = [array[pivotIndex], array[pivotIndex] = array[left]][0]; // 마지막으로 기준과 만난 수를 바꿔줍니다. 기준의 위치는 이제 i입니다.
+    return left;
+};
+
+const quickSort = (array, left, right) => { // 재귀하는 부분
+    if (!left) left = 0;
+    if (!right) right = array.length - 1;
+    let pivotIndex = right; // 배열 가장 오른쪽의 수를 기준으로 뽑습니다.
+    pivotIndex = partition(array, left, right - 1, pivotIndex); // right - 1을 하는 이유는 현재 원소를 제외하고 정렬하기 위함입니다.
+    if (left < pivotIndex - 1)
+        quickSort(array, left, pivotIndex - 1); // 기준 왼쪽 부분 재귀
+    if (pivotIndex + 1 < right)
+        quickSort(array, pivotIndex + 1, right); // 기준 오른쪽 부분 재귀
+    return array;
+};
+```
+
+### 힙 정렬(heap sort)
+
+**힙 정렬(Heapsort)** 이란 최대 힙 트리나 최소 힙 트리를 구성해 정렬을 하는 방법으로서, 내림차순 정렬을 위해서는 최대 힙을 구성하고 오름차순 정렬을 위해서는 최소 힙을 구성하면 된다. 
+
+![힙소트2](https://user-images.githubusercontent.com/44011462/88031020-fa0da880-cb76-11ea-8a34-e3bd07e71a22.gif)
+
+    시간 복잡도: O(n log n)
+    공간 복잡도: extra O(1)
+
+```javascript
+let arrLen;
+
+const heapRoot = (array, i) => {
+    const left = 2 * i + 1;
+    const right = 2 * i + 2;
+    let max = i;
+
+    if (left < arrLen && array[left] > array[max]) {
+        max = left;
+    }
+
+    if (right < arrLen && array[right] > array[max]) {
+        max = right;
+    }
+
+    if (max != i) {
+        array[i] = [array[max], array[max] = array[i]][0];
+        heapRoot(array, max);
+    }
+}
+
+const heapSort = (array) => {
+    arrLen = array.length;
+
+    for (let i = Math.floor(arrLen / 2); i >= 0; i--) {
+        heapRoot(array, i);
+    }
+
+    for (let i = array.length - 1; i > 0; i--) {
+        array[0] = [array[i], array[i] = array[0]][0];
+        arrLen--;
+
+        heapRoot(array, 0);
+    }
+
+    return array;
+}
+
+```
+
+### 기수 정렬(radix sort)
+
+**기수 정렬(radix sort)** 는 대단히 빠르고 자리수를 비교해서 정렬하는 방식입니다. 단점이라면 자리수가 없는 것들은 정렬할 수 없다는 것입니다. 예를 들면 부동소수점같은 경우가 있습니다. 하지만 문자열과 정수는 거의 다 정렬할 수 있습니다. 
+
+시간 복잡도는 *O(dn)* 이고. d는 가장 큰 데이터의 자리수입니다. 빅 oh 표기법에 따르면 O(dn)은 O(n)에 속하기 때문에 빠릅니다. 가장 작은 자리수부터 비교하는 *LSD*방법입니다. 가장 큰 자리수부터 비교하는 방법은 *MSD*라고 불립니다.
+
+![radix-sort-image](https://user-images.githubusercontent.com/44011462/88031327-6688a780-cb77-11ea-8c59-df8ed4cffeac.png)
+
+
+    시간 복잡도: O(dn)
+    공간 복잡도: extra O(d + n)
+
+```javascript
+const counter = [[]];
+const radixLSD = (array, d) => {
+    let mod = 10;
+    for (let i = 0; i < d; i++, mod *= 10) { // mod는 현재 정렬 중인 자리수를 나타내는 것으로 10부터 해서 100, 1000, ...으로 커집니다.
+        for (let j = 0; j < array.length; j++) {
+            const bucket = parseInt(array[j] % mod); // 같은 그룹으로 묶일 나머지를 나타내는 부분입니다.
+            if (counter[bucket] == null ) {
+                counter[bucket] = [];
+            }
+            counter[bucket].push(array[j]); // 나머지 별로 묶어줍니다.
+            // console.log('bucket', bucket, counter[bucket]);
+        }
+        // console.log(counter.slice(0));
+        let pos = 0;
+        for (let j = 0; j < counter.length; j++) { // counter에 저장한 묶음들(나머지 순서로 정렬됨)을 실제 배열에 반영해줍니다.
+            let value = null ;
+            if (counter[j] != null ) {
+                while ((value = counter[j].shift()) != null ) {
+                    array[pos++] = value;
+                }
+            }
+        }
+        // console.log(array);
+    }
+    return array;
+}
+```
+
 
 
 # DATABASE
@@ -46,7 +314,7 @@ transaction은 한 단위로 간주되어야 하는 작업의 단위를 말한�
 
 ### ACID
 
-#### Atomicity
+ **Atomicity**
 atomicity는 여러가지 논리적으로 의미있는 단위의 일을 하나로 묶어서 반드시 한번에 일어나거나 전혀 일어나지 않아야 하는 일의 속성을 말한다. 어떤 행위에 atomicity가 있다고 하면 더이상 쪼개어질수 없다는 것과 같은 의미이다. 이는 database뿐 아니라 operating system의 critical section에서도 적용되는 개념이다. atomicity가 보장되려면 다음과 같은 일이 하나의 작업으로 보장되어야 한다.
 1. 고객1이 10만원을 출금하려고 한다.
 2. database에서 잔고를 확인하고 10만원을 뺸다
@@ -54,7 +322,7 @@ atomicity는 여러가지 논리적으로 의미있는 단위의 일을 하나�
 
 위 모든 과정이 마치 하나의 일로 발생해야하고, 중간에 어떤 특정한 이유로 모두 마무리 지을 수 없다면 아주 없던일로 해야한다. 
 
-#### Consistency
+ **Consistency**
 data는 constraint와 rule이 있어서 의미가 발생한다. 통장계좌는 항상 0와 같거나 큰 정수라고 정해져 있어야만 있지도 않은 돈을 주는 일을 막을 수 있다. 따라서 transaction간에 해당 data가 rule과 constraint를 지키도록 보장하는 것을 말한다. 만약 고객1이 있지도 않은 금액을 출금하려고 한다면 해당 trasaction은 중단되어야햔다.  
 1. 고객1의 잔고는 100만원이다.
 2. 고객1은 200만원을 출금하려고 시도한다.
@@ -62,7 +330,7 @@ data는 constraint와 rule이 있어서 의미가 발생한다. 통장계좌는 
 4. 해당 transaction은 중단된다
 
 
-#### Isolation
+ **Isolation**
 isolation은 transaction의 수행이 다른 transaction의 영향을 받지 않아야 한다는 것을 의미한다. 만약 고객1과 고객2가 동일한 계좌에서 금액을 출금하려고 한다고 하자. 계좌에는 100만원이 들어있고 고객1과 고객2는 각각 10만원, 25만원을 출금하려는 상황이다. 다음과 같은 일이 순서대로 일어났다고 가정하자. 
 1. 고객1이 10만원을 출금한다.
 2. 계좌에서 10만원이 줄어들고 이 내용이 database에 반영되려고 한다.
@@ -74,15 +342,16 @@ isolation은 transaction의 수행이 다른 transaction의 영향을 받지 않
 
 고객1이 10만원을 출금하는 transaction이 isolation을 보장받지 못한다면 고객2가 25만원을 출금하더라도 잔액이 여전히 90만원일 수 있다. 이런 일이 일어나지 않도록 보장하는 속성이 ioslation이다. 
 
-#### Durability - Persistency
+ **Durability - Persistency**
 persistency로도 불리는 durability는 문제없이 수행된 transaction에 대해서는 영원하게 자료의 내용이 보장되어야 한다는 의미이다. 특정 시스템의 문제가 발생하더라도 자료의 내용이 유지되어야 한다. 따라서 영구적으로 저장이 가능한 매체에 기록되어 저장되어야한다. 소프트웨어적으로도 이를 보장해야한다.
 
 ### transaction의 장단점
-#### Advantages
+**Advantages**
 1. 동시에 여러 사용자가 computer resource를 공유할 수 있다
 2. computing resource가 이미 점유중이라면 job processing의 순서를 조정하여 유연하게 사용할 수 있다.
-3. 사람의 개입 없이도 작업이 가능하여 computer resource를 효율적으로 사용할 수 있다.
-#### Disadvantages
+3. 사람의 개입 없이도 작업이 가능하여 computer resource를 효율적으로 사용할 수 있다.  
+
+**Disadvantages**
 1. 비용이 상대적으로 비싸다
 2. 하드웨어와 소프트웨어가 호환성이 매우 떨어진다
 
@@ -103,7 +372,7 @@ commit을 하게되면 rollback으로 정보를 되돌릴 수 없다.
 ## UDP (User Datagram Protocol), TCP (Transmission Control Protocol)
 
 <img width="648" alt="Screen Shot 2020-07-08 at 1 03 02 PM" src="https://user-images.githubusercontent.com/44011462/86874488-6fab5a80-c11b-11ea-86ef-186410754bff.png">
- 
+
 <details>
     <summary><span style="color:grey">클릭하여 출처보기</span></summary>
 Computer Networking: A Top-Down Approach, Global Edition  <br>
@@ -153,7 +422,7 @@ server는 host의 연결 요청을 기다리고 있다가 요청을 받으면 �
 
 이제 host와 servet는 적절히 통신할 수 있다.
 
-#### web-server와 TCP
+### web-server와 TCP
 
 <img width="587" alt="Screen Shot 2020-07-08 at 2 07 00 PM" src="https://user-images.githubusercontent.com/44011462/86878623-5064fb00-c124-11ea-87c2-6e71c56caf3e.png">
 
@@ -270,11 +539,11 @@ ISBN-13: 978-1292153599  <br>
 
 TCP는 송신자가 **수신 윈도우 (Receive Window)** 를 두어 흐름제어를 제공한다. 수신 윈도우는 수신측에서 가용한 크기가 얼마인지 송신자에게 알려주는데 사용한다. TCP는 전이중(Full-duplex)이기 때문에 수신자와 통신하는 각각의 송신자는 **수신 윈도우rwnd**를 두어 흐름을 통제한다. 
 
-- LastByteRead: RcvBuffer로 부터 읽힌 data stream의 마지막 byte의 수
-- LastByteRcvd: RcvBuffer에 저장된 data stream의 마지막 byte의 수 
+LastByteRead: RcvBuffer로 부터 읽힌 data stream의 마지막 byte의 수  
+LastByteRcvd: RcvBuffer에 저장된 data stream의 마지막 byte의 수   
 
-    LastByteRcvd - LastByteRcvd >= RcvBuffer
-    cwnd = RcvBuffer - (LastByteRcvd - LastByteRead)
+    LastByteRcvd - LastByteRcvd >= RcvBuffer 
+    cwnd = RcvBuffer - (LastByteRcvd - LastByteRead)  
 
 위의 내용을 정리하면 아래와 같은 표를 얻을 수 있다.
 
@@ -290,13 +559,13 @@ ISBN-13: 978-1292153599  <br>
 232Page, 그림3-38 수신 윈도우(rwnd)와 수신 버퍼(RcvBuffer)<br> 
 </details>
 
-송신자는 LastByteSent, LastByteAcked라는 변수를 두어 흐름 제어에 활용한다. 두 변수의 차이인 LastByteSent - LastByteAcked는 아직 ACK을 받지 못한 data의 양을 뜻한다. 이 값이 rwnd보다 작다면 수신자측의 RcvBuffer가 overflow되지 않음이 보장된다.
+송신자는 LastByteSent, LastByteAcked라는 변수를 두어 흐름 제어에 활용한다. 두 변수의 차이인 LastByteSent - LastByteAcked는 아직 ACK을 받지 못한 data의 양을 뜻한다. 이 값이 rwnd보다 작다면 수신자측의 **RcvBuffer가 overflow되지 않음이 보장**된다.
 
     LastByteSent - LastByteAcked <= rwnd
 
-이 방식은 수신버퍼가 rwnd = 0으로서 가득 찼다고 가정하면 송신자는 data를 추가로 보내지 못하여 ACK을 받을수가 없게 된다. 이 경우에는 수신자 측에서 RcvBuffer를 비우게 되더라도 송신자측이 알 수 있는 방법이 없다. 따라서 rwnd = 0인 상황이 되면 송신자는 segment의 크기가 1byte인 작은 data를 지속적으로 보내어 ACK을 확인한다. 결과적으로 버퍼는 비워지며 문제를 해결한다.
+이 방식은 수신버퍼가 rwnd = 0으로서 가득 찼다고 가정하면 송신자는 data를 추가로 보내지 못하여 ACK을 받을수가 없게 된다. 이 경우에는 수신자 측에서 RcvBuffer를 비우게 되더라도 송신자측이 알 수 있는 방법이 없다. 따라서 ***rwnd = 0*** 인 상황이 되면 송신자는 segment의 크기가 1byte인 작은 data를 **지속적으로 보내어** ACK을 확인한다. 결과적으로 버퍼는 비워지며 문제를 해결한다.
 
-#### TCP 연결 관리
+#### TCP Three-way Handshake
 
 TCP는 UDP와 달리 연결 설정을 하며, 연결 상태를 유지하도록 되어있다. **세방향 핸드쉐이크 (three-way handshake)** 를 통해 TCP의 연결을 설정하고 상태를 유지한다.
 
@@ -317,9 +586,8 @@ ISBN-13: 978-1292153599  <br>
 2. TCP SYN segment를 포함하는 IP datagram이 server에 도착하면 server는 IP datagram으로부터 TCP SYN segment를 뽑아낸다. 이 정보를 가지고 TCP buffer와 변수를 할당한다. 이 과정후에 SYN에 대한 응답으로 **SYN-ACK segment**를 보낸다. SYN-ACK segment에도 SYN segment와 마찬가지로 application layer data를 포함하지 않는다. 앞서 받은 SYN segment의 header field 중에서 확인응답 필드(acknowledgement number field)의 값을 1만큼 증가시키고, 순서번호 필드 (sequence number field)에 server에 할당된 정보를 설정하여 보낸다. 
 3. SYN-ACK segment를 수신하면 client는 확인응답 필드의 값을 1만큼 증가시키고, 앞선 과정을 통해 이미 연결되었기 때문에 SYN은 0으로 설정된다. 이후 application layer data를 payload로 넣어 segment를 보내며 통신한다.
 
-이 과정을 three-way handshake라고 부른다. 이 방식은 암벽을 오르는 사람들이 줄을 이용하여 소통하는 방식과 매우 유사하다.
-연결을 끝맺음할때는 segment header field에서 FIN flag를 1로 설정하여 끝을 알린다. 
-
+이 과정을 **three-way handshake**라고 부른다. 이 방식은 암벽을 오르는 사람들이 줄을 이용하여 소통하는 방식과 매우 유사하다.
+연결을 끝맺음 할때는 segment header field에서 FIN flag를 1로 설정하여 끝을 알린다. 
 
 <img width="404" alt="Screen Shot 2020-07-10 at 3 32 23 PM" src="https://user-images.githubusercontent.com/44011462/87123872-91931180-c2c2-11ea-9052-9644f7220a78.png">
 
@@ -335,7 +603,67 @@ ISBN-13: 978-1292153599  <br>
 
 #### 혼잡 제어 (Congestion Control)
 
+TCP 흐름 제어는 수신자가 가진 RcvBuffer에서 일어나는 overflow에 의해 data소실이 발생하고, 그로 인한 재전송, 정보손실 등의 overhead를 막는 기능이다. 이에 반하여 TCP 혼잡 제어(Congestion Control)은 네트워크가 혼잡하면 라우터의 buffer에서 overflow가 일어나 정보가 소실되는 것을 막는다. 따라서 network 전체의 흐름을 제어하는 것과 유사한 효과가 일어나고 이를 **TCP 혼잡 제어(Congestion Control)** 이라고 한다. IP layer는 네트워크 혼잡에 대한 종단 시스템에게 어떤 정보도 알려주지 않으므로, TCP는 종단간의 제어방식을 이용한다. 
+TCP 혼잡제어는 송신자측에서 **혼잡 윈도우(Congestion Window, cwnd)** 변수를 두어 제어한다. 이 변수의 값을 이용하여 네트워크로 traffic을 발생시킬 수 있는 비율을 제한한다. 특히 송신하는 쪽에서 응답확인 (ACK)을 받지 못한 데이터의 양은 cwnd, rwnd의 최소값을 초과하지 않는다.
 
+    LastByteSent - LastByteAcked <= min(cwnd, rwnd)
+
+##### 슬로 스타트 (Slow Start)
+
+TCP 연결이 시작될 때, cwnd의 값은 일반적을 1MSS로 초기화 되고, 그 결과 초기 전송률은 대략적으로 MMS/RTT가 된다. 예를 들어 만약 MMS = 500 bytes이고 RTT = 200 msec, 이면 초기 전송률은 20 kbps정도가 된다. 슬로 스타는 cwnd값을 1MSS에서 시작하여 ACK을 받을 때 마다 cwnd의 크기를 1MSS씩 증가시킨다. **각 ACK segment에 대해 2개의 "최대-크기" segment를 전송**한다. 이러한 과정을 통하여 TCP 전송률은 작은 값으로 시작하지만 **지수적으로** 증가하게 된다.
+
+**슬로우 스타트 종료 조건 3가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- ssthresh <= cwnd 인 경우
+TCP송신자는 slow start는 중단하고 혼잡회피로 들어간다
+- 3개의 duplicated ACK segments
+TCP송신자는 slow start는 중단하고 빠른 재전송으로 들어간다.
+
+<img width="317" alt="Screen Shot 2020-07-21 at 3 58 51 PM" src="https://user-images.githubusercontent.com/44011462/88022948-27545980-cb6b-11ea-81fb-65d0312add8f.png">
+
+<details>
+    <summary> <span style="color:grey">클릭하여 출처보기</span></summary>
+Computer Networking: A Top-Down Approach, Global Edition  <br>
+Publisher: Pearson Higher Education; 7th edition (November 21, 2016)  <br>
+ISBN-10: 1292153598  <br>
+ISBN-13: 978-1292153599  <br>
+250Page, 그림3-50 TCP 슬로 스타트<br> 
+</details>
+
+
+
+##### 혼잡 회피 (Congestion Avoidance)
+
+혼잡 회피 상태로 들어가는 시점에서 ssthresh의 값은 종전의 값의 1/2가 된다. cwnd는 1MSS를 갖는다. 이후에는 조금더 보수적인 자세를 취하여 1MSS만큼 cwnd를 증가시킨다. 
+
+**혼잡 회피 종료 조건 2가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- 3개의 duplicated ACK segments
+빠른회복으로 전환되면서 혼잡 회피가 끝난다. ssthresh는 cwnd의 값을 쓰며 cwnd의 값은 1/2가 된다.
+
+
+##### 빠른 회복 (Fast Recovery)
+
+빠른 회복에서 duplicated ACK을 수신할 때마다 cwnd의 크기를 1MSS만큼 증가시킨다. 
+
+**빠른 회복 종료 조건 2가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- 3개의 duplicated ACK segments
+빠른회복으로 전환되면서 혼잡 회피가 끝난다. ssthresh는 cwnd의 값을 쓰며 cwnd의 값은 1/2가 된다.
+
+<img width="642" alt="Screen Shot 2020-07-21 at 4 06 26 PM" src="https://user-images.githubusercontent.com/44011462/88023527-253eca80-cb6c-11ea-8191-28e01466c54c.png">
+
+<details>
+    <summary> <span style="color:grey">클릭하여 출처보기</span></summary>
+Computer Networking: A Top-Down Approach, Global Edition  <br>
+Publisher: Pearson Higher Education; 7th edition (November 21, 2016)  <br>
+ISBN-10: 1292153598  <br>
+ISBN-13: 978-1292153599  <br>
+251Page, 그림3-51 TCP 혼잡제어의 FSM 설명<br> 
+</details>
 
 
 # COMPUTER ARCHITECTURE
