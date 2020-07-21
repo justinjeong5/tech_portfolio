@@ -239,10 +239,57 @@ TCP 혼잡제어는 송신자측에서 **혼잡 윈도우(Congestion Window, cwn
 
 ##### 슬로 스타트 (Slow Start)
 
-TCP 연결이 시작될 떄, cwnd의 값은 일반적을 1 MSS로 초기화 되고, 그 결과 초기 전송률은 대략적으로 MMS/RTT가 된다. 예를 들어 만약 MMS = 500 bytes이고 RTT = 200 msec, 이면 초기 전송률은 20 kbps정도가 된다. 슬로 스타ㅡ
+TCP 연결이 시작될 때, cwnd의 값은 일반적을 1MSS로 초기화 되고, 그 결과 초기 전송률은 대략적으로 MMS/RTT가 된다. 예를 들어 만약 MMS = 500 bytes이고 RTT = 200 msec, 이면 초기 전송률은 20 kbps정도가 된다. 슬로 스타는 cwnd값을 1MSS에서 시작하여 ACK을 받을 때 마다 cwnd의 크기를 1MSS씩 증가시킨다. **각 ACK segment에 대해 2개의 "최대-크기" segment를 전송**한다. 이러한 과정을 통하여 TCP 전송률은 작은 값으로 시작하지만 **지수적으로** 증가하게 된다.
+
+**슬로우 스타트 종료 조건 3가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- ssthresh <= cwnd 인 경우
+TCP송신자는 slow start는 중단하고 혼잡회피로 들어간다
+- 3개의 duplicated ACK segments
+TCP송신자는 slow start는 중단하고 빠른 재전송으로 들어간다.
+
+<img width="317" alt="Screen Shot 2020-07-21 at 3 58 51 PM" src="https://user-images.githubusercontent.com/44011462/88022948-27545980-cb6b-11ea-81fb-65d0312add8f.png">
+
+<details>
+    <summary> <span style="color:grey">클릭하여 출처보기</span></summary>
+Computer Networking: A Top-Down Approach, Global Edition  <br>
+Publisher: Pearson Higher Education; 7th edition (November 21, 2016)  <br>
+ISBN-10: 1292153598  <br>
+ISBN-13: 978-1292153599  <br>
+250Page, 그림3-50 TCP 슬로 스타트<br> 
+</details>
+
+
 
 ##### 혼잡 회피 (Congestion Avoidance)
 
+혼잡 회피 상태로 들어가는 시점에서 ssthresh의 값은 종전의 값의 1/2가 된다. cwnd는 1MSS를 갖는다. 이후에는 조금더 보수적인 자세를 취하여 1MSS만큼 cwnd를 증가시킨다. 
+
+**혼잡 회피 종료 조건 2가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- 3개의 duplicated ACK segments
+빠른회복으로 전환되면서 혼잡 회피가 끝난다. ssthresh는 cwnd의 값을 쓰며 cwnd의 값은 1/2가 된다.
+
+
 ##### 빠른 회복 (Fast Recovery)
 
-##### TCP Tahoe, TCP Reno
+빠른 회복에서 duplicated ACK을 수신할 때마다 cwnd의 크기를 1MSS만큼 증가시킨다. 
+
+**빠른 회복 종료 조건 2가지**
+- time out에 의한 segment 손실 발생
+TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
+- 3개의 duplicated ACK segments
+빠른회복으로 전환되면서 혼잡 회피가 끝난다. ssthresh는 cwnd의 값을 쓰며 cwnd의 값은 1/2가 된다.
+
+<img width="642" alt="Screen Shot 2020-07-21 at 4 06 26 PM" src="https://user-images.githubusercontent.com/44011462/88023527-253eca80-cb6c-11ea-8191-28e01466c54c.png">
+
+<details>
+    <summary> <span style="color:grey">클릭하여 출처보기</span></summary>
+Computer Networking: A Top-Down Approach, Global Edition  <br>
+Publisher: Pearson Higher Education; 7th edition (November 21, 2016)  <br>
+ISBN-10: 1292153598  <br>
+ISBN-13: 978-1292153599  <br>
+251Page, 그림3-51 TCP 혼잡제어의 FSM 설명<br> 
+</details>
