@@ -5,7 +5,7 @@ transaction은 한 단위로 간주되어야 하는 작업의 단위를 말한�
 
 ### ACID
 
-#### Atomicity
+ **Atomicity**
 atomicity는 여러가지 논리적으로 의미있는 단위의 일을 하나로 묶어서 반드시 한번에 일어나거나 전혀 일어나지 않아야 하는 일의 속성을 말한다. 어떤 행위에 atomicity가 있다고 하면 더이상 쪼개어질수 없다는 것과 같은 의미이다. 이는 database뿐 아니라 operating system의 critical section에서도 적용되는 개념이다. atomicity가 보장되려면 다음과 같은 일이 하나의 작업으로 보장되어야 한다.
 1. 고객1이 10만원을 출금하려고 한다.
 2. database에서 잔고를 확인하고 10만원을 뺸다
@@ -13,7 +13,7 @@ atomicity는 여러가지 논리적으로 의미있는 단위의 일을 하나�
 
 위 모든 과정이 마치 하나의 일로 발생해야하고, 중간에 어떤 특정한 이유로 모두 마무리 지을 수 없다면 아주 없던일로 해야한다. 
 
-#### Consistency
+ **Consistency**
 data는 constraint와 rule이 있어서 의미가 발생한다. 통장계좌는 항상 0와 같거나 큰 정수라고 정해져 있어야만 있지도 않은 돈을 주는 일을 막을 수 있다. 따라서 transaction간에 해당 data가 rule과 constraint를 지키도록 보장하는 것을 말한다. 만약 고객1이 있지도 않은 금액을 출금하려고 한다면 해당 trasaction은 중단되어야햔다.  
 1. 고객1의 잔고는 100만원이다.
 2. 고객1은 200만원을 출금하려고 시도한다.
@@ -21,7 +21,7 @@ data는 constraint와 rule이 있어서 의미가 발생한다. 통장계좌는 
 4. 해당 transaction은 중단된다
 
 
-#### Isolation
+ **Isolation**
 isolation은 transaction의 수행이 다른 transaction의 영향을 받지 않아야 한다는 것을 의미한다. 만약 고객1과 고객2가 동일한 계좌에서 금액을 출금하려고 한다고 하자. 계좌에는 100만원이 들어있고 고객1과 고객2는 각각 10만원, 25만원을 출금하려는 상황이다. 다음과 같은 일이 순서대로 일어났다고 가정하자. 
 1. 고객1이 10만원을 출금한다.
 2. 계좌에서 10만원이 줄어들고 이 내용이 database에 반영되려고 한다.
@@ -33,15 +33,16 @@ isolation은 transaction의 수행이 다른 transaction의 영향을 받지 않
 
 고객1이 10만원을 출금하는 transaction이 isolation을 보장받지 못한다면 고객2가 25만원을 출금하더라도 잔액이 여전히 90만원일 수 있다. 이런 일이 일어나지 않도록 보장하는 속성이 ioslation이다. 
 
-#### Durability - Persistency
+ **Durability - Persistency**
 persistency로도 불리는 durability는 문제없이 수행된 transaction에 대해서는 영원하게 자료의 내용이 보장되어야 한다는 의미이다. 특정 시스템의 문제가 발생하더라도 자료의 내용이 유지되어야 한다. 따라서 영구적으로 저장이 가능한 매체에 기록되어 저장되어야한다. 소프트웨어적으로도 이를 보장해야한다.
 
 ### transaction의 장단점
-#### Advantages
+**Advantages**
 1. 동시에 여러 사용자가 computer resource를 공유할 수 있다
 2. computing resource가 이미 점유중이라면 job processing의 순서를 조정하여 유연하게 사용할 수 있다.
-3. 사람의 개입 없이도 작업이 가능하여 computer resource를 효율적으로 사용할 수 있다.
-#### Disadvantages
+3. 사람의 개입 없이도 작업이 가능하여 computer resource를 효율적으로 사용할 수 있다.  
+
+**Disadvantages**
 1. 비용이 상대적으로 비싸다
 2. 하드웨어와 소프트웨어가 호환성이 매우 떨어진다
 
