@@ -900,7 +900,7 @@ var numIslands = function(grid) {
 
 위와 같은 그래프 탐색에는 대표적으로 1. **Depth First Search**, 2. **Breadth First Search**가 사용된다. DFS와 BFS는 각각 깊이와 너비를 우선적으로 탐색하는 방식을 의미한다. 위 두가지 방식은 아래의 GIF를 보면 직관적으로 이해할 수 있다. 
 
-<img src="https://user-images.githubusercontent.com/44011462/90379016-1e48a080-e0b5-11ea-8e71-3032527f7807.png" width="300px"><img src="https://user-images.githubusercontent.com/44011462/90379022-21dc2780-e0b5-11ea-909d-87b942e44c5c.png" width="300px">
+<img src="https://user-images.githubusercontent.com/44011462/61773130-d9f5bd00-ae2e-11e9-8bfc-41d13a269061.gif" width="600px">
 
 <details>
     <summary><span style="color:grey">클릭하여 출처보기</span></summary>  
