@@ -3,14 +3,13 @@
 
 [AI Summit 2020 seoul](https://aisummit.co.kr/) COEX
 
-<img src="https://user-images.githubusercontent.com/44011462/93159771-e3846780-f749-11ea-90af-ab196b8b512f.jpg" width=300px>
-<img src="https://user-images.githubusercontent.com/44011462/93159843-13336f80-f74a-11ea-8a07-c7b64e4e58be.jpg" width=300px>
+<img src="https://user-images.githubusercontent.com/44011462/93159771-e3846780-f749-11ea-90af-ab196b8b512f.jpg" width=300px> <img src="https://user-images.githubusercontent.com/44011462/93159843-13336f80-f74a-11ea-8a07-c7b64e4e58be.jpg" width=300px>
 
-일시 : 2020년 12월 9-11일
-장소 : Korea seoul, COEX (Grand Ballroom)
-대상 : 보안기업(안랩, 소만사, 이스트시큐리티 등), 국가기관(한국인터넷진흥원, 금융보안원 등), 제조업(현대자동차), 연구기관(대학 등)
-기획/주관 : AI Summit 사무국, DMK
-방식 : 온라인 스트리밍 (현장 등록 50명 선착순)
+일시 : 2020년 12월 9-11일  
+장소 : Korea seoul, COEX (Grand Ballroom)  
+대상 : 보안기업(안랩, 소만사, 이스트시큐리티 등), 국가기관(한국인터넷진흥원, 금융보안원 등), 제조업(현대자동차), 연구기관(대학 등)  
+기획/주관 : AI Summit 사무국, DMK  
+방식 : 온라인 스트리밍 (현장 등록 50명 선착순)  
 
 ### EPP(Endpoint Protection Platform)
 주로 클라이언드와 같은 네트워크의 양 끝단에서 보호하는 기술을 일컷는다. *antivirus, data encryption, intrusion prevention*등을 모두 포함하여 말한다.
