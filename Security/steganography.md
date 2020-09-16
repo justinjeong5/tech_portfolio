@@ -76,6 +76,9 @@
 
 #### 소스코드
 
+<details>
+    <summary><span style="color:grey">클릭하여 소스보기</span></summary>
+
 ```c++
 /*
  * 2020.9.15
@@ -253,5 +256,4 @@ void convert_bin_to_txt() {
 }
 
 ```
-
-
+</details>
