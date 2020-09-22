@@ -1,55 +1,38 @@
 # SECURITY
-
-## AI SUMMIT 2020, SEOUL
-
-[AI Summit 2020 seoul](https://aisummit.co.kr/) COEX
-
-<img src="https://user-images.githubusercontent.com/44011462/93159771-e3846780-f749-11ea-90af-ab196b8b512f.jpg" width=300px> <img src="https://user-images.githubusercontent.com/44011462/93159843-13336f80-f74a-11ea-8a07-c7b64e4e58be.jpg" width=300px>
-
-일시 : 2020년 12월 9-11일  
-장소 : Korea seoul, COEX (Grand Ballroom)  
-대상 : 보안기업(안랩, 소만사, 이스트시큐리티 등), 국가기관(한국인터넷진흥원, 금융보안원 등), 제조업(현대자동차), 연구기관(대학 등)  
-기획/주관 : AI Summit 사무국, DMK  
-방식 : 온라인 스트리밍 (현장 등록 50명 선착순)  
-
-### EPP(Endpoint Protection Platform)
-주로 클라이언드와 같은 네트워크의 양 끝단에서 보호하는 기술을 일컷는다. *antivirus, data encryption, intrusion prevention*등을 모두 포함하여 말한다.
-
-### EDR(Endpoint Detection and Response)
-EPP가 조금더 보완된 형태를 EDR이라고 부르며, 대응방식을 포함한 개념이다. 이 대응방식에는 **Cyber Threat Intelligence(CTI)** 라고 불리는 방식이 있으며 여러 기관, 집단에서 수집한 공격정보를 한곳에 모아 정보를 공유하고 이를 대응에 활용하도록 하는 방식이다. 이때 CTI에 도움이되는 정보는 여러가지가 있으며 대표적으로 *IP Address, C&C server, IOC(Indecator Of Compromise)* 가 있다. 이런 정보를 CTI방식으로 모아 AI를 이용하여 정보를 분석하고 해석한다.
-
-### AI for Malware Detection
-AI를 이용한 *malware detection* , 악성 코드 자체를 탐지하는 것보다는 발견된 악성코드를 분류하고 해석하는데 더 효과적으로 알려져 있다. *Ransomware* 등의 일부 특정유형의 악성코드에서는 탐지하는 능력이 매우 뛰어나다. 코드상에서 악성코드임을 알아낼 수 있는 패턴이 존재하기 떄문이다. 하지만 보편적이지 않은 언어로 작성되었거나 packing이 되어있는 경우 등, *training data* 가 많지 않다면 탐지는 어려운 경우가 많다.
-
-### AXI(Explainable AI) for Security
-AI를 이용하여 악성코드를 분류하였다면 *deep learning* 모델을 신뢰할 수 있을까. 주로 이미지 처리 분야에서 많이 사용되는 방식으로 *Class Activation Model(CAM)* 이 있다. *deep learning* 의 결과가 실제 전문가(사람)이 보는 것과 비슷하게, '정보로써 의미 있는 영역을 탐지'하는 방식이다. 이런 비슷한 방식을 AI로 악성코드를 탐지하는데 사용되도록 하는 것이 **AXI**이다. AI가 전체 코드중에서 어떤 부분을 읽고 판단했는지를 보여주는 기능이 있다면 더 좋은 **AI for Malware Detection**로 동작할 수 있는 것이다.
-
-### Security for AI
-인공지능을 보호하기 위해서, 혹은 인공지능을 공격하기 위해서 사용되는 방식이다.
-#### Evasion Attack(Adversarial Example)
-이미 trained되어 있는 인공지능 모델의 정보를 이용하여 속이는 방식이다. 사람의 사진에 안경을 씌워 다른 사람으로 인식하게 하거나, 자율주행 자동차에게 표지판의 일부를 바꾸어 사고를 유발하게 하는 방식이다. 
-#### Data Poisoning
-Evasion Attack이 test단계에서 공격하는 것이라면 **Data Poisoning** 은 *training 단계* 에서 공격하는 기법이다. 대표적인 사례로 마이크로소프트의 Tay라고 불리는 *chatbot* 이다. 2016년 3월 23일에 마이크로소프트사에서 사람의 채팅을 분석하여 특정 연령대의 인물을 모방하도록 하는 서비스의 *chatbot* 이었는데, 최초 16시간의 training과정에서 **의도적으로 잘못된 data**를 입력한 사용자들의 '공격'에 의해 결과적으로 욕설과 인신공격을 일삼는 *chatbot* 이 되어 서비스가 종료된 사례이다.
-#### AI Model Stealing
-AI Model Stealing은 AI의 구동방식을 이용한 공격이다. 가정에 기가지니를 놓는다면, 동작방식은 회사의 자연어처리 서버를 오고가며 정보를 분석하는 방식이다. 이를 이용하여 의도적으로 임의의 상당히 많은 query를 요청하여 AI model 내부적으로 어떻게 동작하는지 유추하는 방식이다. 이를 **Model Inversion Attack** 이라고 부른다.
-
-<img src="https://user-images.githubusercontent.com/44011462/93162227-3f9dba80-f74f-11ea-9f63-37feb3a0272f.png" width=400px>
-
-자율주행 자동차가 정지 표지판을 보고도 멈추지 않도록 공격하는 시나리오를 작성한다면 아래와 같다.
-
-1. Queries
-    수와 종류가 매우 많은 도로교통 표지판의 사진을 보내어 Model inversion attack을 수행한다.
-2. Extract Information
-    query의 요청과 응답을 비교하여 모델이 가진 class를 유추한다.
-3. A proxy of the target AI model
-    모델의 class를 보고 취약점(class의 경계가 모호하거나 근접한 부분)을 알아낸다
-4. Create Adversarial Examples
-    Model이 stop 표지판을 무시하거나 출발하는 신호로 인식할 수 있는 Adversarial Example를 만든다
-5. 자율 주행 자동차는 멈추는 신호를 인식하지 못하고 교통사고가 일어난다.
+- [SECURITY](#security)
+  - [SQL Injection](#sql-injection)
+    - [blind sql injection](#blind-sql-injection)
+    - [sql injection 방어](#sql-injection-방어)
+  - [STEGANOGRAPHY](#steganography)
+    - [상용 스테가노그래피(steganography)](#상용-스테가노그래피steganography)
+    - [steganography 구현](#steganography-구현)
+      - [개요](#개요)
+      - [사용방법](#사용방법)
+      - [실행결과](#실행결과)
+      - [구현원리](#구현원리)
+      - [소스코드](#소스코드)
+- [number Theory](#number-theory)
+  - [primality test](#primality-test)
+    - [trial division](#trial-division)
+    - [fermat test](#fermat-test)
+    - [Miller-Rabin test](#miller-rabin-test)
+    - [deterministic algorithm](#deterministic-algorithm)
+    - [byhrid](#byhrid)
+  - [공개키 암호의 설계 기본 원리](#공개키-암호의-설계-기본-원리)
+    - [Descrete Logarithm](#descrete-logarithm)
+    - [integer factorization](#integer-factorization)
+- [classical encryption](#classical-encryption)
+  - [Symmetric Cipher Model](#symmetric-cipher-model)
+  - [Substitution thechniques](#substitution-thechniques)
+    - [Monoalphabetic ciphers](#monoalphabetic-ciphers)
+    - [Polyalphabetic ciphers](#polyalphabetic-ciphers)
+  - [Transposition thechniques](#transposition-thechniques)
+  - [Rotor machines](#rotor-machines)
+  - [Steganography](#steganography-1)
 
 
 
-## WEB_HACKING SQL Injection
+## SQL Injection
 SQL injection은 응용 프로그램 보안상의 취약점을 이용하여 개발자가 의도하지 않은 sql을 실행하여 데이터베이스를 비정상적으로 조작하는 code injection attack 방식이다.
 
 **일반적인 웹앱의 호출방법**은 아래와 같다.
@@ -170,8 +153,7 @@ SELECT * FROM usr WHERE id = 'admin' OR 1=1 -- AND pw = 'd0be2cd421';
     
     *스테가노그래피 기법으로 JPG파일에 숨겨져 있는 랜섬웨어 압축 포멧*
 
-### 상용 스테가노그래피(steganopraphy)
-
+### 상용 스테가노그래피(steganography)
 
 [openStegano](https://www.openstego.com/index.html)
 개발언어: Java([open source](https://github.com/syvaidya/openstego))
@@ -411,3 +393,98 @@ void convert_bin_to_txt() {
 
 ```
 </details>
+
+
+# number Theory
+
+## primality test
+
+### trial division
+가능한 모든 소수에 대해서 나누어 보는 방식이다. 단 p에 대해서는 <img src="https://user-images.githubusercontent.com/44011462/93845751-fca68e80-fcdc-11ea-8824-1901309d16f5.png" height=20px>만큼만 확인해보면 test가 가능하다.
+
+### fermat test
+일종의 확률적인 방법이다. p가 소수인지 아닌지 알기위해 GCD(a, p) = 1을 만족하는 a를 뽑는다. a에 대해서 <img src="https://user-images.githubusercontent.com/44011462/93845784-18119980-fcdd-11ea-8ac0-5d8fa60beead.png" height=20px>의 계산 결과가 1인지 아닌지를 확인하는 방식이며, 이를 만족하는 a를 하나라도 얻을 수 있다면 p는 소수가 아니다.
+
+### Miller-Rabin test
+기본적으로는 이 방식도 일종의 fermat test이다. 여기에 NSR test를 더하여 Miller-Rabin test가 된다. p가 만약에 홀수인 소수라면 <img src="https://user-images.githubusercontent.com/44011462/93845856-42635700-fcdd-11ea-96c2-dcca2811eeab.png" height=20px>을 만족하는 해는 x = 1, p - 1(<img src="https://user-images.githubusercontent.com/44011462/93845912-750d4f80-fcdd-11ea-95cd-f2a0c7bbc384.png" height=20px>)밖에 없다. 따라서 이 두수에 대해서 x = 1, p - 1이 아닌 해를 구할 수 있다면 p는 소수가 아니다. 
+기본적으로 Miller-Rabin test는 fermat test를 기반으로 하기떄문에 확률적인 방식이다. 알고리즘이 확률적이라는 것은 아래와 같은 의미이다.
+1. 항상 답은 얻지만, 입력에 따라 수행시간이 확률적으로 들쭉날쭉한 방식
+2. 알고리즘의 수행시간은 항상 일정하지만, 입력에 따라 결과가 틀릴 수 있는 방식
+
+Miller-Rabin test는 2번의 방식이다. 그렇다면 이런 방식을 믿고 사용할 수 있는가? 
+그렇다. 2번의 방식을 어느정도 반복하면 오답의 확률이 매우 적어지기 떄문에 활용이 가능하다.
+
+```javascript
+// Miller-Rabin Algorithm
+
+Miller_Rain(n, s)   // Test if n is prime with error probability << 2 ^-s
+For j = 1 to s
+    a = random positive integet < n
+    if Test(a, n) = Composite, then return Composite.    // definitely
+End For
+Return Prime    // almost sure
+
+Subroutine Test(a, n)
+Let t and u mbe s.t. t >= 1, u is odd, and n - 1 = (s ^ t) * u.
+x0 = a^u mod n.
+For i = 1 to t
+    xi = (xi-1)^2 mod n.
+    if xi = 1 and xi-1 != 1 and xi-1 != n - 1, then return Composite.    // NSR test
+End For
+if xt != 1, then return Composite.   // Fermat test
+Return Prime
+
+// 출처: Cormen, Leiserson, Rivest, and Stein, Introduction ro ALgorithms, 3rd ed., MIT Press
+```
+위 방식에서 subroutine Test의 정답 확률은 50%정도로 알려져 있다. 따라서 s번을 반복한다면 Test의 오답 확률은 2^s정도로 작아진다. 보통 s정도는 100회정도로 하도록 권장되며 이는 약 1.2676506e+30이며 0에 근접한다. 
+
+### deterministic algorithm
+trial division방식은 상당히 비효율적이고 miller-rabin test는 정답을 보장할수는 없다. trial division보다 효율적이고 정답이 보장되는 방법을 찾으려는 시도는 항상 있었다. AKS algorithm이라는 방식이 제안되었지만 miller-rabin 방식보다 상당히 비효율적이다. 현재 2020년까지는 deterministic 하면서 miller-rabin보다 빠른방식은 알려지지 않았다. 
+
+### byhrid 
+실무에서는 trial division과 Miller-Rabin을 조합하여 사용한다. 100자리 이상의 거대한 숫자가 prime인지 확인하는 문제에서 2, 3, 5, 7, 11등의 아주 작은 prime까지만 trial division으로 확인해보고 이후로 MR방식으로 확인한다. trial 방식을 사용하면서 상당히 많은 후보군을 줄일 수 있으므로 MR의 확률이 매우 좋아진다.
+
+## 공개키 암호의 설계 기본 원리
+공개키 암호는 descrete logarithm과 integer factorization의 두가지 '풀이가 매우 어려운' 두가지 방식을 이용하여 설계된다. descrete logarithm은 어떤수 a를 p에 대해서 module연산을 수행할 때 a를 몇번 제곱해야 n이 나오는지 계산하는것이다. integer factorization은 어떤 수를 두개의 소수로 소인수분해를 하는 방식이다. 위 두가지 방식은 4096bits에서 8192bits의 소수에 대해 계산하는 것이 매우 어렵다는 점을 이용한다.
+### Descrete Logarithm
+<img src="https://user-images.githubusercontent.com/44011462/93839674-a92a4580-fcc8-11ea-8d68-1ac3a260a078.png" width=600px>
+
+### integer factorization
+<img src="https://user-images.githubusercontent.com/44011462/93840155-55206080-fcca-11ea-9770-c91273af67c1.png" width=600px>
+ 
+공개키 암호에 대한 자세한 이야기는 다른곳에서 다루기로 한다.
+
+# classical encryption
+1950-60년대에 주로 사용되었던 고전 암호이다. 
+
+## Symmetric Cipher Model
+<img src="https://user-images.githubusercontent.com/44011462/93840586-df1cf900-fccb-11ea-8cb5-2b77ce605096.png" width=300px><br><img src="https://user-images.githubusercontent.com/44011462/93840804-9fa2dc80-fccc-11ea-9a01-738f400208b5.png" width=300px>  
+
+암호화할떄의 key와 복호화할떄의 key가 같도록 하는 방식이다. 따라서 공격자는 cipher text를 갈취한다고 하여도 plain text를 알수 없다. 이런 암호화 방식은 표준화가 되어있어서 이루어지는 모든 방식을 누구라도 알수 있다. 따라서 사용되는 key가 안전해야한다. 
+
+## Substitution thechniques
+plain text를 구성하는 글자, 숫자, 기호가 다른것으로 대체되는 것을 말한다. 
+
+### Monoalphabetic ciphers
+이런 방식중 가장 고전적인 방식이 고대 로마시절에 율리우스 시저황제가 사용했던 방식인 Caesar Cipher이다. alphabet을 n칸씩 오른쪽으로 이동시키는 방식으로 가능성이 26가지로 규칙이 매우 단순한 것이 특징이다.   
+
+<img src="https://user-images.githubusercontent.com/44011462/93841242-e7763380-fccd-11ea-98e9-775a913d1c46.png" width=300px>
+
+다음은 Caesar 방식의 단순함을 어느정도 극복한 Permutation Cipher이다. 알파벳이 대응되어야 하는 부분을 n칸씩 정한것이 아닌, 모든 알파벳에 대하여 임의로 알바펫을 대응시키는 방식이다. 
+
+<img src="https://user-images.githubusercontent.com/44011462/93841511-c6faa900-fcce-11ea-8106-feb4699d7c09.png" width=300px> 
+
+26!개의 방식이 있기때문에 당시에는 일일이 해보기에는 어려운 방식이었다. 하지만 영어에는 자주 쓰이는 알파벳이 정해져있다. plain text에서 많이나오는 E와 같은 알파벳은 Cipher text에도 가장 많이 등장하는 알파벳이라는 것을 알 수 있다.
+
+<img src="https://user-images.githubusercontent.com/44011462/93841683-53a56700-fccf-11ea-859e-75b398f5f060.png" width=300px>
+
+게다가 영어에는 the, th, ph등등 주로 짝지어서 사용하는 몇몇 알파벳이 있다. 이런 조합을 사용하여 추측해보면 충분히 key가 없이도 해독이 가능하다는 한계가 있다.
+
+### Polyalphabetic ciphers
+위 방식이 한계를 갖는 점을 극복하자는 방식이다. 
+
+## Transposition thechniques
+
+## Rotor machines
+
+## Steganography

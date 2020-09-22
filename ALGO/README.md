@@ -1,5 +1,30 @@
 # ALGORITHM
 
+- [ALGORITHM](#algorithm)
+  - [Sorting](#sorting)
+    - [Bubble Sort](#bubble-sort)
+    - [Insertion Sort](#insertion-sort)
+    - [Selection Sort](#selection-sort)
+    - [Merge Sort](#merge-sort)
+    - [Quick Sort](#quick-sort)
+    - [Heap Sort](#heap-sort)
+    - [Radix Sort](#radix-sort)
+  - [Union Find](#union-find)
+    - [constructor](#constructor)
+    - [makeSet](#makeset)
+    - [findParent](#findparent)
+    - [mergeSet](#mergeset)
+    - [complexity](#complexity)
+    - [implementation](#implementation)
+      - [related problem - leetcode 399. Evaluate Division](#related-problem---leetcode-399-evaluate-division)
+      - [related problem - 200. Number of Islands](#related-problem---200-number-of-islands)
+  - [backtracking](#backtracking)
+    - [Depth First Search(DFS)](#depth-first-searchdfs)
+    - [Breadth First Search(BFS)](#breadth-first-searchbfs)
+    - [휴리스틱(heuristics)](#휴리스틱heuristics)
+      - [related problem - Baekjoon 9663. N-Queen](#related-problem---baekjoon-9663-n-queen)
+      - [related problem - baekjoon 2580. Sudoku](#related-problem---baekjoon-2580-sudoku)
+
 ## Sorting
 
 ### Bubble Sort

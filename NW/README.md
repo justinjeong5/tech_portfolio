@@ -1,5 +1,27 @@
 # NETWORK
 
+- [NETWORK](#network)
+  - [UDP (User Datagram Protocol), TCP (Transmission Control Protocol)](#udp-user-datagram-protocol-tcp-transmission-control-protocol)
+    - [Multiplexing, Demultiplexing](#multiplexing-demultiplexing)
+      - [비연결형 다중화](#비연결형-다중화)
+      - [연결형 다중화](#연결형-다중화)
+    - [web-server와 TCP](#web-server와-tcp)
+    - [UDP](#udp)
+      - [UDP가 TCP보다 좋은점](#udp가-tcp보다-좋은점)
+      - [UDP segment 구조](#udp-segment-구조)
+      - [UDP check-sum](#udp-check-sum)
+    - [신뢰적인 데이터 전달(reliable data transfer)의 원리](#신뢰적인-데이터-전달reliable-data-transfer의-원리)
+    - [TCP](#tcp)
+      - [TCP segment 구조](#tcp-segment-구조)
+      - [흐름 제어 (Flow Control)](#흐름-제어-flow-control)
+      - [TCP Three-way Handshake](#tcp-three-way-handshake)
+      - [혼잡 제어 (Congestion Control)](#혼잡-제어-congestion-control)
+        - [슬로 스타트 (Slow Start)](#슬로-스타트-slow-start)
+        - [혼잡 회피 (Congestion Avoidance)](#혼잡-회피-congestion-avoidance)
+        - [빠른 회복 (Fast Recovery)](#빠른-회복-fast-recovery)
+  - [what webbrowser does?](#what-webbrowser-does)
+
+
 ## UDP (User Datagram Protocol), TCP (Transmission Control Protocol)
 
 <img width="648" alt="Screen Shot 2020-07-08 at 1 03 02 PM" src="https://user-images.githubusercontent.com/44011462/86874488-6fab5a80-c11b-11ea-86ef-186410754bff.png">
@@ -13,7 +35,7 @@ ISBN-13: 978-1292153599  <br>
 173Page, 그림3-1 트랜스포트 계층은 애플리케이션간의 물리적 통신보다는 논리적 통신을 제공함 <br> 
 </details>
 
-### 다중화(Multiplexing)와 역다중화(Demultiplexing)
+### Multiplexing, Demultiplexing
 Transport layer는 전달받은 segment의 data를 application layer의 어떤 socket에 넘겨줄지 확인하기 위해서 segment의 field를 검사하는 것을 말한다. 그리고 이 segment를 해당 socket으로 보낸다. 이를 **Multiplexing**이라고 한다. 반대로 출발지 host에서 socket으로부터 data를 모으고 이에 대한 segment를 생성하기 위해서 각 데이터에 header정보로 캡슐화하고 그 segment를 network layer로 보내는 것을 **Demultiplexing**이라고 한다.
 
 #### 비연결형 다중화

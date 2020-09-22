@@ -1,5 +1,9 @@
 # DESIGN PATTERN
 
+- [DESIGN PATTERN](#design-pattern)
+  - [Adaptor pattern](#adaptor-pattern)
+  - [Facade pattern](#facade-pattern)
+
 ## Adaptor pattern
 
 실생활에서 adaptor는 쉽게 볼 수 있다. 대표적으로 USB2.0의 micro 5pin 충전기를 USB3.0의 c-type로 바꿔주는 스마트폰 adaptor가 있고 해외 여행을 가려면 가장 먼저 준비하는 110v - 250v **돼지코**가 있다. 이 adaptor를 사용하는 이유는 간편하기 때문이다. 휴대폰이 바뀔때마다 충전기를 바꿔야하는 불편함은 어느정도 해소가 가능하지만, *해외여행을 갈따마다 110v용 전자기기를 구입하는 것은 억지스럽다*.
