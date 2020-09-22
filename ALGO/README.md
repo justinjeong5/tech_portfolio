@@ -1,12 +1,12 @@
 # ALGORITHM
 
-## 정렬 (sorting)
+## Sorting
 
-### 거품 정렬(bubble sort)
+### Bubble Sort
 
 ![Bubble_sort_animation](https://user-images.githubusercontent.com/44011462/61772707-e75e7780-ae2d-11e9-8394-ec83d03749cc.gif)
 
-**거품 정렬(Bubble sort)** 은 두 인접한 원소를 검사하여 정렬하는 방법이다. 시간 복잡도가 *O(n^2)* 로 상당히 느리지만, 코드가 단순하기 때문에 자주 사용된다. 원소의 이동이 거품이 수면으로 올라오는 듯한 모습을 보이기 때문에 지어진 이름이다.
+**거품 정렬(Bubble Sort)** 은 두 인접한 원소를 검사하여 정렬하는 방법이다. 시간 복잡도가 *O(n^2)* 로 상당히 느리지만, 코드가 단순하기 때문에 자주 사용된다. 원소의 이동이 거품이 수면으로 올라오는 듯한 모습을 보이기 때문에 지어진 이름이다.
 
     시간 복잡도: O(N^2)
     공간 복잡도: extra O(1)
@@ -25,12 +25,12 @@ const bubbleSort = (array) => {
 }
 ```
 
-### 삽입 정렬(insertion sort)
+### Insertion Sort
 
 ![Insertion_sort_animation](https://user-images.githubusercontent.com/44011462/61772654-c1d16e00-ae2d-11e9-9a0e-9aa5ea0807be.gif)
 
 
-**삽입 정렬(insertion sort)** 은 자료 배열의 모든 요소를 앞에서부터 차례대로 이미 정렬된 배열 부분과 비교하여, 자신의 위치를 찾아 삽입함으로써 정렬을 완성하는 알고리즘이다. k번째 반복 후의 결과 배열은, 앞쪽 k + 1 항목이 정렬된 상태이다.
+**삽입 정렬(insertion Sort)** 은 자료 배열의 모든 요소를 앞에서부터 차례대로 이미 정렬된 배열 부분과 비교하여, 자신의 위치를 찾아 삽입함으로써 정렬을 완성하는 알고리즘이다. k번째 반복 후의 결과 배열은, 앞쪽 k + 1 항목이 정렬된 상태이다.
 
 ![Insertionsort-before](https://user-images.githubusercontent.com/44011462/61772339-f85ab900-ae2c-11e9-91c9-693c443848db.png)
 *Array prior to the insertion of x*
@@ -63,12 +63,12 @@ const insertionSort = (array) => {
 ```
 
 
-### 선택 정렬(selection sort)
+### Selection Sort
 
 ![Selection-Sort-Animation](https://user-images.githubusercontent.com/44011462/61772691-d9105b80-ae2d-11e9-81af-ef19b2beed86.gif)
 
 
-**선택 정렬(selection sort)** 은 제자리 정렬 알고리즘의 하나로, 다음과 같은 순서로 이루어진다. 주어진 리스트 중에 최소값을 찾는다. 그 값을 맨 앞에 위치한 값과 교체한다. 맨 처음 위치를 뺀 나머지 리스트를 같은 방법으로 교체한다.
+**선택 정렬(selection Sort)** 은 제자리 정렬 알고리즘의 하나로, 다음과 같은 순서로 이루어진다. 주어진 리스트 중에 최소값을 찾는다. 그 값을 맨 앞에 위치한 값과 교체한다. 맨 처음 위치를 뺀 나머지 리스트를 같은 방법으로 교체한다.
 비교하는 것이 상수 시간에 이루어진다는 가정 아래, n개의 주어진 리스트를 이와 같은 방법으로 정렬하는 데에는 *O(n^2)* 만큼의 시간이 걸린다. 선택 정렬은 알고리즘이 단순하며 사용할 수 있는 메모리가 제한적인 경우에 사용시 성능 상의 이점이 있습니다.
 
     시간 복잡도: O(n^2)
@@ -90,11 +90,11 @@ const selectionSort = (array) => {
 }
 ```
 
-### 병합 정렬(merge sort)
+### Merge Sort
 
-![220px-Merge-sort-example-300px](https://user-images.githubusercontent.com/44011462/61772622-acf4da80-ae2d-11e9-8798-d75ab2c0ffd7.gif)
+![220px-Merge-Sort-example-300px](https://user-images.githubusercontent.com/44011462/61772622-acf4da80-ae2d-11e9-8798-d75ab2c0ffd7.gif)
 
-**병합 정렬(merge sort)** 은 *O(n log n)* 비교 기반 정렬 알고리즘이다. 일반적인 방법으로 구현했을 때 이 정렬은 안정 정렬에 속하며, **분할 정복(divide and conquer) 알고리즘**의 하나이다. 존 폰 노이만이 1945년에 개발했다.
+**병합 정렬(merge Sort)** 은 *O(n log n)* 비교 기반 정렬 알고리즘이다. 일반적인 방법으로 구현했을 때 이 정렬은 안정 정렬에 속하며, **분할 정복(divide and conquer) 알고리즘**의 하나이다. 존 폰 노이만이 1945년에 개발했다.
 
     시간 복잡도: O(n log n)
     공간 복잡도: extra O(1)
@@ -125,7 +125,7 @@ const merge = (left, right) => {
 };
 
 ```
-### 퀵 정렬(quick sort)
+### Quick Sort
 
 ![220px-Sorting_quicksort_anim](https://user-images.githubusercontent.com/44011462/61772579-977fb080-ae2d-11e9-92fe-44de99119834.gif)
 
@@ -170,7 +170,7 @@ const quickSort = (array, left, right) => { // 재귀하는 부분
 };
 ```
 
-### 힙 정렬(heap sort)
+### Heap Sort
 
 **힙 정렬(Heapsort)** 이란 최대 힙 트리나 최소 힙 트리를 구성해 정렬을 하는 방법으로서, 내림차순 정렬을 위해서는 최대 힙을 구성하고 오름차순 정렬을 위해서는 최소 힙을 구성하면 된다. 
 
@@ -220,13 +220,13 @@ const heapSort = (array) => {
 
 ```
 
-### 기수 정렬(radix sort)
+### Radix Sort
 
-**기수 정렬(radix sort)** 는 대단히 빠르고 자리수를 비교해서 정렬하는 방식입니다. 단점이라면 자리수가 없는 것들은 정렬할 수 없다는 것입니다. 예를 들면 부동소수점같은 경우가 있습니다. 하지만 문자열과 정수는 거의 다 정렬할 수 있습니다. 
+**기수 정렬(radix Sort)** 는 대단히 빠르고 자리수를 비교해서 정렬하는 방식입니다. 단점이라면 자리수가 없는 것들은 정렬할 수 없다는 것입니다. 예를 들면 부동소수점같은 경우가 있습니다. 하지만 문자열과 정수는 거의 다 정렬할 수 있습니다. 
 
 시간 복잡도는 *O(dn)* 이고. d는 가장 큰 데이터의 자리수입니다. 빅 oh 표기법에 따르면 O(dn)은 O(n)에 속하기 때문에 빠릅니다. 가장 작은 자리수부터 비교하는 *LSD*방법입니다. 가장 큰 자리수부터 비교하는 방법은 *MSD*라고 불립니다.
 
-![radix-sort-image](https://user-images.githubusercontent.com/44011462/88031327-6688a780-cb77-11ea-8c59-df8ed4cffeac.png)
+![radix-Sort-image](https://user-images.githubusercontent.com/44011462/88031327-6688a780-cb77-11ea-8c59-df8ed4cffeac.png)
 
 
     시간 복잡도: O(dn)
