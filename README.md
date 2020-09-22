@@ -21,4 +21,5 @@
 - SECURITY
   - [SQL Injection](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#web_hacking-sql-injection)
   - [Steganography](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#steganography)
-  - [Number Theory]()
+  - [Number Theory](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#number-theory)
+  - [Classical Encryption](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#classical-encryption)

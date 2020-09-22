@@ -3,14 +3,6 @@
   - [SQL Injection](#sql-injection)
     - [blind sql injection](#blind-sql-injection)
     - [sql injection 방어](#sql-injection-방어)
-  - [STEGANOGRAPHY](#steganography)
-    - [상용 스테가노그래피(steganography)](#상용-스테가노그래피steganography)
-    - [steganography 구현](#steganography-구현)
-      - [개요](#개요)
-      - [사용방법](#사용방법)
-      - [실행결과](#실행결과)
-      - [구현원리](#구현원리)
-      - [소스코드](#소스코드)
 - [number Theory](#number-theory)
   - [primality test](#primality-test)
     - [trial division](#trial-division)
@@ -28,7 +20,14 @@
     - [Polyalphabetic ciphers](#polyalphabetic-ciphers)
   - [Transposition thechniques](#transposition-thechniques)
   - [Rotor machines](#rotor-machines)
-  - [Steganography](#steganography-1)
+  - [Steganography](#steganography)
+    - [상용 스테가노그래피(steganography)](#상용-스테가노그래피steganography)
+    - [steganography 구현](#steganography-구현)
+      - [개요](#개요)
+      - [사용방법](#사용방법)
+      - [실행결과](#실행결과)
+      - [구현원리](#구현원리)
+      - [소스코드](#소스코드)
 
 
 
@@ -133,7 +132,101 @@ SELECT * FROM usr WHERE id = 'admin' OR 1=1 -- AND pw = 'd0be2cd421';
     특정 기관 또는 회사등에서 사용하는 경우라면 **외부의 접근** 자체를 막을 수도 있다. 이는 **공격자가 외부**에서 접근하려는 경우에 사용가능하다.   
 
 
-## STEGANOGRAPHY
+
+
+# number Theory
+
+## primality test
+
+### trial division
+가능한 모든 소수에 대해서 나누어 보는 방식이다. 단 p에 대해서는 <img src="https://user-images.githubusercontent.com/44011462/93845751-fca68e80-fcdc-11ea-8824-1901309d16f5.png" height=20px>만큼만 확인해보면 test가 가능하다.
+
+### fermat test
+일종의 확률적인 방법이다. p가 소수인지 아닌지 알기위해 GCD(a, p) = 1을 만족하는 a를 뽑는다. a에 대해서 <img src="https://user-images.githubusercontent.com/44011462/93845784-18119980-fcdd-11ea-8ac0-5d8fa60beead.png" height=20px>의 계산 결과가 1인지 아닌지를 확인하는 방식이며, 이를 만족하는 a를 하나라도 얻을 수 있다면 p는 소수가 아니다.
+
+### Miller-Rabin test
+기본적으로는 이 방식도 일종의 fermat test이다. 여기에 NSR test를 더하여 Miller-Rabin test가 된다. p가 만약에 홀수인 소수라면 <img src="https://user-images.githubusercontent.com/44011462/93845856-42635700-fcdd-11ea-96c2-dcca2811eeab.png" height=20px>을 만족하는 해는 x = 1, p - 1(<img src="https://user-images.githubusercontent.com/44011462/93845912-750d4f80-fcdd-11ea-95cd-f2a0c7bbc384.png" height=20px>)밖에 없다. 따라서 이 두수에 대해서 x = 1, p - 1이 아닌 해를 구할 수 있다면 p는 소수가 아니다. 
+기본적으로 Miller-Rabin test는 fermat test를 기반으로 하기떄문에 확률적인 방식이다. 알고리즘이 확률적이라는 것은 아래와 같은 의미이다.
+1. 항상 답은 얻지만, 입력에 따라 수행시간이 확률적으로 들쭉날쭉한 방식
+2. 알고리즘의 수행시간은 항상 일정하지만, 입력에 따라 결과가 틀릴 수 있는 방식
+
+Miller-Rabin test는 2번의 방식이다. 그렇다면 이런 방식을 믿고 사용할 수 있는가? 
+그렇다. 2번의 방식을 어느정도 반복하면 오답의 확률이 매우 적어지기 떄문에 활용이 가능하다.
+
+```javascript
+// Miller-Rabin Algorithm
+
+Miller_Rain(n, s)   // Test if n is prime with error probability << 2 ^-s
+For j = 1 to s
+    a = random positive integet < n
+    if Test(a, n) = Composite, then return Composite.    // definitely
+End For
+Return Prime    // almost sure
+
+Subroutine Test(a, n)
+Let t and u mbe s.t. t >= 1, u is odd, and n - 1 = (s ^ t) * u.
+x0 = a^u mod n.
+For i = 1 to t
+    xi = (xi-1)^2 mod n.
+    if xi = 1 and xi-1 != 1 and xi-1 != n - 1, then return Composite.    // NSR test
+End For
+if xt != 1, then return Composite.   // Fermat test
+Return Prime
+
+// 출처: Cormen, Leiserson, Rivest, and Stein, Introduction ro ALgorithms, 3rd ed., MIT Press
+```
+위 방식에서 subroutine Test의 정답 확률은 50%정도로 알려져 있다. 따라서 s번을 반복한다면 Test의 오답 확률은 2^s정도로 작아진다. 보통 s정도는 100회정도로 하도록 권장되며 이는 약 1.2676506e+30이며 0에 근접한다. 
+
+### deterministic algorithm
+trial division방식은 상당히 비효율적이고 miller-rabin test는 정답을 보장할수는 없다. trial division보다 효율적이고 정답이 보장되는 방법을 찾으려는 시도는 항상 있었다. AKS algorithm이라는 방식이 제안되었지만 miller-rabin 방식보다 상당히 비효율적이다. 현재 2020년까지는 deterministic 하면서 miller-rabin보다 빠른방식은 알려지지 않았다. 
+
+### byhrid 
+실무에서는 trial division과 Miller-Rabin을 조합하여 사용한다. 100자리 이상의 거대한 숫자가 prime인지 확인하는 문제에서 2, 3, 5, 7, 11등의 아주 작은 prime까지만 trial division으로 확인해보고 이후로 MR방식으로 확인한다. trial 방식을 사용하면서 상당히 많은 후보군을 줄일 수 있으므로 MR의 확률이 매우 좋아진다.
+
+## 공개키 암호의 설계 기본 원리
+공개키 암호는 descrete logarithm과 integer factorization의 두가지 '풀이가 매우 어려운' 두가지 방식을 이용하여 설계된다. descrete logarithm은 어떤수 a를 p에 대해서 module연산을 수행할 때 a를 몇번 제곱해야 n이 나오는지 계산하는것이다. integer factorization은 어떤 수를 두개의 소수로 소인수분해를 하는 방식이다. 위 두가지 방식은 4096bits에서 8192bits의 소수에 대해 계산하는 것이 매우 어렵다는 점을 이용한다.
+### Descrete Logarithm
+<img src="https://user-images.githubusercontent.com/44011462/93839674-a92a4580-fcc8-11ea-8d68-1ac3a260a078.png" width=600px>
+
+### integer factorization
+<img src="https://user-images.githubusercontent.com/44011462/93840155-55206080-fcca-11ea-9770-c91273af67c1.png" width=600px>
+ 
+공개키 암호에 대한 자세한 이야기는 다른곳에서 다루기로 한다.
+
+# classical encryption
+1950-60년대에 주로 사용되었던 고전 암호이다. 
+
+## Symmetric Cipher Model
+<img src="https://user-images.githubusercontent.com/44011462/93840586-df1cf900-fccb-11ea-8cb5-2b77ce605096.png" width=300px><br><img src="https://user-images.githubusercontent.com/44011462/93840804-9fa2dc80-fccc-11ea-9a01-738f400208b5.png" width=300px>  
+
+암호화할떄의 key와 복호화할떄의 key가 같도록 하는 방식이다. 따라서 공격자는 cipher text를 갈취한다고 하여도 plain text를 알수 없다. 이런 암호화 방식은 표준화가 되어있어서 이루어지는 모든 방식을 누구라도 알수 있다. 따라서 사용되는 key가 안전해야한다. 
+
+## Substitution thechniques
+plain text를 구성하는 글자, 숫자, 기호가 다른것으로 대체되는 것을 말한다. 
+
+### Monoalphabetic ciphers
+이런 방식중 가장 고전적인 방식이 고대 로마시절에 율리우스 시저황제가 사용했던 방식인 Caesar Cipher이다. alphabet을 n칸씩 오른쪽으로 이동시키는 방식으로 가능성이 26가지로 규칙이 매우 단순한 것이 특징이다.   
+
+<img src="https://user-images.githubusercontent.com/44011462/93841242-e7763380-fccd-11ea-98e9-775a913d1c46.png" width=300px>
+
+다음은 Caesar 방식의 단순함을 어느정도 극복한 Permutation Cipher이다. 알파벳이 대응되어야 하는 부분을 n칸씩 정한것이 아닌, 모든 알파벳에 대하여 임의로 알바펫을 대응시키는 방식이다. 
+
+<img src="https://user-images.githubusercontent.com/44011462/93841511-c6faa900-fcce-11ea-8106-feb4699d7c09.png" width=300px> 
+
+26!개의 방식이 있기때문에 당시에는 일일이 해보기에는 어려운 방식이었다. 하지만 영어에는 자주 쓰이는 알파벳이 정해져있다. plain text에서 많이나오는 E와 같은 알파벳은 Cipher text에도 가장 많이 등장하는 알파벳이라는 것을 알 수 있다.
+
+<img src="https://user-images.githubusercontent.com/44011462/93841683-53a56700-fccf-11ea-859e-75b398f5f060.png" width=300px>
+
+게다가 영어에는 the, th, ph등등 주로 짝지어서 사용하는 몇몇 알파벳이 있다. 이런 조합을 사용하여 추측해보면 충분히 key가 없이도 해독이 가능하다는 한계가 있다.
+
+### Polyalphabetic ciphers
+위 방식이 한계를 갖는 점을 극복하자는 방식이다. 
+
+## Transposition thechniques
+
+## Rotor machines
+
+## Steganography
 
 **스테가노그래피(steganography)** 는 데이터를 은폐 기술로 그리스어로 감추어져 있다는 뜻인 *'stegano'* 와 쓰다, 그리다는 뜻의 *'graphos'* 의 합성어이다. 이는 사진, 음악, 동영상 등의 일반적인 파일 안에 데이터를 숨기는 기술이다. **크립토그래피(cryptography)** 는 데이터의 내용을 읽을 수 없도록 하는 기술이라면 **strganography**는 데이터의 존재 자체를 감추는 기술이다. 
 
@@ -393,98 +486,3 @@ void convert_bin_to_txt() {
 
 ```
 </details>
-
-
-# number Theory
-
-## primality test
-
-### trial division
-가능한 모든 소수에 대해서 나누어 보는 방식이다. 단 p에 대해서는 <img src="https://user-images.githubusercontent.com/44011462/93845751-fca68e80-fcdc-11ea-8824-1901309d16f5.png" height=20px>만큼만 확인해보면 test가 가능하다.
-
-### fermat test
-일종의 확률적인 방법이다. p가 소수인지 아닌지 알기위해 GCD(a, p) = 1을 만족하는 a를 뽑는다. a에 대해서 <img src="https://user-images.githubusercontent.com/44011462/93845784-18119980-fcdd-11ea-8ac0-5d8fa60beead.png" height=20px>의 계산 결과가 1인지 아닌지를 확인하는 방식이며, 이를 만족하는 a를 하나라도 얻을 수 있다면 p는 소수가 아니다.
-
-### Miller-Rabin test
-기본적으로는 이 방식도 일종의 fermat test이다. 여기에 NSR test를 더하여 Miller-Rabin test가 된다. p가 만약에 홀수인 소수라면 <img src="https://user-images.githubusercontent.com/44011462/93845856-42635700-fcdd-11ea-96c2-dcca2811eeab.png" height=20px>을 만족하는 해는 x = 1, p - 1(<img src="https://user-images.githubusercontent.com/44011462/93845912-750d4f80-fcdd-11ea-95cd-f2a0c7bbc384.png" height=20px>)밖에 없다. 따라서 이 두수에 대해서 x = 1, p - 1이 아닌 해를 구할 수 있다면 p는 소수가 아니다. 
-기본적으로 Miller-Rabin test는 fermat test를 기반으로 하기떄문에 확률적인 방식이다. 알고리즘이 확률적이라는 것은 아래와 같은 의미이다.
-1. 항상 답은 얻지만, 입력에 따라 수행시간이 확률적으로 들쭉날쭉한 방식
-2. 알고리즘의 수행시간은 항상 일정하지만, 입력에 따라 결과가 틀릴 수 있는 방식
-
-Miller-Rabin test는 2번의 방식이다. 그렇다면 이런 방식을 믿고 사용할 수 있는가? 
-그렇다. 2번의 방식을 어느정도 반복하면 오답의 확률이 매우 적어지기 떄문에 활용이 가능하다.
-
-```javascript
-// Miller-Rabin Algorithm
-
-Miller_Rain(n, s)   // Test if n is prime with error probability << 2 ^-s
-For j = 1 to s
-    a = random positive integet < n
-    if Test(a, n) = Composite, then return Composite.    // definitely
-End For
-Return Prime    // almost sure
-
-Subroutine Test(a, n)
-Let t and u mbe s.t. t >= 1, u is odd, and n - 1 = (s ^ t) * u.
-x0 = a^u mod n.
-For i = 1 to t
-    xi = (xi-1)^2 mod n.
-    if xi = 1 and xi-1 != 1 and xi-1 != n - 1, then return Composite.    // NSR test
-End For
-if xt != 1, then return Composite.   // Fermat test
-Return Prime
-
-// 출처: Cormen, Leiserson, Rivest, and Stein, Introduction ro ALgorithms, 3rd ed., MIT Press
-```
-위 방식에서 subroutine Test의 정답 확률은 50%정도로 알려져 있다. 따라서 s번을 반복한다면 Test의 오답 확률은 2^s정도로 작아진다. 보통 s정도는 100회정도로 하도록 권장되며 이는 약 1.2676506e+30이며 0에 근접한다. 
-
-### deterministic algorithm
-trial division방식은 상당히 비효율적이고 miller-rabin test는 정답을 보장할수는 없다. trial division보다 효율적이고 정답이 보장되는 방법을 찾으려는 시도는 항상 있었다. AKS algorithm이라는 방식이 제안되었지만 miller-rabin 방식보다 상당히 비효율적이다. 현재 2020년까지는 deterministic 하면서 miller-rabin보다 빠른방식은 알려지지 않았다. 
-
-### byhrid 
-실무에서는 trial division과 Miller-Rabin을 조합하여 사용한다. 100자리 이상의 거대한 숫자가 prime인지 확인하는 문제에서 2, 3, 5, 7, 11등의 아주 작은 prime까지만 trial division으로 확인해보고 이후로 MR방식으로 확인한다. trial 방식을 사용하면서 상당히 많은 후보군을 줄일 수 있으므로 MR의 확률이 매우 좋아진다.
-
-## 공개키 암호의 설계 기본 원리
-공개키 암호는 descrete logarithm과 integer factorization의 두가지 '풀이가 매우 어려운' 두가지 방식을 이용하여 설계된다. descrete logarithm은 어떤수 a를 p에 대해서 module연산을 수행할 때 a를 몇번 제곱해야 n이 나오는지 계산하는것이다. integer factorization은 어떤 수를 두개의 소수로 소인수분해를 하는 방식이다. 위 두가지 방식은 4096bits에서 8192bits의 소수에 대해 계산하는 것이 매우 어렵다는 점을 이용한다.
-### Descrete Logarithm
-<img src="https://user-images.githubusercontent.com/44011462/93839674-a92a4580-fcc8-11ea-8d68-1ac3a260a078.png" width=600px>
-
-### integer factorization
-<img src="https://user-images.githubusercontent.com/44011462/93840155-55206080-fcca-11ea-9770-c91273af67c1.png" width=600px>
- 
-공개키 암호에 대한 자세한 이야기는 다른곳에서 다루기로 한다.
-
-# classical encryption
-1950-60년대에 주로 사용되었던 고전 암호이다. 
-
-## Symmetric Cipher Model
-<img src="https://user-images.githubusercontent.com/44011462/93840586-df1cf900-fccb-11ea-8cb5-2b77ce605096.png" width=300px><br><img src="https://user-images.githubusercontent.com/44011462/93840804-9fa2dc80-fccc-11ea-9a01-738f400208b5.png" width=300px>  
-
-암호화할떄의 key와 복호화할떄의 key가 같도록 하는 방식이다. 따라서 공격자는 cipher text를 갈취한다고 하여도 plain text를 알수 없다. 이런 암호화 방식은 표준화가 되어있어서 이루어지는 모든 방식을 누구라도 알수 있다. 따라서 사용되는 key가 안전해야한다. 
-
-## Substitution thechniques
-plain text를 구성하는 글자, 숫자, 기호가 다른것으로 대체되는 것을 말한다. 
-
-### Monoalphabetic ciphers
-이런 방식중 가장 고전적인 방식이 고대 로마시절에 율리우스 시저황제가 사용했던 방식인 Caesar Cipher이다. alphabet을 n칸씩 오른쪽으로 이동시키는 방식으로 가능성이 26가지로 규칙이 매우 단순한 것이 특징이다.   
-
-<img src="https://user-images.githubusercontent.com/44011462/93841242-e7763380-fccd-11ea-98e9-775a913d1c46.png" width=300px>
-
-다음은 Caesar 방식의 단순함을 어느정도 극복한 Permutation Cipher이다. 알파벳이 대응되어야 하는 부분을 n칸씩 정한것이 아닌, 모든 알파벳에 대하여 임의로 알바펫을 대응시키는 방식이다. 
-
-<img src="https://user-images.githubusercontent.com/44011462/93841511-c6faa900-fcce-11ea-8106-feb4699d7c09.png" width=300px> 
-
-26!개의 방식이 있기때문에 당시에는 일일이 해보기에는 어려운 방식이었다. 하지만 영어에는 자주 쓰이는 알파벳이 정해져있다. plain text에서 많이나오는 E와 같은 알파벳은 Cipher text에도 가장 많이 등장하는 알파벳이라는 것을 알 수 있다.
-
-<img src="https://user-images.githubusercontent.com/44011462/93841683-53a56700-fccf-11ea-859e-75b398f5f060.png" width=300px>
-
-게다가 영어에는 the, th, ph등등 주로 짝지어서 사용하는 몇몇 알파벳이 있다. 이런 조합을 사용하여 추측해보면 충분히 key가 없이도 해독이 가능하다는 한계가 있다.
-
-### Polyalphabetic ciphers
-위 방식이 한계를 갖는 점을 극복하자는 방식이다. 
-
-## Transposition thechniques
-
-## Rotor machines
-
-## Steganography
