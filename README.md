@@ -19,7 +19,7 @@
 - OPERATING SYSTEM
   - [Semaphore Mutex](https://github.com/justinjeong5/tech_portfolio/tree/master/OS#semaphore--mutex-mutual-exclusion)
 - SECURITY
-  - [SQL Injection](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#web_hacking-sql-injection)
-  - [Steganography](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#steganography)
+  - [OWASP](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#owasp)
   - [Number Theory](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#number-theory)
   - [Classical Encryption](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#classical-encryption)
+  - [Block Cipher & DES](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#block-cipher--date-encryption-standard)
