@@ -10,11 +10,11 @@
     - [반사 XSS 공격 (Reflective 방식)](#반사-xss-공격-reflective-방식)
     - [DOM XSS 공격](#dom-xss-공격)
     - [XSS 방어](#xss-방어)
-- [number Theory](#number-theory)
-  - [primality test](#primality-test)
-    - [trial division](#trial-division)
-    - [fermat test](#fermat-test)
-    - [Miller-Rabin test](#miller-rabin-test)
+- [Number Theory](#number-theory)
+  - [Primality Test](#primality-test)
+    - [Trial division](#trial-division)
+    - [Fermat Test](#fermat-test)
+    - [Miller-Rabin Test](#miller-rabin-test)
     - [deterministic algorithm](#deterministic-algorithm)
     - [byhrid](#byhrid)
   - [공개키 암호의 설계 기본 원리](#공개키-암호의-설계-기본-원리)
@@ -219,17 +219,17 @@ function xss_filter($content) {
 [링크](http://xss-quiz.int21h.jp)에서 xss와 관련된 해킹기법을 연습해 볼 수 있다.
 
 
-# number Theory
+# Number Theory
 
-## primality test
+## Primality Test
 
-### trial division
+### Trial division
 가능한 모든 소수에 대해서 나누어 보는 방식이다. 단 p에 대해서는 <img src="https://user-images.githubusercontent.com/44011462/93845751-fca68e80-fcdc-11ea-8824-1901309d16f5.png" height=20px>만큼만 확인해보면 test가 가능하다.
 
-### fermat test
+### Fermat Test
 일종의 확률적인 방법이다. p가 소수인지 아닌지 알기위해 GCD(a, p) = 1을 만족하는 a를 뽑는다. a에 대해서 <img src="https://user-images.githubusercontent.com/44011462/93845784-18119980-fcdd-11ea-8ac0-5d8fa60beead.png" height=20px>의 계산 결과가 1인지 아닌지를 확인하는 방식이며, 이를 만족하는 a를 하나라도 얻을 수 있다면 p는 소수가 아니다.
 
-### Miller-Rabin test
+### Miller-Rabin Test
 기본적으로는 이 방식도 일종의 fermat test이다. 여기에 NSR test를 더하여 Miller-Rabin test가 된다. p가 만약에 홀수인 소수라면 <img src="https://user-images.githubusercontent.com/44011462/93845856-42635700-fcdd-11ea-96c2-dcca2811eeab.png" height=20px>을 만족하는 해는 x = 1, p - 1(<img src="https://user-images.githubusercontent.com/44011462/93845912-750d4f80-fcdd-11ea-95cd-f2a0c7bbc384.png" height=20px>)밖에 없다. 따라서 이 두수에 대해서 x = 1, p - 1이 아닌 해를 구할 수 있다면 p는 소수가 아니다. 
 기본적으로 Miller-Rabin test는 fermat test를 기반으로 하기떄문에 확률적인 방식이다. 알고리즘이 확률적이라는 것은 아래와 같은 의미이다.
 1. 항상 답은 얻지만, 입력에 따라 수행시간이 확률적으로 들쭉날쭉한 방식
@@ -241,7 +241,7 @@ Miller-Rabin test는 2번의 방식이다. 그렇다면 이런 방식을 믿고 
 ```javascript
 // Miller-Rabin Algorithm
 
-Miller_Rain(n, s)   // Test if n is prime with error probability << 2 ^-s
+Miller_Rabin(n, s)   // Test if n is prime with error probability << 2 ^-s
 For j = 1 to s
     a = random positive integet < n
     if Test(a, n) = Composite, then return Composite.    // definitely
