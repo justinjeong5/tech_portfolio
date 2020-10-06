@@ -10,16 +10,6 @@
     - [반사 XSS 공격 (Reflective 방식)](#반사-xss-공격-reflective-방식)
     - [DOM XSS 공격](#dom-xss-공격)
     - [XSS 방어](#xss-방어)
-- [Number Theory](#number-theory)
-  - [Primality Test](#primality-test)
-    - [Trial division](#trial-division)
-    - [Fermat Test](#fermat-test)
-    - [Miller-Rabin Test](#miller-rabin-test)
-    - [deterministic algorithm](#deterministic-algorithm)
-    - [byhrid](#byhrid)
-  - [공개키 암호의 설계 기본 원리](#공개키-암호의-설계-기본-원리)
-    - [Descrete Logarithm](#descrete-logarithm)
-    - [integer factorization](#integer-factorization)
 - [CLASSICAL ENCRYPTION](#classical-encryption)
   - [Symmetric Cipher Model](#symmetric-cipher-model)
   - [Substitution techniques](#substitution-techniques)
@@ -36,23 +26,15 @@
     - [Rail Fence Cipher](#rail-fence-cipher)
     - [Row Transposition Cipher](#row-transposition-cipher)
   - [Rotor Machines](#rotor-machines)
-  - [Steganography](#steganography)
-    - [상용 스테가노그래피(steganography)](#상용-스테가노그래피steganography)
-    - [steganography 구현](#steganography-구현)
-      - [개요](#개요)
-      - [사용방법](#사용방법)
-      - [실행결과](#실행결과)
-      - [구현원리](#구현원리)
-      - [소스코드](#소스코드)
-- [Block Cipher & Date Encryption Standard](#block-cipher--date-encryption-standard)
-  - [Classification of Symmetric Encryption](#classification-of-symmetric-encryption)
-    - [Stream Ciphers](#stream-ciphers)
-    - [Block Ciphers](#block-ciphers)
-  - [Block Cipher](#block-cipher)
-    - [Feistel Cipher](#feistel-cipher)
-  - [the Data Encryption Standard(DES)](#the-data-encryption-standarddes)
-    - [Encryption and Decryption](#encryption-and-decryption)
-    - [Strength of DES](#strength-of-des)
+- [BLOCK CIPHER and DES](#block-cipher-and-des)
+  - [classification of symmetric encryption](#classification-of-symmetric-encryption)
+    - [stream ciphers](#stream-ciphers)
+    - [block ciphers](#block-ciphers)
+  - [block cipher](#block-cipher)
+    - [feistel cipher](#feistel-cipher)
+  - [the data encryption standard(DES)](#the-data-encryption-standarddes)
+    - [encryption and decryption](#encryption-and-decryption)
+    - [strength of DES](#strength-of-des)
 
 # OWASP
 **OWASP**, *The Open Web Application Security Project*는 웹 해킹에 대한 보안 향상을 목표로 만들어진 전 세계적인 비영리 단체이다. 대표적으로 보안 취약점 top 10과 Guide를 제공한다.
@@ -61,7 +43,7 @@
 - Testing Guide
 
 ## OWASP top 10
-보안을 전문으로 다루는 기업들의 데이터를 토대로 가장 보안에서 주의하야할 **10가지 부문**을 선정한다. 선정 기준은 기업, application에 대한 *취약점 정보를 바탕으로 위험도, 발생 빈도* 등 다양한 요소를 고려한다. 개발자는 다른 조직의 과실로부터 개선점을 찾고 경영진은 보안이 취약할 떄의 위험을 어떻게 관리할지 참고할 수 있다.  보안 취약점 상위 10개에 빠지지 않고 선정되는 것이 **SQL injection**과 **XSS**이다.   
+보안을 전문으로 다루는 기업들의 데이터를 토대로 가장 보안에서 주의하야할 **10가지 부문**을 선정한다. 선정 기준은 기업, application에 대한 *취약점 정보를 바탕으로 위험도, 발생 빈도* 등 다양한 요소를 고려한다. 개발자는 다른 조직의 과실로부터 개선점을 찾고 경영진은 보안이 취약할 때의 위험을 어떻게 관리할지 참고할 수 있다.  보안 취약점 상위 10개에 빠지지 않고 선정되는 것이 **SQL injection**과 **XSS**이다.   
 
 [OWASP Top 10 Web Application Security Risks](https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project)
 <details>
@@ -82,7 +64,7 @@
 
 
 ## SQL Injection
-SQL, OS, LDAP injection과 같은 **injection 취약점**은 신뢰할 수 없는 데이터가 명령어나 query의 일부로써 인터프리터로 전송될 떄 발생한다. 공격자가 삽입한 데이터는 인터프리터를 속여 **악의적인 명령어를 실행하거나 권한이 없는 데이터에 접근**할 수 있다. 이중에서 SQL injection은 응용 프로그램 보안상의 취약점을 이용하여 개발자가 의도하지 않은 sql을 실행하여 데이터베이스를 비정상적으로 조작하는 code injection attack 방식이다.
+SQL, OS, LDAP injection과 같은 **injection 취약점**은 신뢰할 수 없는 데이터가 명령어나 query의 일부로써 인터프리터로 전송될 때 발생한다. 공격자가 삽입한 데이터는 인터프리터를 속여 **악의적인 명령어를 실행하거나 권한이 없는 데이터에 접근**할 수 있다. 이중에서 SQL injection은 응용 프로그램 보안상의 취약점을 이용하여 개발자가 의도하지 않은 sql을 실행하여 데이터베이스를 비정상적으로 조작하는 code injection attack 방식이다.
 
 **일반적인 웹앱의 호출방법**은 아래와 같다.
 
@@ -221,7 +203,7 @@ const removeBad = (URL) => {
     return URL;
 }
 ```
-**이러한 방어**는 코드가 자바스크립트로 되어 있기 떄문에 공격자가 **버프스위트 등의 proxy를 사용하여 극복**가능하다는 한계가 있다. 이런 한계는 아래와 같이 방어 코드를 서버에 올려놓는 것으로 어느정도 극복할 수 있다. 하지만 이는 서버성능에 영향을 주기떄문에 개발자의 판단하에 방어기법을 선택할 수 있다.
+**이러한 방어**는 코드가 자바스크립트로 되어 있기 때문에 공격자가 **버프스위트 등의 proxy를 사용하여 극복**가능하다는 한계가 있다. 이런 한계는 아래와 같이 방어 코드를 서버에 올려놓는 것으로 어느정도 극복할 수 있다. 하지만 이는 서버성능에 영향을 주기때문에 개발자의 판단하에 방어기법을 선택할 수 있다.
 ```PHP
 function xss_filter($content) {
 /* IE6과 7의 expression() 기능을 이용한 취약점을 방지하기 위해 <meta httpequiv="X-UA-Compatible" content="IE=edge" />를 반드시 붙여야 한다. */
@@ -233,66 +215,6 @@ function xss_filter($content) {
 }
 ```
 [링크](http://xss-quiz.int21h.jp)에서 xss와 관련된 해킹기법을 연습해 볼 수 있다.
-
-
-# Number Theory
-
-## Primality Test
-
-### Trial division
-가능한 모든 소수에 대해서 나누어 보는 방식이다. 단 p에 대해서는 <img src="https://user-images.githubusercontent.com/44011462/93845751-fca68e80-fcdc-11ea-8824-1901309d16f5.png" height=20px>만큼만 확인해보면 test가 가능하다.
-
-### Fermat Test
-일종의 확률적인 방법이다. p가 소수인지 아닌지 알기위해 GCD(a, p) = 1을 만족하는 a를 뽑는다. a에 대해서 <img src="https://user-images.githubusercontent.com/44011462/93845784-18119980-fcdd-11ea-8ac0-5d8fa60beead.png" height=20px>의 계산 결과가 1인지 아닌지를 확인하는 방식이며, 이를 만족하는 a를 하나라도 얻을 수 있다면 p는 소수가 아니다.
-
-### Miller-Rabin Test
-기본적으로는 이 방식도 일종의 fermat test이다. 여기에 NSR test를 더하여 Miller-Rabin test가 된다. p가 만약에 홀수인 소수라면 <img src="https://user-images.githubusercontent.com/44011462/93845856-42635700-fcdd-11ea-96c2-dcca2811eeab.png" height=20px>을 만족하는 해는 x = 1, p - 1(<img src="https://user-images.githubusercontent.com/44011462/93845912-750d4f80-fcdd-11ea-95cd-f2a0c7bbc384.png" height=20px>)밖에 없다. 따라서 이 두수에 대해서 x = 1, p - 1이 아닌 해를 구할 수 있다면 p는 소수가 아니다. 
-기본적으로 Miller-Rabin test는 fermat test를 기반으로 하기떄문에 확률적인 방식이다. 알고리즘이 확률적이라는 것은 아래와 같은 의미이다.
-1. 항상 답은 얻지만, 입력에 따라 수행시간이 확률적으로 들쭉날쭉한 방식
-2. 알고리즘의 수행시간은 항상 일정하지만, 입력에 따라 결과가 틀릴 수 있는 방식
-
-Miller-Rabin test는 2번의 방식이다. 그렇다면 이런 방식을 믿고 사용할 수 있는가? 
-그렇다. 2번의 방식을 어느정도 반복하면 오답의 확률이 매우 적어지기 떄문에 활용이 가능하다.
-
-```javascript
-// Miller-Rabin Algorithm
-
-Miller_Rabin(n, s)   // Test if n is prime with error probability << 2 ^-s
-For j = 1 to s
-    a = random positive integet < n
-    if Test(a, n) = Composite, then return Composite.    // definitely
-End For
-Return Prime    // almost sure
-
-Subroutine Test(a, n)
-Let t and u mbe s.t. t >= 1, u is odd, and n - 1 = (s ^ t) * u.
-x0 = a^u mod n.
-For i = 1 to t
-    xi = (xi-1)^2 mod n.
-    if xi = 1 and xi-1 != 1 and xi-1 != n - 1, then return Composite.    // NSR test
-End For
-if xt != 1, then return Composite.   // Fermat test
-Return Prime
-
-// 출처: Cormen, Leiserson, Rivest, and Stein, Introduction ro ALgorithms, 3rd ed., MIT Press
-```
-위 방식에서 subroutine Test의 정답 확률은 50%정도로 알려져 있다. 따라서 s번을 반복한다면 Test의 오답 확률은 2^s정도로 작아진다. 보통 s정도는 100회정도로 하도록 권장되며 이는 약 1.2676506e+30이며 0에 근접한다. 
-
-### deterministic algorithm
-trial division방식은 상당히 비효율적이고 miller-rabin test는 정답을 보장할수는 없다. trial division보다 효율적이고 정답이 보장되는 방법을 찾으려는 시도는 항상 있었다. AKS algorithm이라는 방식이 제안되었지만 miller-rabin 방식보다 상당히 비효율적이다. 현재 2020년까지는 deterministic 하면서 miller-rabin보다 빠른방식은 알려지지 않았다. 
-
-### byhrid 
-실무에서는 trial division과 Miller-Rabin을 조합하여 사용한다. 100자리 이상의 거대한 숫자가 prime인지 확인하는 문제에서 2, 3, 5, 7, 11등의 아주 작은 prime까지만 trial division으로 확인해보고 이후로 MR방식으로 확인한다. trial 방식을 사용하면서 상당히 많은 후보군을 줄일 수 있으므로 MR의 확률이 매우 좋아진다.
-
-## 공개키 암호의 설계 기본 원리
-공개키 암호는 descrete logarithm과 integer factorization의 두가지 '풀이가 매우 어려운' 두가지 방식을 이용하여 설계된다. descrete logarithm은 어떤수 a를 p에 대해서 module연산을 수행할 때 a를 몇번 제곱해야 n이 나오는지 계산하는것이다. integer factorization은 어떤 수를 두개의 소수로 소인수분해를 하는 방식이다. 위 두가지 방식은 4096bits에서 8192bits의 소수에 대해 계산하는 것이 매우 어렵다는 점을 이용한다.
-### Descrete Logarithm
-<img src="https://user-images.githubusercontent.com/44011462/93839674-a92a4580-fcc8-11ea-8d68-1ac3a260a078.png" width=600px>
-
-### integer factorization
-<img src="https://user-images.githubusercontent.com/44011462/93840155-55206080-fcca-11ea-9770-c91273af67c1.png" width=600px>
- 
-공개키 암호에 대한 자세한 이야기는 다른곳에서 다루기로 한다.
 
 # CLASSICAL ENCRYPTION
 1950-60년대에 주로 사용되었던 고전 암호체계이다. **Substitution techniques**, **Transposition Thechniques**, **Roter Machines**, **Steganography**등이 있다. 암호쳬계는 고대시절부터 존재한 개념으로 주로 군대나 정부기관의 필요에 의해 개발되었고 최근에는 학술적으로도 많은 관심을 받는 분야이다. 
@@ -325,8 +247,6 @@ plain text를 구성하는 글자, 숫자, 기호가 다른것으로 **대체**�
 
 게다가 영어에는 the, th, ph등등 주로 짝지어서 사용하는 몇몇 알파벳이 있다. 이런 조합을 사용하여 추측해보면 **충분히 key가 없이도 해독이 가능하다는 한계**가 있다.
 
-
-
 #### Playfair Cipher
 앞서 본 것처럼 한 글자를 다른 한 글자에 대응시키지 않고 두 글자를 다른 두 글자로 바꾸는 방식이다. 따라서 26글자가 26글자로 대응되는 shift cipher와 다르게 <img src="https://user-images.githubusercontent.com/44011462/94516279-6cc68e80-0260-11eb-85e7-4031db98d623.png" height=20px>글자가 <img src="https://user-images.githubusercontent.com/44011462/94516279-6cc68e80-0260-11eb-85e7-4031db98d623.png" height=20px>글자로 대응되는 방식이다. 5*5크기의 2차원 행렬을 기반으로 작성되며 1차대전에 실제로 야전에서 사용된 암호체계이다. 
 
@@ -357,7 +277,7 @@ plain text를 구성하는 글자, 숫자, 기호가 다른것으로 **대체**�
 한개의 글자를 한개로, 또는 두개의 글자를 두개로 대응시키는 방식이  한계를 갖는 점을 극복하자는 방식이다. 
 
 #### Vigenere Cipher
-평문과 길이가 동일한 암호키를 이용하여 암호화시키며 **shift cipher를 여러개를 동시에 사용하는 효과**가 있는 방식이다. 이떄 암호키는 특정 길이를 갖는 단어를 반복적으로 사용하여 길이를 맞춘다. 이 암호체계는 16세기에 이탈리아의 Bellaso라는 사람이 처음으로 만들었지만 19세기에 Vigenere에 의해 재발견된 암호체계이다.
+평문과 길이가 동일한 암호키를 이용하여 암호화시키며 **shift cipher를 여러개를 동시에 사용하는 효과**가 있는 방식이다. 이때 암호키는 특정 길이를 갖는 단어를 반복적으로 사용하여 길이를 맞춘다. 이 암호체계는 16세기에 이탈리아의 Bellaso라는 사람이 처음으로 만들었지만 19세기에 Vigenere에 의해 재발견된 암호체계이다.
 
 <img src="https://user-images.githubusercontent.com/44011462/94505020-26176b00-0245-11eb-9cc6-9fc9a1a86876.png" width=300px>  
 
@@ -403,309 +323,80 @@ key로는 숫자 n을 이용하여 1부터 n까지의 수를 permutation하여 k
 
 ABC라는 plain text는 EIB로 암호화 된다. 하지만 한번 사용하고나면 기계적으로 rotor가 회전하며 다음에 ABC는 YDO가 된다. enigma를 통해 나온 암호의 가지수는 <img src="https://user-images.githubusercontent.com/44011462/94516038-e611b180-025f-11eb-973c-434f974879b7.png" height=20px> 정도로 상당히 많다. 세계 2차대전때 당시의 기술로 <img src="https://user-images.githubusercontent.com/44011462/94516038-e611b180-025f-11eb-973c-434f974879b7.png" height=20px>가지의 모든 경우의 수를 대입해보는데는 일주일이 넘게 걸렸는데, 독일군은 하루에 한번씩 enigma를 설정하는 암호key를 전달하여 매우 안전성이 좋은 암호체계로 동작했다. 
 
+# BLOCK CIPHER and DES
 
-## Steganography
+## classification of symmetric encryption
+현대 대칭 암호 체계는 stream cipher, block cipher의 두 가지로 분류한다. 
 
-**스테가노그래피(steganography)** 는 데이터를 은폐 기술로 그리스어로 감추어져 있다는 뜻인 *'stegano'* 와 쓰다, 그리다는 뜻의 *'graphos'* 의 합성어이다. 이는 사진, 음악, 동영상 등의 일반적인 파일 안에 데이터를 숨기는 기술이다. **크립토그래피(cryptography)** 는 데이터의 내용을 읽을 수 없도록 하는 기술이라면 **strganography**는 데이터의 존재 자체를 감추는 기술이다. 
 
-<img src="https://user-images.githubusercontent.com/44011462/94508730-90340e00-024d-11eb-9b47-4b18a72be476.png" width=300px>  
-
-*편지의 마지막 단어만 읽으면 메세지가 된다.*
-
-<img src="https://user-images.githubusercontent.com/44011462/92374126-49656380-f13a-11ea-9cb5-82189412bc38.jpg" width=300px> <img src="https://user-images.githubusercontent.com/44011462/92374126-49656380-f13a-11ea-9cb5-82189412bc38.jpg" width=300px>  
-
-*사람의 눈에는 서로 다르지 않은 동일한 파일로 인식된다.*
-
-하지만 steganography는 데이터에 대한 overhead가 상당히 크다. 또한 숨기는 방식이 노출된다면 누구라도 어렵지 않게 메세지를 알아낼 수 있다. 이런 단점이 있음에도 사용하는 이유는 일반적으로 암호화된 결과는 누가 보아도 암호화된 정보처럼 보이지만 steganography는 비밀통신을 한다는 사실자체를 숨기는데 유용하다.
-
-**steganography가 악용된 실제 사례**
-* 미국의 911테러를 이르킨 빈라덴이 테러지령을 *steganography*로 전달한 것이 밝혀지며 유명한 정보 은닉 기술로 알려졌다.
-* 한때 악망 높았던 *랜섬웨어(ransomware)* 가 *steganography*를 이용하였다. 이메일을 통해 *window script file(.wsf)* 형식의 악성 스크립트 파일을 첨부하고, 그 해당 *wsf*이 특정 URL로 접속하게하여 이미지 파일을 다운로드시켰다. 그 이미지에는 랜섬웨어 관련 파일들이 *zip*의 형태로 숨겨져 있었다.  
-    <img src="https://user-images.githubusercontent.com/44011462/92375171-b5949700-f13b-11ea-9141-1ab9bb6f020a.png" width=300px>  
-
-    *랜섬웨어에 감염된 화면*
-
-* 배너 광고에 *malware*가 숨겨진 사례로, Internet Explorer와 adobe Flash player의 *보안 취약점*을 이용하여 악성 javascript code가 *steganography*를 이용하여 숨겨진 이미지가 배너에 사용되었다.   
-    <img src="https://user-images.githubusercontent.com/44011462/92381313-900c8b00-f145-11ea-8fec-7ce8d48ff50e.png" width=300px>  
-    
-    *스테가노그래피 기법으로 JPG파일에 숨겨져 있는 랜섬웨어 압축 포멧*
-
-### 상용 스테가노그래피(steganography)
-
-[openStegano](https://www.openstego.com/index.html)
-개발언어: Java([open source](https://github.com/syvaidya/openstego))
-사용환경: Window, Linux
-
-<img src="https://user-images.githubusercontent.com/44011462/92380767-aa923480-f144-11ea-8c41-5ccefa210478.png" width=300px> <img src="https://user-images.githubusercontent.com/44011462/92380858-cac1f380-f144-11ea-8ece-5e3a18f7aefe.png" width=300px>
-
-<img src="https://user-images.githubusercontent.com/44011462/92380942-eb8a4900-f144-11ea-85e5-aa202fd67302.png" width=300px> <img src="https://user-images.githubusercontent.com/44011462/92380993-065cbd80-f145-11ea-9e14-9af3187d274d.png" width=300px>
-
-### steganography 구현
-
-#### 개요
-개발환경: window 10, visual studio 2019 
-사용언어: c++ 14
-프로그램 설명: window bitmap file(.bmp) 형태의 파일에 원하는 message를 숨기고 열어볼 수 있는 프로그램
-
-#### 사용방법
-우선 숨기기를 원하는 최대 500자의 text와 bmp확장자를 가진 이미지가 필요하다.
-이미지와 실행파일을 동일한 directory에 위치시키고 아래와 같은 명령을 수행한다. 
-실행파일의 이름은 stego.exe로 이미지의 이름은 origin.bmp로 지정한다.  
-
-
-<img src="https://user-images.githubusercontent.com/44011462/93299549-2e78aa80-f830-11ea-835a-9b77f37c3c89.png" width=300px>  <img src="https://user-images.githubusercontent.com/44011462/93299548-2e78aa80-f830-11ea-8b06-68c472185b89.png" width=300px>
-
-*window command를 이용한 encoding과 decoding의 모습*
-
-
-#### 실행결과
-
-<img src="https://user-images.githubusercontent.com/44011462/92374126-49656380-f13a-11ea-9cb5-82189412bc38.jpg" width=300px> <img src="https://user-images.githubusercontent.com/44011462/93299536-2b7dba00-f830-11ea-9f6a-9e440eb4b009.png" width=300px>  
-
-
-<img src="https://user-images.githubusercontent.com/44011462/92374126-49656380-f13a-11ea-9cb5-82189412bc38.jpg" width=300px> <img src="https://user-images.githubusercontent.com/44011462/93299550-2f114100-f830-11ea-8cff-a324be282500.png" width=300px>  
-
-*origin.bmp와 stego.bmp의 모습*
-
-#### 구현원리
-
-24 비트맵 이미지의 경우, bitmap 이미지 데이터는 offset 0x36인 곳에서부터 blue, green, red 순서로 된 튜플들을 순차적으로 저장하고 있다. 각 색상의 크기는 1바이트. 따라서, 픽셀당 **3bytes**를 사용한다. 이 각 픽셀이 가진 정보는 *2^24(약 1600만개)* 가지로, 아주 작은 차이는 *사람의 눈으로는 구분이 불가능*하다.
-이 점을 이용하여 3byte의 *마지막 비트를 steganography를 위한 공간으로 활용*한다. 따라서 숨길 수 있는 데이터의 크기는 비트맵 헤더파일이 담고 있는 정보중 offset 0x02에 있는 **BMP 파일 크기** 정보에서 헤더 파일의 전체 크기인 **54bytes**를 제외한 크기만큼 가능하다.  
-**encoding**은 3bytes중에서 가장 마지막 비트마다 message의 binary정보를 순서대로 넣었다.
-**decoding**은 encoding의 반대개념으로, BMP를 탐색하면서 3bytes의 마지막 비트를 차례대로 수집하였다. encoding시에는 다루고자하는 message의 길이르 알수 있었지만, decoding때는 길이를 알수 없어서 최대길이를 1000자로 제한하는 조건을 걸어두어 해결하였다.
-
-
-**bitmap, BMP의 파일 format**
-|offset(dec) |offset(hex)|크기 |목적 |
-|:---:|:---:|:---:|---|
-|0  |0x0 |2 |**BMP 파일을 식별**하는 데 쓰이는 매직 넘버: 0x42 0x4D (B와 M에 대한 ASCII 코드 포인트)|
-|2	|0x2 |4	|**BMP 파일 크기** (바이트 단위)
-|10	|0xA |4	|비트맵 데이터를 찾을 수 있는 **시작 오프셋** (바이트 단위)
-|14	|0xE |4	|이 헤더의 크기 (40 바이트)
-|18	|0x12 |4 |**비트맵 가로** (단위는 화소, signed integer).
-|22	|0x16 |4 |**비트맵 세로** (단위는 화소, signed integer).
-|54	|0x36 |- |**실제 데이터**
-
-
-#### 소스코드
-
-<details>
-    <summary><span style="color:grey">클릭하여 소스보기</span></summary>
-
-```c++
-/*
- * 2020.9.15
- * 컴퓨터보안 project #1 - Steganography
- * 12164720 정경하 컴퓨터공학과
- */
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <iostream>
-#include <fstream>
-#include <bitset>
-#include <string>
-#include <Windows.h>
-
-using namespace std;
-
-BITMAPFILEHEADER bf;
-BITMAPINFOHEADER bi;
-
-const int COLOR_SIZ = 3;
-const int MAX_TXT_SIZ = 500;
-
-unsigned char *bmp_img;
-
-string txt;
-string txt_in_bin;
-
-void print_message(const string &msg);
-
-void decode();
-
-void read_file(const char *img);
-
-void convert_bin_to_txt();
-
-void encode();
-
-void write_file();
-
-void convert_txt_to_bin();
-
-int main(int argc, char **argv) {
-
-    if (argc != 2) {
-        print_message("usage error! usage : mystego.exe e/d");
-        exit(-1);
-    }
-
-    if (argv[1][0] != 'e' && argv[1][0] != 'd') {
-        print_message("usage error! usage : mystego.exe e/d");
-        exit(-1);
-    }
-
-    switch (argv[1][0]) {
-        case 'e':
-            encode();
-            print_message("encoding success!!");
-            break;
-
-        case 'd':
-            decode();
-            print_message("decoding success!!");
-            break;
-
-        default:
-            print_message("argument error! argument should be e or d");
-    }
-    cout << " ...program exit\n";
-    return 0;
-}
-
-
-void print_message(const string &msg) {
-    cout << msg << endl;
-}
-
-void decode() {
-    //TODO: BMP파일에 숨겨진 messge를 읽음
-    txt_in_bin = "";
-    read_file("stego.bmp");
-
-    for (int i = 0; i < bi.biSizeImage; i = i + COLOR_SIZ) {
-        txt_in_bin.push_back(bmp_img[i]);
-    }
-    convert_bin_to_txt();
-}
-
-void convert_txt_to_bin() {
-    //TODO: 사용자로부터 message를 입력받아 binary 코드로 변환
-    cout << "insert message to Steganograph" << endl;
-    getline(cin, txt);
-    int txt_len = txt.size();
-    if (txt_len > MAX_TXT_SIZ) {
-        print_message("message is too long. (smaller than 1000 characters)");
-        exit(-1);
-    }
-
-    for (int i = 0; i < txt_len; ++i) {
-        string temp = bitset<8>(txt[i]).to_string();
-        for (int j = 0; j < 8; ++j) {
-            txt_in_bin.push_back(temp[j]);
-        }
-    }
-}
-
-void read_file(const char *img) {
-// TODO: BMP형식의 파일을 읽어 메모리 heap영역에 저장함
-    ifstream read_bmp;
-
-    read_bmp.open(img, ios_base::in | ios_base::binary); //a.bmp파일을 바이트로 읽어 들인다..
-    read_bmp.read((char *) &bf, sizeof(BITMAPFILEHEADER)); // 사이즈..
-
-    FILE *fileDescriptor = fopen(img, "rb");
-    if (fileDescriptor == NULL) {
-        print_message("read_file error! cannot read image(.bmp) file");
-        exit(-1);
-    }
-
-    fread(&bf, sizeof(unsigned char), sizeof(BITMAPFILEHEADER), fileDescriptor);// 사이중 헤더에 사이즈 14바이트..
-    fread(&bi, sizeof(unsigned char), sizeof(BITMAPINFOHEADER), fileDescriptor);// 나머지 정보 40바이트 저장..
-
-    bmp_img = new unsigned char[bi.biSizeImage];
-    fread(bmp_img, sizeof(unsigned char), bi.biSizeImage, fileDescriptor);
-
-    fclose(fileDescriptor);
-}
-
-void encode() {
-    //TODO: BMP파일에 message를 숨김
-
-    read_file("origin.bmp");
-    convert_txt_to_bin();
-
-    const int MAX_COUNT = txt_in_bin.size();
-    int count = 0;
-    for (int i = 0; i < bi.biSizeImage, count < MAX_COUNT; i = i + COLOR_SIZ) {
-        //TODO: 그림에 binary로 처리한 message를 입력
-        bmp_img[i] = txt_in_bin[count++];
-    }
-
-    write_file();
-}
-
-void write_file() {
-// TODO: 파일을 BMP형식으로 내보냄
-
-    FILE *fileDescriptor = fopen("stego.bmp", "wb");
-    if (fileDescriptor == NULL) {
-        print_message("write_file error! cannot write stego.bmp");
-        exit(-1);
-    }
-
-    fwrite(&bf, sizeof(unsigned char), sizeof(BITMAPFILEHEADER), fileDescriptor);
-    fwrite(&bi, sizeof(unsigned char), sizeof(BITMAPINFOHEADER), fileDescriptor);
-    fwrite(bmp_img, sizeof(unsigned char), bi.biSizeImage, fileDescriptor);
-
-    fclose(fileDescriptor);
-    delete[] bmp_img;
-}
-
-
-void convert_bin_to_txt() {
-// TODO: binary를 글자로 출력함
-
-    int index = 0;
-    for (int i = 0; i < bi.biSizeImage; ++i) {
-        if (txt_in_bin[index] != '1' && txt_in_bin[index] != '0') break;
-        bitset<8> temp(00000000);
-        for (int j = 0; j < 8; ++j) {
-            temp.set(7 - j, txt_in_bin[index++] == '1');
-        }
-        cout << (char) temp.to_ulong();
-    }
-    cout << endl;
-}
-
-```
-</details>
-
-# Block Cipher & Date Encryption Standard
-- [block cipher and date encryption standard](#block-cipher-and-date-encryption-standard)
-  - [classificatin of symmetric encryption](#classificatin-of-symmetric-encryption)
-    - [stream ciphers](#stream-ciphers)
-    - [block ciphers](#block-ciphers)
-  - [block cipher](#block-cipher)
-    - [feistel cipher](#feistel-cipher)
-  - [the data encryption standard(DES)](#the-data-encryption-standarddes)
-    - [encryption and decryption](#encryption-and-decryption)
-    - [strength of DES](#strength-of-des)
-
-## Classification of Symmetric Encryption
-현대 대칭 암호 체계는 stream cipher, block cipher의 두 가지로 분류한다.  
-여러가지 stream cipher 방식은 난수를 이용하여 symmetric cipher를 이용하는 방식이다. 암호학적으로 가장 이상적인 방식으로 one-time pad가 있다. 하지만 현실적으로 비효율적인 방식이라는 한계가 있다. 반면에 vernam cipher는 어느정도 단점을 보완하고 장점을 살린 것이 방식이다. 하지만 역시 단순하다는 한계가 있다. 이런 두가지 장점을 모두 살리고 단점을 보완한 방식이 stream cipher이다.  
+여러가지 **stream cipher** 방식은 난수를 이용하여 symmetric cipher를 이용하는 방식이다. 암호학적으로 가장 이상적인 방식으로 one-time pad가 있다. 하지만 현실적으로 비효율적인 방식이라는 한계가 있다. 반면에 vernam cipher는 어느정도 단점을 보완하고 장점을 살린 것이 방식이다. 하지만 역시 단순하다는 한계가 있다. 이런 두가지 장점을 모두 살리고 단점을 보완한 방식이 stream cipher이다.  
 <img src="https://user-images.githubusercontent.com/44011462/94510638-38e46c80-0252-11eb-9567-c6dbfe16e60c.png" height=140px> <img src="https://user-images.githubusercontent.com/44011462/94510626-3255f500-0252-11eb-9f83-9bdc60e06746.png" height=140px>  
 
-stream cipher의 개요 / block cipher의 개요
-
-반면에 block cipher는 암호화하는 쪽과 복호화하는 쪽이 모두 보안키를 가져야 한다는 점에서는 symmetric cipher방식과 동일하다. 하지만 대부분의 stream cipher는 통계적인 부분에서 취약점이 있다. 통계적인 한계를 극복하기 위한 방식은 암호키를 관리하는 측면이 까다로워지는 tradeoff 관계가 있다는 근본적인 한계가 있다.
+대부분의 **stream cipher는 통계적인 부분에서 취약**점이 있다. 통계적인 한계를 극복하기 위한 방식은 암호키를 관리하는 측면이 까다로워지는 tradeoff 관계가 있다는 근본적인 한계가 있다.
 <img src="https://user-images.githubusercontent.com/44011462/94504790-8eb21800-0244-11eb-82ae-fe45468f2ffe.png" width=300px>  
 
-이런 한계를 극복하기 위해서 plain text를 글자단위, 혹은 bit단위로 암호화하지 않고 64bits, 128bits등의 아주 큰 단위로 대응시키는 방식이다. 이런 방식은 통계적인 방법을 사용할 자료가 거의 없다는 장점이 있어서 stream cipher의 근본적인 한계를 극복할 수 있다. 현대 암호에서도 사용하는 방식이다.
+**block cipher**는 암호화하는 쪽과 복호화하는 쪽이 모두 보안키를 가져야 한다는 점에서는 symmetric cipher방식과 동일하다. 하지만 stream cipher가 갖는 통계적인 한계를 극복하기 위해서 plain text를 글자단위, 혹은 bit단위로 암호화하지 않고 **64bits, 128bits등의 아주 큰 단위로 대응**시키는 방식이다. 이런 방식은 통계적인 방법을 사용할 자료가 거의 없다는 장점이 있어서 **stream cipher의 근본적인 한계를 극복**할 수 있다. 현대 암호에서도 사용하는 방식이다.
 
 <img src="https://user-images.githubusercontent.com/44011462/94511303-e6a44b00-0253-11eb-8da8-747a77f5989a.png" width=300px>  
 
-위 자료는 4bits를 기준으로 했을때 key를 만드는 과정이다. 4bits를 이용하므로 암호key의 경우의 수는 <img src="https://user-images.githubusercontent.com/44011462/94516610-2291dd00-0261-11eb-8677-78c9c15960d7.png" height=20px>정도의 경우가 존재한다. 실제로는 64bits, 또는 128bits를 이용하는데 128bits를 이용하여 암호key를 만드는 경우의 수는 <img src="https://user-images.githubusercontent.com/44011462/94516477-db0b5100-0260-11eb-9064-84ea30dc266a.png" height=20px> = <img src="https://user-images.githubusercontent.com/44011462/94511517-8cf05080-0254-11eb-9a1a-2e0d6daa79ce.png" height=20px>이라는 상당히 큰 수가 된다. 따라서 통계적인 접근은 의미가 없게 된다는 것이 block cipher의 특징이다. 이런 암호key는 정보량이 상당히 많아서 key로 table와 같은 key-value를 전달하지 않고 값을 입력하면 계산이 가능한 알고리즘을 이용한다. 
+위 자료는 4bits를 기준으로 했을때 key를 만드는 과정이다. 4bits를 이용하므로 암호key의 경우의 수는 <img src="https://user-images.githubusercontent.com/44011462/94516610-2291dd00-0261-11eb-8677-78c9c15960d7.png" height=20px>정도의 경우가 존재한다. 실제로는 64bits, 또는 128bits를 이용하는데 128bits를 이용하여 암호key를 만드는 경우의 수는 <img src="https://user-images.githubusercontent.com/44011462/94516477-db0b5100-0260-11eb-9064-84ea30dc266a.png" height=20px> = <img src="https://user-images.githubusercontent.com/44011462/94511517-8cf05080-0254-11eb-9a1a-2e0d6daa79ce.png" height=20px>이라는 상당히 큰 수가 된다. 따라서 **통계적인 접근은 의미가 없게 된다는 것이 block cipher의 특징**이다. 이런 암호key는 정보량이 상당히 많아서 key로 table와 같은 key-value를 전달하지 않고 입력에 따라 출력이 달라지는 알고리즘을 이용한다. 
 
-### Stream Ciphers
+### stream ciphers
 deterministic bit-stream generator를 이용한다. 특정 입력이 있다면 항상 같은 값의 bit-stream을 출력한다. 
 
-### Block Ciphers
+### block ciphers
+두 글자, 혹은 더 많은 글자를 다른 글자로 대체하는 polyalphabetic Ciphers를 이용하면 한 가지 글자를 다른 한 글자로 바꾸는 monoalphabetic Ciphers보다 더 암호화 성능이 뛰어나다는 것을 알고 있다. 이런 성능 우위에 초점을 두어 확장한 방식이 block cipher방식이다. **block cipher 방식은 64bits 단위 혹은 128bits 단위로 묶어서 대체하는 방식**이다. 이 방식도 일종의 substitution cipher방식이다.   
 
-## Block Cipher
-### Feistel Cipher
+<img src="https://user-images.githubusercontent.com/44011462/94511303-e6a44b00-0253-11eb-8da8-747a77f5989a.png" width=300px>    
 
-## the Data Encryption Standard(DES)
-### Encryption and Decryption
-### Strength of DES
+앞서 설명한 것처럼 4bits를 하나로 묶는 경우 4가지 bit로 표현 가능한 숫자는 0부터 15까지 16가지이다. 이 숫자를 각기 다른 숫자에 매핑하여 대체하는 방식이다. 위 예시는 0b0000은 0b1101로, 0b0001은 0b0100으로 대체하고 있다. 따라서 <img src="https://user-images.githubusercontent.com/44011462/94516610-2291dd00-0261-11eb-8677-78c9c15960d7.png" height=20px> 의 경우의 수 중에서 한 가지이다. 이때 monoalphabetic Ciphers의 한 방식인 permutation cipher를 이용한 경우에는 <img src="https://user-images.githubusercontent.com/44011462/95153621-d0a20780-07ca-11eb-9333-9d431c3d2c86.png" height=20px>의 경우의 수가 있다.   
+따라서 block cipher의 block 단위를 64bits, 128bits로 확장하면 이는 monoalphabetic Ciphers, polyalphabetic Ciphers에 비교하면 경우의 수가 상당히 다양해진다. 다만 block cipher가 128bits를 이용한다면  <img src="https://user-images.githubusercontent.com/44011462/94516477-db0b5100-0260-11eb-9064-84ea30dc266a.png" height=20px> = <img src="https://user-images.githubusercontent.com/44011462/94511517-8cf05080-0254-11eb-9a1a-2e0d6daa79ce.png" height=20px>라는 상당히 많은 경우의 수를 가지고 있으므로, 이 모든 **key-value를 전달하기에는 정보의 양이 상당히 많다**.  
+이 모든 key-value의 정보를 전달할 수 없기 떄문에 보통의 경우 block cipher는 128bits의 특정 숫자를 입력하면 결과값이 출력되는 함수의 형태로 전달한다. 함수자체가 노출되면 그대로 암호테이블 전체가 노출되는 결과로 이어지기 때문에 함수에는 **특정 매개변수를 제공**하여 여러가지 경우의 수에서 원하는 방식을 선택하도록 한다. key에 따라서 존재하는 경우의 수는 <img src="https://user-images.githubusercontent.com/44011462/95154004-c9c7c480-07cb-11eb-8e88-0d19b0c560ba.png" height=20px>가지이므로 이 수 역시 매우 크기 때문에 함수의 **매개변수가 안전하다면 암호화 함수가 노출되어도 안전**하다고 볼 수 있다.
+
+
+## block cipher
+
+### feistel cipher
+feistel cipher는 substitution과 permutation의 조합으로 만들어지는 암호체계이다. 참고로 여기에서 말하는 substitution과 permutation은 monoalphabetic Ciphers의 방식을 말하는 것이 아닌 말 그대로 치환하는 것(substitute)과 전치하는 것(permute, transpose)을 말한다.
+
+<img src="https://user-images.githubusercontent.com/44011462/95155007-20ce9900-07ce-11eb-91d9-e115a1c0bc8a.png" width=300px> 
+
+위 도식표는 feistel cipher를 표현한다. 64bits를 하나의 block으로 하고 16rounds를 갖는 feistel cipher는 다음과 같은 방식으로 동작한다.
+
+1. input으로 암호화하고 싶은 plain text를 입력받는다.
+1. K라는 매개변수를 전달받는다
+   1. K는 48bits이다.
+   1. key schedule이라는 방식을 사용하여 16개의 K를 만든다. 
+1. 입력받은 64bits의 input text를 32bits씩 두개로 나누어 순서대로 LE, RE로 구분한다.
+   1. RE는 두번 사용되는데 우선 첫번째로는 다음 Round에서 LE로 substitute된다.
+   1. 두번째로 RE는 암호화 함수(F)의 입력으로 사용된다.
+    <img src="https://user-images.githubusercontent.com/44011462/95155465-2bd5f900-07cf-11eb-8bf4-b4c619af4722.png" width=150px> 
+   1. K와 RE를 입력으로 하여 함수(F)를 통해 나온 값은 LE와 XOR연산을 거쳐 다음단계의 RE로 사용된다.
+1. 위의 3과정을 16번 반복한다. 
+1. 16단계가 끝나면 LE와 RE를 전치(permute)한다.
+2. feistel cipher을 이용한 암호화가 마무리되어 cipher text를 얻는다.
+
+feistel cipher의 복호화는 다른 암호방식의 복호화와는 다른 특징이 있다. 기존의 방식은 암호화를 한 순서를 그대로 역행하여 복호화를 완성한다. feistel cipher는 비트연산이 2번 XOR되면 원래의 값이 그대로 나오는 특징을 이용하기 때문에 암호화의 순서대로 그대로 cipher text를 넣으면 plain text를 찾을 수 있다는 특징이 있다. 단, K값으로는 처음 암호화를 위해 key schedule을 하여 얻은 K1, K2, ..., K16을 복호화때는 거꾸로 K16, K15, ..., K1의 순서대로 사용해야 한다. 
+
+이 암호체계는 1950년대에 개발되어 사용되었다. 그 당시의 시기를 이해해보면 개인용 컴퓨터가 흔하지 않았고 컴퓨터는 대부분 메인 프레임이었다. 따라서 계산하는데 비용이 매우 컸고, 용량을 차지하는 것에도 비용이 상당했다. 따라서 암화와 복호화가 하나의 방식으로 동작하는 feistel cipher는 시대적으로 매우 적절하고 유용한 방식이었다. 하나의 방식으로 동작할 수 있다는 의미는 함수(F)가 역연산이 가능하도록 고려할 필요가 없다는 의미이다. 함수(F)는 다음과 같이 설계되어있다.
+<img src="https://user-images.githubusercontent.com/44011462/95156984-cc79e800-07d2-11eb-8a07-04fba4a72708.png" width=300px>    
+
+함수(F)는 다음과 같이 동작한다.
+1. 함수(F)에 입력으로 들어올 32bits RE를 48bits로 만들기 위해 특정 16bits를 두번 사용하여 48bits를 만든다(expansion)
+2. K와 expansion을 XOR연산을 진행한다.
+3. 2번의 결과인 48bits를 32bits로 바꾸주는 연산을 한다(substitution)
+4. 3번의 결과인 32bits를 이리저리 위치를 바꾸어서 새로운 32bits를 만든다(permutation)
+
+
+## the data encryption standard(DES)
+1977년 미국의 National Bureau of Standards(지금의 NIST)에서 Federal Infomation Processing Standard 46의 일환으로 만들어진 표준화된 block cipher 체계가 DES이다. DES는 Data Encryption Algorithm(DEA)를 사용하는 국제 표준의 이름이며, DEA는 64bits의 Key를 이용하여 block cipher를 하는 암호화 체계이다. 2001년에 Advanced Encrpyion Standard(AES)라는 새로운 표준이 만들어지기 전 약 36년 동안 국제표준으로 이용되었고, 현재에도 상당히 많은 부분에서 DES를 사용하고 있다. 
+
+### encryption and decryption
+<img src="https://user-images.githubusercontent.com/44011462/95157803-08ae4800-07d5-11eb-9591-ecaa818115f7.png" width=300px> 
+
+64bits의 Key는 7+1bits가 8개 묶음이 있는 형태이며, 마지막 1bit는 parity bit로 사용되어 실제로 암호화에 이용되는 key는 56bits이다. 앞서 살펴본 feistel cipher와 동일한 방식으로 동작한다. 암호화에 이용된 방식이 동일하에 복호화에도 이용되며 16round를 이용하여 암호화의 복잡도를 높였다. 
+
+### strength of DES
+국제적인 표준으로 정해져있어서 누구라도 암호화의 방식을 알 수 있다. 하지만 key에 따라서 <img src="https://user-images.githubusercontent.com/44011462/95157982-73f81a00-07d5-11eb-9441-542473332e75.png" height=20px> 가지의 경우의 수를 갖기 때문에 충분히 보안적으로 믿을 만하다. 만약 어떤 공격자가 특정 plain text가 어떤 cipher text로 바뀌는지 알고 있다고 가정하자. 만약 사용된 key가 어떤건지 알 수 있다면 앞으로 동일한 key를 사용하는 cipher text를 모두 해독할 수 있을 것이다. 위해서 frute force를 시도하여 key를 알아낸다고 하자. 1초에 대략 <img src="https://user-images.githubusercontent.com/44011462/95158083-b28dd480-07d5-11eb-96e2-51c80efe2cda.png" height=20px>번의 decryption 연산이 가능한 기계를 사용한다면 최대 1년 1개월 2주가 소요된다.   
+하지만 2000년대 초반에 DES의 취약점이 있다는 것을 인지한 몇몇 사람들이 DES를 해독하는 슈퍼 컴퓨터를 만들었다. 실제로 24시간만에 DES에 사용된 key를 알아냈다. 그 사건을 계기로 AES가 만들어지게 되었고, 128bits key를 이용하는 AES-128을 1초에 대략 <img src="https://user-images.githubusercontent.com/44011462/95158083-b28dd480-07d5-11eb-96e2-51c80efe2cda.png" height=20px>번의 decryption 연산이 가능한 기계를 사용한다면 <img src="https://user-images.githubusercontent.com/44011462/95158584-e87f8880-07d6-11eb-83fc-9e2686501f83.png" height=20px>년이 걸린다. AES는 128bits, 192bits, 256bits의 방식이 존재한다.
+한가지 주목할 점은 permutation cipher의 key는 <img src="https://user-images.githubusercontent.com/44011462/95153621-d0a20780-07ca-11eb-9333-9d431c3d2c86.png" height=20px>개의 경우의 수가 있고 이를 만약 1초에 대략 <img src="https://user-images.githubusercontent.com/44011462/95158083-b28dd480-07d5-11eb-96e2-51c80efe2cda.png" height=20px>번의 decryption 연산이 가능한 기계를 사용한다면 <img src="https://user-images.githubusercontent.com/44011462/95158744-57f57800-07d7-11eb-993e-370eac7b29ee.png" height=20px>년이 걸린다. 통계적인 취약점을 노리면 단시간에 해독할 수 있다는 한계가 있었다. 하지만 DES나 AES는 이러한 통계적인 방식이 전혀 통하지 않는 암호쳬계이며 따라서 모든 경우의 수를 전수조사하는 brute force 공격만이 유일한 공격방법이라는 점을 볼때 AES-128은 비교적 상당히 안전한 암호체계라고 할 수 있다. 
