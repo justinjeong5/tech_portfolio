@@ -19,9 +19,8 @@
   - [Semaphore Mutex](https://github.com/justinjeong5/tech_portfolio/tree/master/OS#semaphore--mutex-mutual-exclusion)
 - [SECURITY](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#security)
   - [OWASP](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#owasp)
-  - [Number Theory](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#number-theory)
   - [Classical Encryption](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#classical-encryption)
-  - [Block Cipher & DES](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#block-cipher--date-encryption-standard)
+  - [Block Cipher & DES](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#block-cipher-and-des)
 
 ## contributor
 
