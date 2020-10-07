@@ -8,17 +8,17 @@
     - [web-server와 TCP](#web-server와-tcp)
     - [UDP](#udp)
       - [UDP가 TCP보다 좋은점](#udp가-tcp보다-좋은점)
-      - [UDP segment 구조](#udp-segment-구조)
+      - [UDP segment structure](#udp-segment-structure)
       - [UDP check-sum](#udp-check-sum)
     - [신뢰적인 데이터 전달(reliable data transfer)의 원리](#신뢰적인-데이터-전달reliable-data-transfer의-원리)
     - [TCP](#tcp)
-      - [TCP segment 구조](#tcp-segment-구조)
-      - [흐름 제어 (Flow Control)](#흐름-제어-flow-control)
+      - [TCP segment structure](#tcp-segment-structure)
+      - [Flow Control](#flow-control)
       - [TCP Three-way Handshake](#tcp-three-way-handshake)
-      - [혼잡 제어 (Congestion Control)](#혼잡-제어-congestion-control)
-        - [슬로 스타트 (Slow Start)](#슬로-스타트-slow-start)
-        - [혼잡 회피 (Congestion Avoidance)](#혼잡-회피-congestion-avoidance)
-        - [빠른 회복 (Fast Recovery)](#빠른-회복-fast-recovery)
+      - [Congestion Control](#congestion-control)
+        - [Slow Start](#slow-start)
+        - [Congestion Avoidance](#congestion-avoidance)
+        - [Fast Recovery](#fast-recovery)
   - [what webbrowser does?](#what-webbrowser-does)
 
 
@@ -112,7 +112,7 @@ TCP는 종단 시스템에서 연결 상태를 유지한다. 이 연결상태는
 **작은 packet header overhead**  
 TCP가 segment마다 20bytes의 header overhead를 갖는 반면에 UDP는 단지 8bytes의 header overhead를 갖는다.
 
-#### UDP segment 구조
+#### UDP segment structure
 
 <img width="213" alt="Screen Shot 2020-07-09 at 6 05 17 PM" src="https://user-images.githubusercontent.com/44011462/87020400-c34aa080-c20e-11ea-8e21-42dccc9db59f.png">
 
@@ -166,7 +166,7 @@ TCP연결은 **전이중(Full-duplex)** 서비스를 제공한다. 또한 TCP �
 
 client가 connect 요청을 보내면 server는 ACK을 담은 segment로 응답한다. 마지막으로 client가 SYN/ACK으로 다시 응답한다. 처음 2개의 segment에는 '**payload**', 즉 apllication layer data가 없다. 세번째 segment는 payload를 포함할 수 있다. 두 host사이에서 3개의 segment가 보내지므로 이 연결설정 절차는 흔히 **'three-way handshake'** 라 부른다.
 
-#### TCP segment 구조
+#### TCP segment structure
 
 <img width="457" alt="Screen Shot 2020-07-09 at 8 22 20 PM" src="https://user-images.githubusercontent.com/44011462/87033900-fe0a0400-c221-11ea-8854-d543324d21c3.png">
 
@@ -187,7 +187,7 @@ ISBN-13: 978-1292153599  <br>
    4. 옵션(option)필드는 최대 세그먼트 크기(Maxium Segment Size, MSS)를 정하거나 window 확장 요소로 이용된다.
    5. **플래그(flag)** 필드는 6bits를 포함한다. **ACK 비트**는 확인응답 필드에 있는 값이 유효한지 확인하는데 사용한다. 
 
-#### 흐름 제어 (Flow Control)
+#### Flow Control
 **흐름 제어(Flow Control)** 는 수신자(Receiver)와 송신자(Sender) 사이에 생기는 전송과 수신의 **속도차이**에 의해 발생한다. 이는 application process가 데이터를 받는 시점과 사용하는 시점이 항상 같은것이 아니기 떄문에 발생하는 문제이다. application process가 다른작업으로 인해 바쁘다면 전송받은 data를 buffer에 담아두고 필요한 시점에 사용한다. 이때 수신자의 data 처리속도가 송신자보다 느리다면 **buffer가 overflow**되어 정소를 소실한다. 이와 같은 문제를 해결하기 위해서 application에 **흐름 제어(Flow Control)** 를 제공한다. 
 
 TCP는 송신자가 **수신 윈도우 (Receive Window)** 를 두어 흐름제어를 제공한다. 수신 윈도우는 수신측에서 가용한 크기가 얼마인지 송신자에게 알려주는데 사용한다. TCP는 전이중(Full-duplex)이기 때문에 수신자와 통신하는 각각의 송신자는 **수신 윈도우rwnd**를 두어 흐름을 통제한다. 
@@ -254,14 +254,14 @@ ISBN-13: 978-1292153599  <br>
 </details>
 
 
-#### 혼잡 제어 (Congestion Control)
+#### Congestion Control
 
 TCP 흐름 제어는 수신자가 가진 RcvBuffer에서 일어나는 overflow에 의해 data소실이 발생하고, 그로 인한 재전송, 정보손실 등의 overhead를 막는 기능이다. 이에 반하여 TCP 혼잡 제어(Congestion Control)은 네트워크가 혼잡하면 라우터의 buffer에서 overflow가 일어나 정보가 소실되는 것을 막는다. 따라서 network 전체의 흐름을 제어하는 것과 유사한 효과가 일어나고 이를 **TCP 혼잡 제어(Congestion Control)** 이라고 한다. IP layer는 네트워크 혼잡에 대한 종단 시스템에게 어떤 정보도 알려주지 않으므로, TCP는 종단간의 제어방식을 이용한다. 
 TCP 혼잡제어는 송신자측에서 **혼잡 윈도우(Congestion Window, cwnd)** 변수를 두어 제어한다. 이 변수의 값을 이용하여 네트워크로 traffic을 발생시킬 수 있는 비율을 제한한다. 특히 송신하는 쪽에서 응답확인 (ACK)을 받지 못한 데이터의 양은 cwnd, rwnd의 최소값을 초과하지 않는다.
 
     LastByteSent - LastByteAcked <= min(cwnd, rwnd)
 
-##### 슬로 스타트 (Slow Start)
+##### Slow Start
 
 TCP 연결이 시작될 때, cwnd의 값은 일반적을 1MSS로 초기화 되고, 그 결과 초기 전송률은 대략적으로 MMS/RTT가 된다. 예를 들어 만약 MMS = 500 bytes이고 RTT = 200 msec, 이면 초기 전송률은 20 kbps정도가 된다. 슬로 스타는 cwnd값을 1MSS에서 시작하여 ACK을 받을 때 마다 cwnd의 크기를 1MSS씩 증가시킨다. **각 ACK segment에 대해 2개의 "최대-크기" segment를 전송**한다. 이러한 과정을 통하여 TCP 전송률은 작은 값으로 시작하지만 **지수적으로** 증가하게 된다.
 
@@ -286,7 +286,7 @@ ISBN-13: 978-1292153599  <br>
 
 
 
-##### 혼잡 회피 (Congestion Avoidance)
+##### Congestion Avoidance
 
 혼잡 회피 상태로 들어가는 시점에서 ssthresh의 값은 종전의 값의 1/2가 된다. cwnd는 1MSS를 갖는다. 이후에는 조금더 보수적인 자세를 취하여 1MSS만큼 cwnd를 증가시킨다. 
 
@@ -297,7 +297,7 @@ TCP송신자는 cwnd값을 1MSS로 하여 새로운 slow start를 시작한다.
 빠른회복으로 전환되면서 혼잡 회피가 끝난다. ssthresh는 cwnd의 값을 쓰며 cwnd의 값은 1/2가 된다.
 
 
-##### 빠른 회복 (Fast Recovery)
+##### Fast Recovery
 
 빠른 회복에서 duplicated ACK을 수신할 때마다 cwnd의 크기를 1MSS만큼 증가시킨다. 
 
