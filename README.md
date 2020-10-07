@@ -5,6 +5,7 @@
   - [Sorting](https://github.com/justinjeong5/tech_portfolio/tree/master/ALGO#sorting)
   - [Union Find](https://github.com/justinjeong5/tech_portfolio/tree/master/ALGO#union-find)
   - [Backtracking](https://github.com/justinjeong5/tech_portfolio/tree/master/ALGO#backtracking)
+  - [Two Pointers](https://github.com/justinjeong5/tech_portfolio/tree/master/ALGO#two-pointers)
 - [DATABASE](https://github.com/justinjeong5/tech_portfolio/tree/master/DB#database)
   - [Transaction](https://github.com/justinjeong5/tech_portfolio/tree/master/DB#transaction)
 - [DESIGN PATTERN](https://github.com/justinjeong5/tech_portfolio/tree/master/design%20pattern#design-pattern)
