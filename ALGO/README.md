@@ -1,33 +1,36 @@
-# ALGORITHM
+<h1>ALGORITHM</h1>
 
-- [ALGORITHM](#algorithm)
-  - [Sorting](#sorting)
-    - [Bubble Sort](#bubble-sort)
-    - [Insertion Sort](#insertion-sort)
-    - [Selection Sort](#selection-sort)
-    - [Merge Sort](#merge-sort)
-    - [Quick Sort](#quick-sort)
-    - [Heap Sort](#heap-sort)
-    - [Radix Sort](#radix-sort)
-  - [Union Find](#union-find)
+- [Sorting](#sorting)
+  - [Bubble Sort](#bubble-sort)
+  - [Insertion Sort](#insertion-sort)
+  - [Selection Sort](#selection-sort)
+  - [Merge Sort](#merge-sort)
+  - [Quick Sort](#quick-sort)
+  - [Heap Sort](#heap-sort)
+  - [Radix Sort](#radix-sort)
+- [Union Find](#union-find)
     - [constructor](#constructor)
-    - [makeSet](#makeset)
-    - [findParent](#findparent)
-    - [mergeSet](#mergeset)
-    - [complexity](#complexity)
-    - [implementation](#implementation)
-      - [related problem - leetcode 399. Evaluate Division](#related-problem---leetcode-399-evaluate-division)
-      - [related problem - 200. Number of Islands](#related-problem---200-number-of-islands)
-  - [backtracking](#backtracking)
-    - [Depth First Search(DFS)](#depth-first-searchdfs)
-    - [Breadth First Search(BFS)](#breadth-first-searchbfs)
-    - [휴리스틱(heuristics)](#휴리스틱heuristics)
-      - [related problem - Baekjoon 9663. N-Queen](#related-problem---baekjoon-9663-n-queen)
-      - [related problem - baekjoon 2580. Sudoku](#related-problem---baekjoon-2580-sudoku)
+  - [makeSet](#makeset)
+  - [findParent](#findparent)
+  - [mergeSet](#mergeset)
+  - [complexity](#complexity)
+  - [implementation](#implementation)
+    - [related problem - leetcode 399. Evaluate Division](#related-problem---leetcode-399-evaluate-division)
+    - [related problem - 200. Number of Islands](#related-problem---200-number-of-islands)
+- [backtracking](#backtracking)
+  - [Depth First Search(DFS)](#depth-first-searchdfs)
+  - [Breadth First Search(BFS)](#breadth-first-searchbfs)
+  - [휴리스틱(heuristics)](#휴리스틱heuristics)
+    - [related problem - Baekjoon 9663. N-Queen](#related-problem---baekjoon-9663-n-queen)
+    - [related problem - baekjoon 2580. Sudoku](#related-problem---baekjoon-2580-sudoku)
+- [TWO POINTERS](#two-pointers)
+  - [time complexity](#time-complexity)
+  - [one pointer with hashmap](#one-pointer-with-hashmap)
+  - [sliding window](#sliding-window)
 
-## Sorting
+# Sorting
 
-### Bubble Sort
+## Bubble Sort
 
 ![Bubble_sort_animation](https://user-images.githubusercontent.com/44011462/61772707-e75e7780-ae2d-11e9-8394-ec83d03749cc.gif)
 
@@ -50,7 +53,7 @@ const bubbleSort = (array) => {
 }
 ```
 
-### Insertion Sort
+## Insertion Sort
 
 ![Insertion_sort_animation](https://user-images.githubusercontent.com/44011462/61772654-c1d16e00-ae2d-11e9-9a0e-9aa5ea0807be.gif)
 
@@ -88,7 +91,7 @@ const insertionSort = (array) => {
 ```
 
 
-### Selection Sort
+## Selection Sort
 
 ![Selection-Sort-Animation](https://user-images.githubusercontent.com/44011462/61772691-d9105b80-ae2d-11e9-81af-ef19b2beed86.gif)
 
@@ -115,7 +118,7 @@ const selectionSort = (array) => {
 }
 ```
 
-### Merge Sort
+## Merge Sort
 
 ![220px-Merge-Sort-example-300px](https://user-images.githubusercontent.com/44011462/61772622-acf4da80-ae2d-11e9-8798-d75ab2c0ffd7.gif)
 
@@ -150,7 +153,7 @@ const merge = (left, right) => {
 };
 
 ```
-### Quick Sort
+## Quick Sort
 
 ![220px-Sorting_quicksort_anim](https://user-images.githubusercontent.com/44011462/61772579-977fb080-ae2d-11e9-92fe-44de99119834.gif)
 
@@ -195,7 +198,7 @@ const quickSort = (array, left, right) => { // 재귀하는 부분
 };
 ```
 
-### Heap Sort
+## Heap Sort
 
 **힙 정렬(Heapsort)** 이란 최대 힙 트리나 최소 힙 트리를 구성해 정렬을 하는 방법으로서, 내림차순 정렬을 위해서는 최대 힙을 구성하고 오름차순 정렬을 위해서는 최소 힙을 구성하면 된다. 
 
@@ -245,7 +248,7 @@ const heapSort = (array) => {
 
 ```
 
-### Radix Sort
+## Radix Sort
 
 **기수 정렬(radix Sort)** 는 대단히 빠르고 자리수를 비교해서 정렬하는 방식입니다. 단점이라면 자리수가 없는 것들은 정렬할 수 없다는 것입니다. 예를 들면 부동소수점같은 경우가 있습니다. 하지만 문자열과 정수는 거의 다 정렬할 수 있습니다. 
 
@@ -285,7 +288,7 @@ const radixLSD = (array, d) => {
     return array;
 }
 ```
-## Union Find
+# Union Find
 
 **Union find**는 미시건 대학의 [Bernard Galler](#https://en.wikipedia.org/wiki/Bernard_Galler) 에 의해 1964년에 처음 고안된 disjoint set의 data structure를 이용하는 algorithm이다. Union find는 **disjoint-set**, **merge-find** 라고도 불린다. 
 Union find는 *multiway tree*의 형태를 다루며 원소간의 **partition**을 매우 빠르고 효율적으로 다루는 알고리즘이다. 
@@ -301,7 +304,7 @@ class UnionFind{
     }
 }
 ```
-### makeSet
+## makeSet
 위에서 선언된 공간을 union find에서 활용하기 위해서는 초기값이 필요하다. 이 연산을 수행하는 함수를 makeSet이라고 부르며 다음과 같이 구현된다. 초기값으로 임의의 원소 newNode의 parent값은 자기 자신으로 한다. 자신이 root이므로 rank는 0이고 자기 자신으로만 구성된 set이므로 size는 1이다.
 
 ```javascript
@@ -319,7 +322,7 @@ class UnionFind{
 }
 ```
 
-### findParent
+## findParent
 makeSet으로 disjoint set에 포함된 임의의 원소를 찾는 연산이다. 이를 구현하는 방법에는 크게 3가지가 있고 **Path compression**, **Path halving**, **Path splitting**의 방식이 있다.
 
 ```javascript
@@ -350,7 +353,7 @@ https://gmlwjd9405.github.io/2018/08/31/algorithm-union-find.html  <br>
 find 연산 최적화<br> 
 </details>
 
-### mergeSet
+## mergeSet
 두 서로다른 set을 하나로 합치는 방식은 크게 2가지가 있다. size, 또는 rank를 이용하는 방식이다. 대부분 size가 큰것을 root로 삼거나 rank가 작은 것을 root로 삼는다. 
 
 ```javascript
@@ -386,7 +389,7 @@ const mergeSet = (node1, node2) => {
 }
 ```
 
-### complexity
+## complexity
 
 | Algorithm	| Average | Worst case |
 |---:|---|---|
@@ -395,7 +398,7 @@ const mergeSet = (node1, node2) => {
 | Merge | O(α(n)) | O(α(n)) |
 
 
-### implementation
+## implementation
 
 ```javascript
 
@@ -435,7 +438,7 @@ class UnionFind{
 [wikipedia](#https://en.wikipedia.org/wiki/Disjoint-set_data_structure#Representation)   
 [gmlwjd9405 (github)](#https://gmlwjd9405.github.io/2018/08/31/algorithm-union-find.html)  
 
-#### related problem - leetcode 399. Evaluate Division
+### related problem - leetcode 399. Evaluate Division
 <details>
     <summary><span style="color:grey">클릭하여 출처보기</span></summary>
 leetcode 399. Evaluate Division<br>
@@ -542,7 +545,7 @@ function calcEquation(equations, values, queries) {
 }
 ```
 
-#### related problem - 200. Number of Islands
+### related problem - 200. Number of Islands
 
 <details>
     <summary><span style="color:grey">클릭하여 출처보기</span></summary>
@@ -663,7 +666,7 @@ var numIslands = function(grid) {
 };
 ```
 
-## backtracking
+# backtracking
 
 그래프에서 모든 정점(*Vertices*)을 방문하는 일을 그래프 순회(*Graph Traversal*)이라고 합니다. 그 중에서 원하는 특정 경로를 찾는 일을 그래프 탐색(*Graph Search*)라고 합니다. 생활에서 마주하는 문제를 그래프를 이용할 수 있도록 모델링 할 수 있기 때문에 그래프 탐색은 매우 유용한 알고리즘입니다.
 
@@ -692,7 +695,7 @@ var numIslands = function(grid) {
 </details>
 
 DFS와 BFS는 탐색을 우선시 하는 방식에 차이가 있고 그에 따른 특징이 다르게 나타납니다.
-### Depth First Search(DFS)
+## Depth First Search(DFS)
 1. 스택(Stack)을 이용 - 재귀(Recursion)
 2. 더이상 확인할 길이 없을때까지 들어갔다가 나오며 경로를 순회한다.
 3. 그래프에 싸이클이 있거나 깊이가 무한히 깊으면 적절하지 못하다.
@@ -727,7 +730,7 @@ void dfsAll() {     // 모든 정점을 방문한다.
 }
 ```
 
-### Breadth First Search(BFS)
+## Breadth First Search(BFS)
 1. 큐(Queue)를 이용
 2. 현재 위치에서 갈 수 있는 루트를 우선적으로 순회한다.
 3. 최단 경로를 찾을 수 있는 방식이다.
@@ -762,7 +765,7 @@ vector<int> bfs(int start) { 	//start에서 시작해 그래프를 너비 우선
 }
 ```
 
-### 휴리스틱(heuristics)
+## 휴리스틱(heuristics)
 
 백트래킹(**backtracking**)은 어느 지점에서 문제가 제약조건을 만족하지 못하는 부분을 제거해 나가면서 해답에 점차 가까워지는 문제 해결 전략이다. DFS와 유사하게 흐름이 진행되지만 **DFS와 Backtracking을 완전히 다르게** 볼 수 있는 것은 바로 **부분 문제(subproblem)을 제거**해 나간다는 **휴리스틱(heuristics)** 에 있다. backtracking에서의 휴리스틱은 **정답이 될 수 없는 것을 제외시키는 정도**로 사용된다. 
 
@@ -782,7 +785,7 @@ vector<int> bfs(int start) { 	//start에서 시작해 그래프를 너비 우선
 모든 가능한 경우를 전부다 확인해보는 방식보다 더 빠르다. backtrack하면서 부분 문제(Subset)을 제거했기 때문이다. 
 
 
-#### related problem - Baekjoon 9663. [N-Queen](https://www.acmicpc.net/problem/9663)
+### related problem - Baekjoon 9663. [N-Queen](https://www.acmicpc.net/problem/9663)
 
 ```c++
 /*
@@ -852,7 +855,7 @@ int main() {
 }
 ```
 
-#### related problem - baekjoon 2580. [Sudoku](https://www.acmicpc.net/problem/2580)
+### related problem - baekjoon 2580. [Sudoku](https://www.acmicpc.net/problem/2580)
 
 ```c++
 /*
@@ -954,6 +957,143 @@ int main() {
 
     return 0;
 }
+
+```
+
+# TWO POINTERS
+
+**Two pointers**는 기본적으로 동시에 **2곳을 중점적으로 관찰**하는 방식을 말한다. 각각의 포인터가 동시에 같은 방향으로 진행하거나 서로 마주오는 방향으로 진행할 수 있다. two pointers의 개념이 베어있는 가장 대표적인 예시가 sorting algorithm이라고 할 수 있다. 아래의 코드는 javascript로 작성된 selection sort의 알고리즘이다. 
+```javascript
+const selectionSort = () => {
+    var indexMin;
+    for (var left = 0; left < numSiz; ++left) {
+        indexMin = left;
+        for (var right = left + 1; right < numSiz; ++right) {
+            if (nums[right] >= nums[indexMin]) continue;
+            indexMin = right;
+        }
+        [nums[left], nums[indexMin]] = [nums[indexMin], nums[left]];
+    }
+}
+```
+selection sorting의 특징은 두 개의 loop가 중첩(nested)되어 있고 **각각의 loop가 가진 index 정보가 각각 하나의 pointer의 역할**을 한다. 아래의 그림을 보면 **두개의 포인터**가 움직이면서 swap을 통해 정렬을 진행하고 있다.
+
+![Selection-Sort-Animation](https://user-images.githubusercontent.com/44011462/61772691-d9105b80-ae2d-11e9-81af-ef19b2beed86.gif)
+
+## time complexity
+
+**two pointers**는 일반적으로 <img src="https://user-images.githubusercontent.com/44011462/95317267-e3eacb00-08cf-11eb-8147-62b4e34b6d14.png" height=23px>의 시간복잡도를 갖는다.  *기본적으로 two pointers로 해결가능한 문제는 2개의 loop를 이용하여 <img src="https://user-images.githubusercontent.com/44011462/95316988-7e96da00-08cf-11eb-9f5f-d758d70c8f3b.png" height=23px>의 시간복잡도를 갖는 solution을 만들 수 있다*. 다시말해 nested-loop의 solution이 존재하는 문제중에서 **특정 조건이 만족된다면 two pointers를 이용**한 간단한 solution을 만들 수 있다.  
+따라서 naive solution으로 이중 반복문의 형태를 갖는다면 two pointer가 가능하지 확인해야 한다. 위에서 예시로 들은 sort는 two pointers로 풀수 있는 조건을 갖추지 못한 문제의 유형이다. 왼쪽 pointer에 해당하는 변수 left가 다시 돌아오는 구조를 갖기 떄문이다. 
+참고로 **sorting**은 ***O(n log(n))의 사간복잡도*** 가 **optimal**으로 증명된 유형의 문제이다. 문제에 대한 해법이 최적화된 형태를 갖는다는 말에는 많은 의미가 내포되어있다. 이 부분은 나중에 따로 떼어 살펴보도록 하자.
+
+## one pointer with hashmap
+혹은 **하나의 pointer에 hashmap**과 같은 다른 자료구조를 이용해서 two pointer의 효과를 갖을 수 있다.  
+하나의 pointer는 중첩되지 않은 loop에, 또다른 pointer는 hashmap에 두는 유형이다. 엄밀히 구분하자면 이는 <img src="https://user-images.githubusercontent.com/44011462/95317267-e3eacb00-08cf-11eb-8147-62b4e34b6d14.png" height=23px>의 시간복잡도를 갖는 one pointer algorithm과 <img src="https://user-images.githubusercontent.com/44011462/95318680-d33b5480-08d1-11eb-9af6-57ae1e025a95.png" height=23px>의 시간복잡도를 갖는 hashmap을 이용한 방식이지만 2곳을 중점적으로 관찰한다는 점에서 two pointers의 한가지 종류로 생각했다.  문제를 통해서 설명해보자.  
+[문제보기](https://leetcode.com/problems/two-sum/)
+
+    Given an array of integers nums and an integer target, 
+    return the two numbers such that they add up to target.
+
+    You may assume that each input would have exactly one solution, 
+    and you may not use the same element twice.
+
+    You can return the answer in any order.
+
+        Example 1:
+
+        Input: nums = [2,7,11,15], target = 9
+        Output: [2,7]
+        Output: Because 2 + 7 == 9, we return [2, 9].
+
+위 문제는 nested-loop로 <img src="https://user-images.githubusercontent.com/44011462/95316988-7e96da00-08cf-11eb-9f5f-d758d70c8f3b.png" height=23px>의 시간복잡도를 갖는 solution을 간단하게 떠올릴 수 있는 형태의 문제이다. 따라서 **two pointers**가 적용이 가능할지 살펴볼 수 있다. two pointers는 pointer의 진행방향이 빈번하게 바뀌는 경우에는 사용할 수 없다. 위 문제의 경우에는 **two pointers방식을 적용하기에는 무리**가 있는데, left에 해당하는 포인터의 진행방향은 일정하지만 **right에 해당하는 pointer의 진행방향이 일정하지 않기 때문**이다. 그럼에도 two pointer로 분류할 수 있는 이유는 a + b = c라는 수식에서 2개의 미지수가 정해지면 마지막 하나는 저절로 값이 정해지는 특징이 있기 떄문이다. 
+
+```javascript
+const twoSum = (nums, target) => {
+    const map = [];
+    for (const num of nums) {
+        let complement = target - num;
+        if (map[complement] !== undefined) {
+            return [complement, num];
+        }
+        map[complement] = map[num] = true;
+    }
+    return [-1, -1]
+}
+```
+
+
+## sliding window
+
+**two pointer**가 같은 방향으로 향하는 유형의 문제에서 유명한 방식으로 **sliding window algorithm**이 있다. 앞서 말한 것처럼 sliding window로 해결가능한 문제는 nested-loop의 방식으로도 해결이 가능하다. 하지만 수행시간에 있어서 상당한 차이를 보이기 떄문에 문제의 조건이 **sliding window를 쓸수 있는 유형**이라면 <img src="https://user-images.githubusercontent.com/44011462/95317267-e3eacb00-08cf-11eb-8147-62b4e34b6d14.png" height=23px>의 시간복잡도를 갖는 two pointers의 한 종류인 sliding window algorithm을 사용해야 한다.
+sliding window에도 여러가지 유형이 있지만 가장 기본적인 형태를 갖는 문제를 통해 설명해보자. [문제보기](https://leetcode.com/problems/minimum-window-substring/)
+
+    Given a string S and a string T, 
+    find the minimum window in S which will contain all the characters in T 
+
+        Example 1:
+
+        input: S = "ABAACBAB", T = "ABC"
+        Outpur: "ACB"
+
+
+아래의 그림을 보면 일종의 크기가 늘어나고 줄어드는 창문이 움직이는 것처럼 보인다. 원래 sliding window는 *network* 분야에서 처음 고안되었다. 송신자와 수신자간의 packet의 흐름을 제어하는 [congestion control](https://github.com/justinjeong5/tech_portfolio/tree/master/NW#congestion-control)을 구현하기 위한 방법으로 사용된다. **실시간성이 매우 중요한 네트워크**에서 naive한 방식을 채택하는 것이 논리에 맞지 않을 뿐더러 네트워크에서는 절차를 시작할때 모든 정보를 알지 못해도 **입력을 차례로 받아들이면서 문제를 해결하는 online algorithm**이어야 한다는 점이 있고 sliding window는 이러한 특징을 매우 잘 반영하고 있다. 
+
+<img src="https://user-images.githubusercontent.com/44011462/95321263-c3257400-08d5-11eb-8b99-c1e25658b55a.png" width=400px>   
+<img src="https://user-images.githubusercontent.com/44011462/95321272-c7ea2800-08d5-11eb-8ede-6dbd9a246647.png" width=400px>  
+<img src="https://user-images.githubusercontent.com/44011462/95321288-cf113600-08d5-11eb-92bf-b25d91590ac9.png" width=400px>  
+<img src="https://user-images.githubusercontent.com/44011462/95321308-dafcf800-08d5-11eb-9afa-737fda3cd8d0.png" width=400px>  
+<img src="https://user-images.githubusercontent.com/44011462/95321327-e2240600-08d5-11eb-9e70-c8ea8f78f5dd.png" width=400px>  
+<img src="https://user-images.githubusercontent.com/44011462/95321526-1d263980-08d6-11eb-8b91-83524cda11d8.png" width=400px>  
+
+코드를 통해 two pointers의 특징을 살펴보자. 아래의 코드를 보면 **start와 end라는 변수가 two pointers의 역할**을 하고 있다. 위 문제는 단순히 two pointers만으로는 풀수 없기 때문에 hashmap와 count변수를 도입하여 처리하고 있다. 풀이법에 따라서 queue를 사용하여 풀수도 있지만 모두가 two pointers의 개념을 사용한다는 점에는 변함이 없다. 
+
+```javascript
+
+var minWindow = function (s, t) {
+
+    let remains = 0;
+    let answer = "";
+    const um = [];
+
+    const preprocess = () => {
+        for (let it of t) {
+            if (um[it] === undefined) {
+                um[it] = 0;
+                remains++;
+            }
+            um[it]++;
+        }
+    }
+
+    const solution = () => {
+        let start = 0, end = 0;
+        let len = Number.MAX_VALUE;
+        let answer_start = 0;
+
+        while (end < s.length) {
+            const endChar = s[end++];
+            if (um[endChar] !== undefined) {
+                if (--um[endChar] === 0) remains--;
+            }
+            while (remains === 0) {
+                if (len > end - start) {
+                    len = end - start;
+                    answer_start = start;
+                }
+                const startChar = s[start++];
+                if (um[startChar] !== undefined) {
+                    if (++um[startChar] > 0) remains++;
+                }
+            }
+        }
+        if (len === Number.MAX_VALUE) return;
+        answer = s.substr(answer_start, len);
+    }
+
+    preprocess();
+    solution();
+    return answer;
+};
 
 ```
 
