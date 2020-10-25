@@ -42,15 +42,28 @@
     - [Parameters Correspoding to the Key Size](#parameters-correspoding-to-the-key-size)
     - [SPN(Substitution-Permutation Network)](#spnsubstitution-permutation-network)
   - [Detailed Structure](#detailed-structure)
-  - [AES Transformation Function](#aes-transformation-function)
-    - [Substitute Bytes](#substitute-bytes)
+- [AES Transformation Function](#aes-transformation-function)
+  - [Substitute Bytes](#substitute-bytes)
     - [Rationale for S Box](#rationale-for-s-box)
-    - [Shift Rows](#shift-rows)
-    - [Mix Columns](#mix-columns)
-    - [Add Round Key](#add-round-key)
-  - [AES Key Expansion](#aes-key-expansion)
-    - [Key Expansion Algorithm](#key-expansion-algorithm)
+  - [Shift Rows](#shift-rows)
+  - [Mix Columns](#mix-columns)
+  - [Add Round Key](#add-round-key)
+- [AES Key Expansion](#aes-key-expansion)
+  - [Key Expansion Algorithm](#key-expansion-algorithm)
     - [Rationale for Key Expansion](#rationale-for-key-expansion)
+- [Block Cipher Operation](#block-cipher-operation)
+  - [Multiple encryption and triple DES](#multiple-encryption-and-triple-des)
+    - [Double DES](#double-des)
+    - [Triple DES](#triple-des)
+  - [Modes of Operation](#modes-of-operation)
+    - [ECB Mode (Electronic Codebook Mode)](#ecb-mode-electronic-codebook-mode)
+    - [CBC Mode (Cipher block Chaining Mode)](#cbc-mode-cipher-block-chaining-mode)
+    - [CFB Mode (Cipher FeedBack Mode)](#cfb-mode-cipher-feedback-mode)
+    - [OFB Mode (Output FeedBack Mode)](#ofb-mode-output-feedback-mode)
+    - [CTR Mode (Counter Mode)](#ctr-mode-counter-mode)
+  - [comparision of feedback characteristic](#comparision-of-feedback-characteristic)
+    - [AES-CCMP](#aes-ccmp)
+    - [TLS (Transport Layer Security)](#tls-transport-layer-security)
 
 # OWASP
 **OWASP**, *The Open Web Application Security Project*는 웹 해킹에 대한 보안 향상을 목표로 만들어진 전 세계적인 비영리 단체이다. 대표적으로 보안 취약점 top 10과 Guide를 제공한다.
@@ -417,13 +430,12 @@ feistel cipher의 복호화는 다른 암호방식의 복호화와는 다른 특
 한가지 주목할 점은 permutation cipher의 key는 <img src="https://user-images.githubusercontent.com/44011462/95153621-d0a20780-07ca-11eb-9333-9d431c3d2c86.png" height=20px>개의 경우의 수가 있고 이를 만약 1초에 대략 <img src="https://user-images.githubusercontent.com/44011462/95158083-b28dd480-07d5-11eb-96e2-51c80efe2cda.png" height=20px>번의 decryption 연산이 가능한 기계를 사용한다면 <img src="https://user-images.githubusercontent.com/44011462/95158744-57f57800-07d7-11eb-993e-370eac7b29ee.png" height=20px>년이 걸린다. 통계적인 취약점을 노리면 단시간에 해독할 수 있다는 한계가 있었다. 하지만 DES나 AES는 이러한 통계적인 방식이 전혀 통하지 않는 암호쳬계이며 따라서 모든 경우의 수를 전수조사하는 brute force 공격만이 유일한 공격방법이라는 점을 볼때 AES-128은 비교적 상당히 안전한 암호체계라고 할 수 있다. 
 
 
-
 # AES(Advanced Encryption Standard)
 AES는 'DES는 key의 길이다 짧다'는 한계를 극복하기 위해서 2001년에 NIST(National Institute of Standards and Technology)의해 채택된 표준이다. AES는 벨기에의 Rijmen과 Daemen이라는 두 암호학자가 만든 Rijndael이라는 암호화 알고리즘을 채택하여 표준화하여 완성하였다. [FIPS Publication 197](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf)로 등록되어 있다. 
 
 ## Why Finite Field for Block Cipher
-block cipher는 128, 196, 256단위의 bit를 무작위로 섞어서 암호화하는 방식을 일컷는다. 덧셈이나 뺄셈은 강력한 무작위 효과를 내기 어렵다. bit에서의 modular 연산은 상쇄되는 효과가 있기 때문이다. 그렇다면 곱셉과 나눗셈은 어떨까. 매우 강력한 효과를 낼수 있고 이 모든 연산에 대해서 닫혀있는 field를 다뤄야 정해진 형태가 유지될 수 있기 떄문에 finite field를 사용하여 이러한 효과를 낸다.   
-이러한 이유떄문에 finite field를 사용한다. 그렇다면 finite field중에서 어떤 field를 사용해야 하는가? 이중에서 원하는 데이터의 format에 정확히 맞게끔 bit를 다루기에는 2^n을 사용하는 것이 유리하다. 하지만 2^n은 field를 구성할 수 없는 합성수이다. 따라서 동일한 효과를 내기 위해서 계수가 2진수인 다항식(binary polynomials)로 표현하면 가능하다. 이중에서 AES는 GF(<img src="https://user-images.githubusercontent.com/44011462/95806027-b5db1000-0d41-11eb-92bf-312d78d992f6.png" height=20px>) bit가 8인 갈루아 필드를 사용한다. GF(<img src="https://user-images.githubusercontent.com/44011462/95806027-b5db1000-0d41-11eb-92bf-312d78d992f6.png" height=20px>)에서의 곱셉의 irreducible polynomial은 <img src="https://user-images.githubusercontent.com/44011462/95806122-ec188f80-0d41-11eb-87f5-7bcb90c8d9d5.png" height=25px>으로 하여 표준으로 정해져 있다. 참고로 modular 2의 polynomial에서는 <img src="https://user-images.githubusercontent.com/44011462/95806310-55000780-0d42-11eb-8f56-74d3771fb4df.png" height=25px>이 irreducible이 아니다. <img src="https://user-images.githubusercontent.com/44011462/95806368-72cd6c80-0d42-11eb-837c-d5f19dd9198e.png" height=25px>이기 떄문이다. 더불어  <img src="https://user-images.githubusercontent.com/44011462/95806443-a3ada180-0d42-11eb-81ae-378b443d93e6.png" height=25px>또한 성립한다. 이런 modular2의 polynomial을 고려하더라도 <img src="https://user-images.githubusercontent.com/44011462/95806122-ec188f80-0d41-11eb-87f5-7bcb90c8d9d5.png" height=25px>은 irreducible이고 표준으로 정해져있다. 
+block cipher는 128, 196, 256단위의 bit를 무작위로 섞어서 암호화하는 방식을 일컷는다. 덧셈이나 뺄셈은 강력한 무작위 효과를 내기 어렵다. bit에서의 modular 연산은 상쇄되는 효과가 있기 때문이다. 그렇다면 곱셉과 나눗셈은 어떨까. 매우 강력한 효과를 낼수 있고 이 모든 연산에 대해서 닫혀있는 field를 다뤄야 정해진 형태가 유지될 수 있기 때문에 finite field를 사용하여 이러한 효과를 낸다.   
+이러한 이유때문에 finite field를 사용한다. 그렇다면 finite field중에서 어떤 field를 사용해야 하는가? 이중에서 원하는 데이터의 format에 정확히 맞게끔 bit를 다루기에는 2^n을 사용하는 것이 유리하다. 하지만 2^n은 field를 구성할 수 없는 합성수이다. 따라서 동일한 효과를 내기 위해서 계수가 2진수인 다항식(binary polynomials)로 표현하면 가능하다. 이중에서 AES는 GF(2^8^) bit가 8인 갈루아 필드를 사용한다. GF(2^8^)에서의 곱셉의 irreducible polynomial은 x^8^ + x^4^ + x^3^ + x + 1으로 하여 표준으로 정해져 있다. 참고로 modular 2의 polynomial에서는 x^2^ + 1이 irreducible이 아니다. x^2^ + 1 = x^2^ + 2x + 1 = (x + 1)(x + 1)이기 때문이다. 더불어  x^2^ - 1 = (x + 1)(x - 1) = (x + 1)(x + 1)또한 성립한다. 이런 modular2의 polynomial을 고려하더라도 x^8^ + x^4^ + x^3^ + x + 1은 irreducible이고 표준으로 정해져있다. 
 
 ## General Structure
 ### State
@@ -441,14 +453,14 @@ substitution: subBytes / Mix Columns / Add Round Key
 
 
 ## Detailed Structure
-AES는 전체적인 data block을 각 round마다 substitution과 permutation을 이용하여 암호화한다. AES는 SPN구조로 이루어지기 떄문에 Feistel과는 다르게 block전체가 모두 암호화가 된다.  
+AES는 전체적인 data block을 각 round마다 substitution과 permutation을 이용하여 암호화한다. AES는 SPN구조로 이루어지기 때문에 Feistel과는 다르게 block전체가 모두 암호화가 된다.  
 
 업데이트를 하는 과정에서 key가 사용되는데 32bits word가 4개가 모이면 128bit의 하나의 state가 되고 10rounds라면 11개가 필요하다. 11rounds의 key를 44개의 word로 표기하여 w[0], ..., w[43]으로 표기한다.  
 
 각 10개의 rounds를 구성하는 연산이 4가지가 있다.
 1. Substitute Bytes: bytes단위로 치환하는 것을 의미하며 정보는 S-Box에서 얻는다.
 2. Shift Rows: 행 내부에서 rotation하는 연산이다.
-3. Mix Columns: GF(2^8)에서 각각의 column을 update하는 연산이다.
+3. Mix Columns: GF(2^8^)에서 각각의 column을 update하는 연산이다.
 4. Add Round Key: bitwisw XOR를 하는 연산이다.
 
 전체 11번의 round의 시작과 끝은 Add Round Key가 사용된다.
@@ -457,53 +469,54 @@ AES는 전체적인 data block을 각 round마다 substitution과 permutation을
 
 <img src="https://user-images.githubusercontent.com/44011462/95808649-e625ad00-0d47-11eb-9ad6-6a64216f2bb3.png" width=300px>
 
-## AES Transformation Function
+# AES Transformation Function
 <img src="https://user-images.githubusercontent.com/44011462/95812769-1160ca00-0d51-11eb-985e-abe802d54784.png" width=300px><img src="https://user-images.githubusercontent.com/44011462/95813071-f773b700-0d51-11eb-96a2-7d88648fe556.png" width=300px>  
 
 하나의 round가 subBytes, shiftRows, mixColumns, addRoundKey의 4가지 연산으로 구성된다. 각각의 연산이 어떤일을 하는지는 아래에서 자세히 알아보자.
 
-### Substitute Bytes
+## Substitute Bytes
 <img src="https://user-images.githubusercontent.com/44011462/95808842-559b9c80-0d48-11eb-92d1-5394840e935d.png" width=300px>  
 
 <img src="https://user-images.githubusercontent.com/44011462/95809119-f8ecb180-0d48-11eb-827b-814878001ff9.png" width=300px>
 
 ### Rationale for S Box
-Sbox는 암호학적 공격에 대해 안전하도록 설계되어 있다. 암호학적 공격에 대해 안전하다는 것은 통계적인 방법이나 brute force attack에 의한 공격에 대비가 되어있다는 의미이다. 또한 input과 output간의 linear mathematical관계를 찾기 어렵다는 의미이기도 하다. 이런 특성을 갖게 하는 방식이 multiplication inverse를 이용하는 방법이고 substitution box(S Box)는 이러한 특징을 잘 반영하고 있다. 이러한 특성이 안전성으로 이어지는 이유는 만약에 공격자가 plaintext와 ciphertext를 알게 된다고 하여도 암호화에 사용된 key를 알아내는것이 매우매우 어렵고 이는 <img src="https://user-images.githubusercontent.com/44011462/95810876-eeccb200-0d4c-11eb-8f55-d45b3268489b.png" height=25px>의 경우의 수를 살펴봐야 한다는 것을 의미한다. 만약 암호화에 이용된 방법이 선형적이라면(linear mathematical function) 수학적인 계산에 의한 방법으로 deterministic하게 알아 낼 수 있다.
+Sbox는 암호학적 공격에 대해 안전하도록 설계되어 있다. 암호학적 공격에 대해 안전하다는 것은 통계적인 방법이나 brute force attack에 의한 공격에 대비가 되어있다는 의미이다. 또한 input과 output간의 linear mathematical관계를 찾기 어렵다는 의미이기도 하다. 이런 특성을 갖게 하는 방식이 multiplication inverse를 이용하는 방법이고 substitution box(S Box)는 이러한 특징을 잘 반영하고 있다. 이러한 특성이 안전성으로 이어지는 이유는 만약에 공격자가 plaintext와 ciphertext를 알게 된다고 하여도 암호화에 사용된 key를 알아내는것이 매우매우 어렵고 이는 256! = 8.57 * 10^506^의 경우의 수를 살펴봐야 한다는 것을 의미한다. 만약 암호화에 이용된 방법이 선형적이라면(linear mathematical function) 수학적인 계산에 의한 방법으로 deterministic하게 알아 낼 수 있다.
 
 <img src="https://user-images.githubusercontent.com/44011462/95810709-9ac1cd80-0d4c-11eb-84bf-a0544fbc611c.png" width=200px>
 
 
-### Shift Rows
+## Shift Rows
 <img src="https://user-images.githubusercontent.com/44011462/95811352-107a6900-0d4e-11eb-91d3-835a6febf207.png" width=200px>
 
 state는 plaintext, ciphertext, intermediatetext를 모두 표현하여 4행의 4열짜리 행렬로 다루게 된다. shift연산을 통해서 input이 output의 여러 부분에 분산하여 영향을 주도록 하여 input와 output의 연관관계를 복잡하게 형성하도록 만들어주는 역할을 한다. 
 
-### Mix Columns
+## Mix Columns
 <img src="https://user-images.githubusercontent.com/44011462/95811387-21c37580-0d4e-11eb-95af-fc07e207e2e3.png" width=200px>
 
 > Coefficients of a matrix based on a linear code with maximal distance between code words ensures a good mixing among the bytes of each column
 
 간단히 축약하여 이야기하면 곱셈이 일어나는 과정에서 각각의 row에 있는 원소들이 모든 column에 영향을 주면서 결과적으로 input과 output간의 연관관계를 복잡하게 형성하도록 만들어주는 역할을 한다.
 
-### Add Round Key
+## Add Round Key
 <img src="https://user-images.githubusercontent.com/44011462/95811352-107a6900-0d4e-11eb-91d3-835a6febf207.png" width=200px>
 
 단순히 XOR하는 연산이다. 하지만 round key expansion의 과정을 거치면서 key의 부분이 cipher text의 전체에 영향을 주도록 하는 역할을 한다.
 
-## AES Key Expansion
+# AES Key Expansion
 <img src="https://user-images.githubusercontent.com/44011462/95812769-1160ca00-0d51-11eb-985e-abe802d54784.png" width=300px>  
 
 위에서 살펴본 그림을 다시 살펴보자. 각 round에서 과정을 일어나는 과정이 하는 역할을 구분해보면 누구라도 같은 결과를 얻게되는 constant input부분과 variable input부분을 나누어서 생각할 수 있다. constant input에서 하는 역할은 그 자체가 암호화의 과정이 아니라 암호화의 결과를 쉽게 유추할 수 없도록 input과 output의 상관관계를 복잡하게 만드는 역할을 한다. 따라서 실제로 plaintext를 ciphertext로 만드는데 중요한 역할을 하는 것은 round key이다. 
 
-<img src="https://user-images.githubusercontent.com/44011462/95813071-f773b700-0d51-11eb-96a2-7d88648fe556.png" width=300px> 
+<img src="https://user-images.githubusercontent.com/44011462/95813071-f773b700-0d51-11eb-96a2-7d88648fe556.png" width=300px>  
+
 위의 과정을 보면 한번의 round를 거쳐 나온 intermediate text가 다음 round에서 모든 bit에 영향을 주고 있다. 따라서 bit하나가 바뀐 결과가 다음에 모든 결과에 영향을 주기 때문에 공격자가 plain text와 cipher text를 알더라도 그 non-linear하지 않은 과정을 유추하기는 매우 어렵다.
 
-### Key Expansion Algorithm
+## Key Expansion Algorithm
 AES-128을 기준으로 key가 어떻게 생성되는지 확인해보자. 128bits는 10round를 실행하도록 설계되어 있고 마지막에 1개의 round를 추가로 활용하므로 입력받은 16bytes(4words)의 key가 11개의 rounds, 즉 44개의 words로 변환되는 과정을 살펴보자. 
 
 <img src="https://user-images.githubusercontent.com/44011462/95814178-b7fa9a00-0d54-11eb-8aa7-f34ed453dc1e.png" width=300px> 
 
-위에 그림에는 key가 들어와서 11개의 round를 만드는 과정이 나와있다. 매번 round를 만들어낼 때마다 g라는 암호화함수를 거친다. 그 결과를 Feistel cipher를 이용하여 다음 round를 구하고 그 결과를 다시 다음 round에 이용한다. 그렇다면 g함수에서는 무슨일을 할까? RC에는 10개의 polynomial with modular가 담겨있고 modular는 앞서 말한것 처럼 irreducible인 <img src="https://user-images.githubusercontent.com/44011462/95806122-ec188f80-0d41-11eb-87f5-7bcb90c8d9d5.png" height=25px>으로 정해져 있다. 위 도표의 흐름을 따라가면 round가 반복될때마다 key의 각 bit가 다음 round에서 활용하는 key의 모든 bit에 영향을 주도록 설계되어 있다. 따라서 입력으로 들어가는 key값이 무엇인지를 알아내는 것은 굉장히 어렵다.
+위에 그림에는 key가 들어와서 11개의 round를 만드는 과정이 나와있다. 매번 round를 만들어낼 때마다 g라는 암호화함수를 거친다. 그 결과를 Feistel cipher를 이용하여 다음 round를 구하고 그 결과를 다시 다음 round에 이용한다. 그렇다면 g함수에서는 무슨일을 할까? RC에는 10개의 polynomial with modular가 담겨있고 modular는 앞서 말한것 처럼 irreducible인 x^8^ + x^4^ + x^3^ + x + 1 으로 정해져 있다. 위 도표의 흐름을 따라가면 round가 반복될때마다 key의 각 bit가 다음 round에서 활용하는 key의 모든 bit에 영향을 주도록 설계되어 있다. 따라서 입력으로 들어가는 key값이 무엇인지를 알아내는 것은 굉장히 어렵다.
 
 ### Rationale for Key Expansion
 
@@ -517,6 +530,95 @@ key가 같을 때 128bits를 갖는 두개의 plaintext가 round가 지남에 �
 
 key만 1bit가 다르고, 같은 128bits를 갖는 두개의 plaintext가 round가 지남에 따라 어떻게 다른가
 
-암호학에서 가장 이상적인 것은 '임의성'이 보장되는 것이다. 위 예시를 보면 128bits를 암호화했을떄 절반정도가 서로다르고 나머지 절반정도는 비슷한 것을 볼 수 있다. 한 비트가 갖을 수 있는 경우의 수가 2개이므로 전체적으로 64개의 bits정도가 바뀌는 것이 가장 이상적이라고 볼수 있고 AES는 이러한 조건을 만족하는 형태의 암호체계이다.
+암호학에서 가장 이상적인 것은 '임의성'이 보장되는 것이다. 위 예시를 보면 128bits를 암호화했을때 절반정도가 서로다르고 나머지 절반정도는 비슷한 것을 볼 수 있다. 한 비트가 갖을 수 있는 경우의 수가 2개이므로 전체적으로 64개의 bits정도가 바뀌는 것이 가장 이상적이라고 볼수 있고 AES는 이러한 조건을 만족하는 형태의 암호체계이다.
 
 AES는 구현적인 측면에서도 상당히 효율적인 암호체계이다. 우선 AES는 8bits를 기본단위로 한다. 따라서 8bits를 갖는 processor에서 상당히 효율적이다. 또한 구성 연산도 XOR, Shift, memory 참고 등의 cpu가 매우 잘하는 연산으로 구현가능하다. 8bits processor는 지금도 IoT장치에서 보편적으로 사용하는 프로세서이다. 그렇다면 일반적으로 32bits, 64bits architecture를 갖는 PC에서는 어떨까? 4kb의 용량을 사용하면 SubBytes, ShiftRows, MixColumns를 미리 계산해두고 단순히 memory 참조만으로 암호계를 사용할 수 있다. 따라서 32bits, 64bits 아키텍처를 갖는 PC에서도 굉장히 효율적으로 사용 할수 있는 암호체계이며, 이는 Rijndeal 알고리즘이 NIST의 표준으로 채택되는 데에 중요한 근거로 쓰였을 것으로 추축된다. 
+
+
+
+# Block Cipher Operation
+
+## Multiple encryption and triple DES
+**DES는 56bits의 key를 이용하는 암호체계**이다. 시간이 지나면서 공격자들의 계산능력이 개선되고 DES를 공격하는 전용 Hardware를 이용하면 하루안에 KEY를 알아내기에 이르렀다. DES를 강화하는 방법으로 **반복적인 DES를 이용**하는 것으로 어느정도 해결한다.
+
+### Double DES
+<img src="https://user-images.githubusercontent.com/44011462/96530390-4fff0300-12c2-11eb-862a-0fcfdb3318c5.png" width=300px>
+
+기본적으로 DES가 2번 반복되면 KEY를 해독하는데 필요한 경우의 수는 2^56^에서 2^112^으로 증가된다. 그러면 실제로 **Double DES는 2^56^에서 2^112^로 증가한 만큼 안전할까?** 그렇지 않다. Meet-in-the Middle Attack을 이용하면 Encryption할때와 Decryption의 중간단계가 동일한지 확인하여 빠르게 공격가능하다. 우선 아래의 시나리오는 공격자가 plaintext와 ciphertext를 모두 알고 있고 KEY를 알아내는 공격의 시나리오이다.
+
+1. encryption과 decryption을 한번하여 각각 존재하는 모든 결과물을 얻어낸다.
+   1. 결과물의 경우의 수는 DES의 key는 56bits이므로 2^56^개의 경우의 수가 있다.
+   2. encryption과 decryption에 1번씩 총 2번이므로 모든 경우의 수는 2^56^ * 2 = 2^57^이다. 
+2. 전체적인 시간복잡도를 낮추기 위하여 각각의 결과물을 정렬한다. 최적의 방법을 사용하면 56 * 2^57^의 연산이 소요된다.
+3. 이렇게 하면 **2^112^ > 56 * 2^57^의 연산**으로 해결가능하다. 
+   1. 하지만 계산에 필요한 공간이 2^56^ * 2 *64bits = 1.153 * 10^6^ TB(terabytes)으로 비현실적으로 크다는 한계가 있다.
+
+계산량과 메모리량이 **Tradeoff인 점을 절충하여 적당한 부분을 설정하여 공격하면 Double DES가 의도한 것보다 훨씬 빠르게 공격**할 수 있다.
+
+### Triple DES
+
+<img src="https://user-images.githubusercontent.com/44011462/96532276-8179cd80-12c6-11eb-9086-8fd19e5b3d3e.png" width=300px>  
+
+Double DES가 부족하다면 Triple을 시도하는 방법을 생각하는 것은 매우 자연스럽다. Key는 2개만 사용하는 형식이 Key를 3개를 사용하는 것보다 일반적으로 선호된다. **3번의 DES를 사용하는데 Encryption -> Decryption -> Encryption으로 진행하는 이유는 하위 호환성(Backward Compatibility)** 때문이다. 만약 Key를 2개, 혹은 3개를 사용하지 않고 모두 동일한 K1으로 사용한다면 triple DES로 single DES의 기능을 수행 할 수 있기  때문에 중간에 Decryption과정을 거치며, Decryption은 Encryption과 반대로 Decryption -> Encryption -> Decryption 의 순서로 진행된다. 
+
+**보안성이 더 개선된 triple DES는 계산량이 많아서 효율성이 떨어**지는 방식이었다. 결국 새로운 암호체계의 도입 필요성을 느낀 NIST는 **AES**를 만들게 된다.
+
+
+## Modes of Operation
+특정 암호화 알고리즘에만 적용되는 것이 아닌 모든 Block cipher에 이용되는 연산을 살펴보자.
+
+### ECB Mode (Electronic Codebook Mode)
+
+<img src="https://user-images.githubusercontent.com/44011462/96536480-28626780-12cf-11eb-97cd-fd19ac4e4330.png" width=300px>  
+
+Symetric cipher에서 사용되는 형식으로, plaintext를 특정한 4bytes 단위로 block을 만들어서 암호화하는 방식이며 복호화는 반대로 수행한다.즉 **input block이 같다면 항상 같은 output block** 을 갖는 형태이다. 어떤 이미지를 ECB Mode를 이용하여 암호화하면 아래와 같은 결과를 얻는다.
+
+<img src="https://user-images.githubusercontent.com/44011462/96536625-724b4d80-12cf-11eb-99dd-39cce9e0a943.png" height=200px><img src="https://user-images.githubusercontent.com/44011462/96536646-8000d300-12cf-11eb-8d05-05eddf0b8130.png" height=200px><img src="https://user-images.githubusercontent.com/44011462/96536903-02899280-12d0-11eb-9890-f933f8ba7b83.png" height=200px>
+
+같은 pixel단위는 같은 결과로 나오기  때문에 만약 이미지에 담긴 내용에 친숙한 공격자라면 특별한 복호화과정이 없더라도 내용을 유추할 수도 있다. 이런 유형의 한계는 Caesor Cipher나 permutation Cipher등의 **한 글자씩 변형하는 암호화 방식에서 공통적으로 나타나는 유형의 문제점**이다. 마치 '미리 정해진 책'과 같은 형식의 암호연산을 ECB Mode라고 한다. 따라서 양이 아주 많은 유형의 plaintext는 추천되지 않는 방식이며 암호문이 매우짧은 경우에 유용하게 사용가능하다. 아래에 등장하는 4가지의 방법은 ECB의 문제점을 해결한 방식이다.
+
+### CBC Mode (Cipher block Chaining Mode)
+<img src="https://user-images.githubusercontent.com/44011462/96537075-62803900-12d0-11eb-85f4-39519cf0b0a0.png" width=300px>  
+
+키와 암호화 알고리즘을 이용하여 나온 결과를 **feedback하여 다음 block의 암호화에 활용**하는 방식이다. 앞서 암호화된 block의 결과에 영향을 받기 때문에 같은 block이라도 다른 결과가 나온다. 이런 알고리즘은 **Error Propagation**이라는 문제점을 갖는다. 어떤 외부적인 요인으로 인해서 plaintext의 아주 일부 bit라도 변형되었다면, AES의 Diffusion특성 중의 하나인 Avalonche Effect와 같이 결과적으로 내용을 파악하기 어려워 질 수 있다.  
+이러한 특징은 암호화의 관점에서 장점으로 활용할 수 있다. 이를 **Message Authentication Code(MAC)**, 혹은 Message Integrity Code(MIC)이라고 부르는데 **Integrity와 Authentication**을 제공하는 방식을 말한다. MAC을 이용하여 제대로된 text를 받았는지 확인할 수 있는데 제대로된 text를 가지고 얻어낸 최종 cipher block을 기준으로 삼고, 전송받은 text의 최종 cipher block이 같은지 확인하는 방식이다. **하나의 비트라도 달라지면 최종 결과물이 완전히 달라지는 점**을 응용한 것이다. 
+이는 **네트워크의 parity check**와 유사한 기능이다. 그렇다면 그냥 parity를 쓰면 안되나? 안된다. 다르다. MAC에는 Authentication기능이 추가되어있다. 만약 MAC이 아닌 parity를 보낸다면 일반적인 bit 오류는 검출할 수 있지만 공격자가 text를 가로채고 parity만 맞도록 보낸다면 parity만으로는 이를 확인할 방법이 없다. CBC를 응용한 **MAC을 사용한다면 integrity와 Authentication** 기능까지 제공가능하다. 
+
+
+### CFB Mode (Cipher FeedBack Mode)
+<img src="https://user-images.githubusercontent.com/44011462/96540109-c0fce580-12d7-11eb-84a9-9aa48449eb2a.png" width=300px><img src="https://user-images.githubusercontent.com/44011462/96540535-fa822080-12d8-11eb-844c-660c7698b0d1.png" width=300px> 
+
+CFB는 CBC와 비슷해보이지만 block cipher가아닌 stream cipher방식을 취하는 연산이다. 따라서 block자체를 암호화 하지 않고 **key와 vector를 암호화한 결과에 XOR** 시키는 연산이다. 이 방식도 Avalanche effect로 error propagation이 발생하여 MAC을 만드는 연산으로 사용할 수 있다. CFB는 plain text block과 cipher block을 XOR한 결과를 다음의 cipher block를 만드는 vector로 활용한다. 때문에 plain text block이 주어지지 않는다면 **암호화전체가 지연(stall)**되는 특징이 있다. 이런 특징은 plain text가 들어올 때 순차적으로 암호화 알고리즘을 사용해야하므로 암호화 알고리즘을 전처리하지 못하여 효율성이 떨어지는 결과를 낳는다.
+
+### OFB Mode (Output FeedBack Mode)
+<img src="https://user-images.githubusercontent.com/44011462/96540325-5dbf8300-12d8-11eb-81d6-c03ca2c24f04.png" width=300px>  
+
+CFB에서 plain text block에 따라 암호화 과정이 **지연되는 문제를 해결**한 방식이 OFB이다. 이전 단계의 cipher block을 암호화 알고리즘의 input으로 사용하지 않고, 이전 암호화 알고리즘의 결과를 input으로 사용한다. 이런 특징 때문에 **stall의 특징이 없고, error propagation도 일어나지 않**는다. 만약 plaintext의 길이가 상당히 길다면 암호화 알고리즘의 전처리(preprocess)과정도 시간이 매우 오래걸리는 특징이 있다. 이전의 결과가 다음에 사용되어야 하므로 병렬적인 연산수행(Parallelism)이 불가능하기 때문이다.
+
+
+### CTR Mode (Counter Mode)
+<img src="https://user-images.githubusercontent.com/44011462/96541314-b1cb6700-12da-11eb-89ba-d880254fe1aa.png" width=300px> 
+
+CTR은 **parallelism**이 가능한 구조를 가지고 있으면서 ECB방식이 갖는 한계를 모두 극복한 암호방식이다. CBC, CFB, OFB과 다르게 앞선 계산 결과가 다음에 영향을 주지 않아서 병렬적으로 처리가능하고 counter를 일정한 연관관계를 주어 다르게 사용하기 때문에 **Ramdom access**도 가능하다. 즉 150번째 cipher text를 먼저 수행할 수 있다는 뜻이다. 
+
+## comparision of feedback characteristic
+
+<img src="https://user-images.githubusercontent.com/44011462/96541845-d6740e80-12db-11eb-9c91-e0bfc5173eb8.png" width=300px>
+
+| Mode  |                                                           summary                                                            | block vs stream | same output | error propagation (MAC) | preprocessing | parallelism | random access |
+| :---: | :--------------------------------------------------------------------------------------------------------------------------: | :-------------: | :---------: | :---------------------: | :-----------: | :---------: | :-----------: |
+|  ECB  | <img src="https://user-images.githubusercontent.com/44011462/96536480-28626780-12cf-11eb-97cd-fd19ac4e4330.png" width=200px> |      block      |      O      |            X            |       X       |      O      |       X       |
+|  CBC  | <img src="https://user-images.githubusercontent.com/44011462/96537075-62803900-12d0-11eb-85f4-39519cf0b0a0.png" width=200px> |      block      |      X      |            O            |       X       |      X      |       X       |
+|  CFB  | <img src="https://user-images.githubusercontent.com/44011462/96540109-c0fce580-12d7-11eb-84a9-9aa48449eb2a.png" width=200px> |     stream      |      X      |            O            |       X       |      X      |       X       |
+|  OFB  | <img src="https://user-images.githubusercontent.com/44011462/96540325-5dbf8300-12d8-11eb-81d6-c03ca2c24f04.png" width=200px> |     stream      |      X      |            X            |       O       |      X      |       X       |
+|  CTR  | <img src="https://user-images.githubusercontent.com/44011462/96541845-d6740e80-12db-11eb-9c91-e0bfc5173eb8.png" width=200px> |     stream      |      X      |            X            |       O       |      O      |       O       |
+
+### AES-CCMP
+
+위 표를 보면 stream/block, propagation/no propagation등의 기준에서 어떤 것이 좋고 나쁘다고 말하기는 어렵지만 text의 길이가 충분히 길다면 **CTR이 가장 효과적**이다. 그러면서 인증과 무결성을 보장해야한다면 **CRT을 기반으로 CBC-MAC**을 사용하는데 이를 CTR with CBC-MAC이라고 부르며 줄여서 **CCM**이라고 부른다. CCM은 굉장히 효과적이고 믿을 수 있는 암호방식이며 **IEEE 802.11(WPA2/3)의 일부를 구현하는데 사용**되어있다. OSI 7 Layer에서 Data Link layer와 **Physical Layer를 구성하는데 AES-CCMP(CCM)이 이용**되었다. 
+
+
+### TLS (Transport Layer Security)  
+**SSL(Secure Socket Layer)**로 시작했으며 버전이 올라가면서 **TLS**로 변경되었다. 지금쓰이는 TLS는 2018년 8월에 나온 v1.3(IERF RFC 8446)이다. 보통 HTTPS로 접속하는 페이지에 적용된 보안방식이다. **RFC 8446**의 9.1절을 보면 TLS를 이용하기 위해서는 반드시 **TLS_AES-128-GCM-SHA256**을 구현해서 사용해야 한다고 나와있다. 이때 GCM이 갈루아 카운터 모드를 뜻하며 **CCM과 유사한 역할을 하는 암호화 알고리즘**이다. HTTPS를 이용하면 AES-GCM을 이용하여 패킷을 암호화하여 접근 권한이 없는 사용자가 패킷을 해석하지 못하도록 한 것이다.  
+
+<img src="https://user-images.githubusercontent.com/44011462/96543788-1937e580-12e0-11eb-8201-d3f5e4386352.png" width=300px>
