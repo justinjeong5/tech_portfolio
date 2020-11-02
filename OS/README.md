@@ -36,19 +36,19 @@ while(true){
 
 문장 'counter++'는 다음과 같은 assembly language로 구현될 수 있다.
 
-  register~1~ = counter
-  register~1~ = register~1~ + 1
-  counter = register~1~
+  register<sub>1</sub> = counter
+  register<sub>1</sub> = register<sub>1</sub> + 1
+  counter = register<sub>1</sub>
 
 
 소비자와 생산자가 'counter++'와 'counter--'를 병행하게 실행하면 아래와 같은 assembly language에 의해 연산이 수행된다
 
-1. 생산자가 register~1~ = counter를 수행(register~1~ = 5)
-2. 생산자가 register~1~ = register~1~ + 1을 수행(register~1~ = 6)
-3. 소비자가 register~2~ = counter를 수행(register~2~ = 5)
-4. 소비자가 register~2~ = register~2~ - 1을 수행(register~2~ = 4)
-5. 생산자가 counter = register~1~을 수행(counter = 6)
-6. 소비자가 counter = register~2~을 수행(counter = 4)
+1. 생산자가 register<sub>1</sub> = counter를 수행(register<sub>1</sub> = 5)
+2. 생산자가 register<sub>1</sub> = register<sub>1</sub> + 1을 수행(register<sub>1</sub> = 6)
+3. 소비자가 register<sub>2</sub> = counter를 수행(register<sub>2</sub> = 5)
+4. 소비자가 register<sub>2</sub> = register<sub>2</sub> - 1을 수행(register<sub>2</sub> = 4)
+5. 생산자가 counter = register<sub>1</sub>을 수행(counter = 6)
+6. 소비자가 counter = register<sub>2</sub>을 수행(counter = 4)
 
 
 실제로는 버퍼에 5개가 채워져 있지만 4개의 버퍼가 채워져 있는 것을 의미하는 counter = 4인 부정확한 상태가 된다. 혹은 counter = 6인 부정확한 상태가 된다. 이런 부정확한 상황이 발생하는 이유는 여러개의 프로세스가 **동일한 자료에 접근하여 조작** 하고 그 실행 결과가 접근이 발생한 **특정 순서에 의존** 하는 **Race Condition**이 발생 했기 떄문이다.
@@ -159,9 +159,9 @@ void signal(semaphore *S) {
 
 대기 큐를 가진 세마포의 구현은 두 개 이상의 프로세스들이, 오로지 대기 중인 프로세스들 중 하나에 의해서만 야기될 수 있는 사건을 무한정 기다리는 상황이 발생할 수 있다. 이런 사건을 **교착 상태(deadlock)** 라고 한다. 
 
-두 개의 프로세스 p~0~과 p~1~로 구성되고, 이들이 1로 지정된 세마포 S와 Q를 접근하는 시스템을 생각해보자. 
+두 개의 프로세스 p<sub>0</sub>과 p<sub>1</sub>로 구성되고, 이들이 1로 지정된 세마포 S와 Q를 접근하는 시스템을 생각해보자. 
 
-p~0~ : wait(S); wait(Q); ...  wait(S); wait(Q);
-p~1~ : wait(Q); wait(S); ...  wait(Q); wait(S);  
+p<sub>0</sub> : wait(S); wait(Q); ...  wait(S); wait(Q);
+p<sub>1</sub> : wait(Q); wait(S); ...  wait(Q); wait(S);  
 
-p~0~이 wait(S)를 싱핼하고, p~1~이 wait(Q)를 실행한다고 가정하자. p~0~이 wait(Q)를 실행할 때, p~0~은 p~1~이 signal(Q)를 실행할 떄까지 기다려야 한다. 마찬자기로  p~1~이 wait(S)를 실행할 때, p~1~은 p~0~이 signal(S)를 실행할 떄까지 기다려야 한다. 이들 시그널 연산은 실핼될 수 없기 떄문에 p~0~과 p~1~은 교착상태가 된다. 한 집합 내의 **모든 프로세스들이** 그 집합 내의 다른 프로세스들이 유발할 수 있는 **사건을 기다릴 때,** 이 프로세스들이 **교착상태** 에 있다고 말한다. 
+p<sub>0</sub>이 wait(S)를 싱핼하고, p<sub>1</sub>이 wait(Q)를 실행한다고 가정하자. p<sub>0</sub>이 wait(Q)를 실행할 때, p<sub>0</sub>은 p<sub>1</sub>이 signal(Q)를 실행할 떄까지 기다려야 한다. 마찬자기로  p<sub>1</sub>이 wait(S)를 실행할 때, p<sub>1</sub>은 p<sub>0</sub>이 signal(S)를 실행할 떄까지 기다려야 한다. 이들 시그널 연산은 실핼될 수 없기 떄문에 p<sub>0</sub>과 p<sub>1</sub>은 교착상태가 된다. 한 집합 내의 **모든 프로세스들이** 그 집합 내의 다른 프로세스들이 유발할 수 있는 **사건을 기다릴 때,** 이 프로세스들이 **교착상태** 에 있다고 말한다. 
