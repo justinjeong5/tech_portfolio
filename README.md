@@ -17,14 +17,14 @@
   - [UDP, TCP](https://github.com/justinjeong5/tech_portfolio/tree/master/NW#udp-user-datagram-protocol-tcp-transmission-control-protocol)
   - [What Webbrowswer Does](https://github.com/justinjeong5/tech_portfolio/tree/master/NW#what-webbrowser-does)
 - [OPERATING SYSTEM](https://github.com/justinjeong5/tech_portfolio/tree/master/OS#operating-system)
-  - [Semaphore Mutex](https://github.com/justinjeong5/tech_portfolio/tree/master/OS#semaphore--mutex-mutual-exclusion)
+  - [Semaphore Mutex](https://github.com/justinjeong5/tech_portfolio/tree/master/OS#process-synchronization)
 - [SECURITY](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#security)
-  - [OWASP](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#owasp)
   - [Classical Encryption](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#classical-encryption)
   - [Block Cipher & DES](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#block-cipher-and-des)
   - [AES(Advanced Encryption Standard)](https://github.com/justinjeong5/tech_portfolio/tree/master/Security#aesadvanced-encryption-standard)
+  
 ## contributor
 
-
+ 
 ## history
 
