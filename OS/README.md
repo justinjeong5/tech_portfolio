@@ -1,5 +1,12 @@
 # OPERATING SYSTEM
 
+- [OPERATING SYSTEM](#operating-system)
+  - [Process Synchronization](#process-synchronization)
+    - [Critical Section Problem](#critical-section-problem)
+    - [Mutex Locks](#mutex-locks)
+    - [Semaphore](#semaphore)
+    - [deadlock and starvation](#deadlock-and-starvation)
+
 ## Process Synchronization
 
 process는 병행하게 또는 병렬적으로 실행될 수 있다. process scheduling에는 여러가지 방식이 알려져 있고 cpu scheduler가 process 사이에서 빠르게 오가며 각 프로세스를 실행하여 모든 프로세스를 병행 실행시킨다. 이는 한 프로세스는 다른 프로세스가 스케줄되기 전에 일부분만 진행할 수 있다는 것을 의미한다. 이렇게 **프로세스가 병행 또는 병렬로 실행** 될 때 여러 프로세스가 공유하는 **데이터의 무결성(integrity)에 문제** 가 발생할 수 있다.
