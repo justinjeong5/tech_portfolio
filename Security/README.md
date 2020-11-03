@@ -54,6 +54,20 @@
   - [comparision of feedback characteristic](#comparision-of-feedback-characteristic)
     - [AES-CCMP](#aes-ccmp)
     - [TLS (Transport Layer Security)](#tls-transport-layer-security)
+- [PUBLIC KEY CRYPTOSYSTEM](#public-key-cryptosystem)
+  - [Motivation](#motivation)
+  - [Terminology](#terminology)
+  - [Applications](#applications)
+  - [Public-key Requirements](#public-key-requirements)
+- [the RSA(Rivest-Shamir-Adleman) Algorithm](#the-rsarivest-shamir-adleman-algorithm)
+  - [Description of the Algorithm](#description-of-the-algorithm)
+    - [Key Generation](#key-generation)
+    - [Encryption](#encryption)
+    - [Decryption](#decryption)
+  - [RSA Example](#rsa-example)
+  - [Computational Aspects](#computational-aspects)
+    - [Fast Modular Exponentiation Algorithm](#fast-modular-exponentiation-algorithm)
+  - [Security of RSA](#security-of-rsa)
 
 
 # CLASSICAL ENCRYPTION
@@ -433,3 +447,164 @@ CTR은 **parallelism**이 가능한 구조를 가지고 있으면서 ECB방식�
 **SSL(Secure Socket Layer)**로 시작했으며 버전이 올라가면서 **TLS**로 변경되었다. 지금쓰이는 TLS는 2018년 8월에 나온 v1.3(IERF RFC 8446)이다. 보통 HTTPS로 접속하는 페이지에 적용된 보안방식이다. **RFC 8446**의 9.1절을 보면 TLS를 이용하기 위해서는 반드시 **TLS_AES-128-GCM-SHA256**을 구현해서 사용해야 한다고 나와있다. 이때 GCM이 갈루아 카운터 모드를 뜻하며 **CCM과 유사한 역할을 하는 암호화 알고리즘**이다. HTTPS를 이용하면 AES-GCM을 이용하여 패킷을 암호화하여 접근 권한이 없는 사용자가 패킷을 해석하지 못하도록 한 것이다.  
 
 <img src="https://user-images.githubusercontent.com/44011462/96543788-1937e580-12e0-11eb-8201-d3f5e4386352.png" width=300px>
+
+
+# PUBLIC KEY CRYPTOSYSTEM
+
+공개키 암호는 descrete logarithm과 integer factorization의 두가지 '풀이가 매우 어려운' 두가지 방식을 이용하여 설계된다. descrete logarithm은 어떤수 a를 p에 대해서 module연산을 수행할 때 a를 몇번 제곱해야 n이 나오는지 계산하는것이다. integer factorization은 어떤 수를 두개의 소수로 소인수분해를 하는 방식이다. 위 두가지 방식은 4096bits에서 8192bits의 소수에 대해 계산하는 것이 매우 어렵다는 점을 이용한다.
+
+**Descrete Logarithm**
+<img src="https://user-images.githubusercontent.com/44011462/93839674-a92a4580-fcc8-11ea-8d68-1ac3a260a078.png" width=300px>
+
+**integer factorization**
+<img src="https://user-images.githubusercontent.com/44011462/93840155-55206080-fcca-11ea-9770-c91273af67c1.png" width=300px>
+ 
+
+## Motivation
+
+<img src="https://user-images.githubusercontent.com/44011462/97937394-f1597f00-1dc1-11eb-9f61-69eb32363bab.png" width=300px><img src="https://user-images.githubusercontent.com/44011462/97938537-02f05600-1dc5-11eb-8eb9-de0c3e0f1bbc.png" width=300px>
+
+Symmetric Cryptosystem을 보면 암호키가 안전하게 전달되어야만 전체적인 암호체계가 보장되는 형태를 갖는다. 이때 Key를 안전하게 전달하는 것이 굉장히 어렵고 비효율적일 수 있다. 혹은 중간에 키를 분배하는 기관이 있다고 하면 내가 가진키가 안전한 키인지 믿을 수 있도록 하는 것이 어렵다. 다른 문제는 Digital signature의 문제이며 nonrepudiation이라고도 불린다. 암호 체계의 특성상 근본적으로, 해당 메세지를 보낸 송신자가 유일하다는 것을 증명할(법적으로) 근거가 없다. 수 많은 학자들이 이런 한계를 극복하기 위해 여러가지 제안을 했지만 해결이 어려웠다. 이후에 Symmetric Cryptosystem을 벗어난  공개키 암호체계를 제안하여 해결하였다. 
+
+|          | Conventional Encryption                                                                          | Public-key Encryption                                                                                    |
+| :------: | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| 요구조건 | 같은 key와 같은 알고리즘에 의해 암호화되고 복호화된다.                                           | key pair에서 암호화에 사용되는 key, 알고리즘과 복호화에 사용되는 것이 각각 쌍을 이루며 서로 다르다.      |
+|    -     | 송신자와 수신자는 반드시 알고리즘과 key를 공유해야한다.                                          | 송신자와 수신자는 쌍이 일치하는 하나의 key pair를 공유해야한다.                                          |
+| 보안조건 | key는 반드시 안전하게 지켜져야한다.                                                              | key pair중에서 public key는 대중에 공개되며 private key는 반드시 안전하게 지켜져야한다.                  |
+|    -     | key가 안전하게 보호된다면, 암호화된 내용을 해독하는 것이 불가능하거나 현실적으로 어려워야한다.   | private key가 안전하게 보호된다면, 암호화된 내용을 해독하는 것이 불가능하거나 현실적으로 어려워야한다.   |
+|    -     | 암호화의 알고리즘과 plaintext와 ciphertext가 노출되더라도 key를 알아내는 것이 매우 어려워야한다. | 암호화의 알고리즘과 plaintext와 ciphertext가 노출되더라도 private key를 알아내는 것이 매우 어려워야한다. |
+
+
+## Terminology
+public key : 모두에게 공개된 개인의 key
+private key : 외부로 공개되지 않은 개인의 key
+key pair : 어느 한 개인의 pirvate key와 pulic key를 한 쌍으로 하는 key
+
+
+## Applications
+
+**Encryption & Decryption**
+public key, private key를 이용하여 암호화,복호화에 활용할 수 있다. 이과정에서 Authentication, Confidentiality를 보장할 수 있어서 Symmetric Cryptosystem이 가진 한계를 극복할 수 있다.
+
+**Key Exchange**
+공개키 방식은 confidentiality가 보장되고, Authentication, Nonrepudiation의 특성을 모두 가지고 있어서 강력하지만 성능적으로 매우 느리다는 한계가 있다. 따라서 많은 양의 정보교환에 사용되기에는 부족한데, 대칭암호체계의 key를 안전하게 전달하는 방식으로 공개키암호를 사용하면 매우 바람직하다. 즉, 성능적으로 보다 월등하지만 key를 안전하게 전달하는 방법이 없는 Symmetric Cryptosystem을 이용하면서 key를 안전하게 보내는 방법으로 Public-key Cryptosystem을 이용하는 방식이 가장 일반적이다. 
+
+|            Algorithm             | Encryption/ Decryption | Digital Signature | Key Exchange |
+| :------------------------------: | :--------------------: | :---------------: | :----------: |
+|               RSA                |          YES           |        YES        |     YES      |
+|          Elliptic Curve          |          YES           |        YES        |     YES      |
+|          Diffie-Hellman          |           NO           |        NO         |     YES      |
+| DSS (Digital Signature Standard) |           NO           |        YES        |      NO      |
+
+## Public-key Requirements
+**Practicalility**
+public key와 private key를 만드는 연산이 복잡하지 않아야한다. 
+송신자의 public key를 아는 수신자는 ciphertext를 만드는 연산이 어렵지 않아야한다.  
+ciphertext를 받은 수신자가 private key를 이용하여 plaintext를 만드는 연산이 어렵지 않아야한다.  
+
+**Security**
+public key를 알고 있지만 private key를 알아내는 것이 불가능하거나 현실적으로 매우 어려워야한다.
+public key와 ciphertext를 알더라도 private key, 혹은 plaintext를 알아내는 것이 불가능하거나 현실적으로 매우 어려워야한다.
+
+
+# the RSA(Rivest-Shamir-Adleman) Algorithm
+1977년에 MIT에서 Ron Rivest, Adi Shamir 그리고 Len Adleman이 만들어낸 암호체계이다. 현재까지 알려진 공개키 암호중에서 가장 널리 사용되고 있는 공개키 암호체계이다. 컴퓨터가 보내는 정보는 binary정보로 0, 1로 구성이 되는데 이를 작게는 2048, 3072 또는 많게는 4096bits 단위로 나머지 연산을 통해 암호화하는 방식을 취한다.  
+
+Ciphertext block을 C, plaintext block을 M이라고 할때, 아래와 같은 방식으로 RSA는 동작한다.  
+
+C = M^e^ mod n  
+M = C^d^ mod n = (M^e^)^d^ mod n = M^ed^ mod n  
+
+수신자와 송신자는 n을 알고있어야 하고 e는 public key, d는 private key로 동작한다.
+
+RSA가 동작하기 위해서는 아래와 같은 몇가지 조건이 만족되어야 한다.
+1. 모든 e, d, n에 대해서 M^ed^ mod n = M이면서 M < n을 만족해야 한다.
+2. M < n인 모든 M에 대해서  M^e^ mod n, 그리고 C^d^ mod n을 계산하는 것이 어렵지 않아야한다.
+3. e와 n이 정해질 떄 d를 유일하게 결정하는 것이 불가능해야한다.
+
+## Description of the Algorithm
+
+RSA는 아래와 같은 방식을 통해 구현이 되어있다.
+
+### Key Generation
+1. 소수이면서 서로 다른 값을 가지는 p, q를 찾는다.
+   1. 임의의 홀수를 생성하여 **Miller-Rabin test** 를 통해 소수인지 확인한다.
+   2. Miller-Rabin test를 통과할 때까지 임의의 수를 생성하여 소수를 만든다.
+2. 두 p, q를 곱하여 ***n*** 을 계산한다.
+3. Euler Totient Function을 이용하여 	$\phi$(n)을 구한다.
+   1. n은 p와 q, 두 소수의 곱으로 표현된다.
+   2. $\phi$(n) = (p - 1) * (q - 1)가 성립한다.
+4. $\phi$(n)과 서로소이면서 1 < e < $\phi$(n)을 만족하는 ***e*** 를 찾는다.
+   1. e가 $\phi$(n)와 서로소 라면 gcd($\phi$(n), e) = 1이다.
+   2. **Euclide Algorithm** 을 이용해 값을 구할 수 있다.
+5. mod $\phi$(n)에 대해 e의 역원 ***d*** 를 찾는다.
+   1. d = e^-1^ mod $\phi$(n)을 만족한다.
+   2. 즉, de mod $\phi$(n) = 1을 만족한다.
+   3. **Extended Euclide Algorithm** 을 통해 값을 구할 수 있다.
+6. 위 모든 계산의 결과로 public key와 private key를 얻을 수 있다.
+   1. ***PU = {e, n}***  
+   2. ***PR = {d, n}*** 
+
+### Encryption
+1. 보내고 싶은 plaintext인 M은 n보다 크기가 작다.
+   1. M < n
+2. ciphertext C는 상대방의 public key, ***PU = {e, n}*** 를 이용하여 얻는다.
+   1. C = M^e^ mod n을 계산한다.
+
+### Decryption
+1. ciphertext C는 자신의 private key, ***PR = {d, n}*** 를 이용하여 decryption 가능하다.
+   1. M = C^d^ mod n
+2. M = C^d^ mod n은 아래와 같이 증명 가능하다.  
+C^d^ mod n  
+= (M^e^ mod n)^d^ mod n,  (C = M^e^ mod n)  
+= M^ed^ mod n  
+= M<sup>k$\phi$(n)+1</sup> mod n  
+= M<sup>k$\phi$(n)</sup> * M mod n  
+= M mod n (M<sup>k$\phi$(n)</sup> mod d = 1 by 중국인의 나머지 정리)  
+= M (by M < n)  
+
+
+## RSA Example
+실제로 RSA가 사용하는 p, q는 매우 큰 숫자임을 감안하자. p = 11, q = 17을 이용하여 RSA의 흐름을 따라가보자. PU와 PR에 포함될 ***n = 187*** 으로 계산된다. $\phi$(n)의 값은 (11 - 1) * (17 - 1) = 160이며, 160과 서로소인 값으로 7을 선택하여 ***e = 7*** 이다. mod 187에 대해 7의 역원인 ***d = 23*** 이다. 따라서 ***PU = {7, 187}, PR = {23, 187}*** 이다. 이 값을 이용하여 진행되는 RSA는 아래와 같이 도식화 가능하다.  
+
+<img src="https://user-images.githubusercontent.com/44011462/97948847-202d2080-1dd5-11eb-9cad-2f47bccc917f.png" width=300px>
+
+
+## Computational Aspects
+
+### Fast Modular Exponentiation Algorithm 
+a^b^ mod n에서 a를 b-1번을 곱하는 방법을 사용할 수도 있다. 하지만 매우 오래걸린다. Fast Modular Exponentiation Algorithm은 O(2log b)의 연산만으로 결과를 얻을 수 있으므로 빠르다. 특히 4096bits의 숫자만큼 제곱하는 경우에는 반드시 필요한 알고리즘이다. 하지만 자릿수 자체가 커서 연산의 양은 여전히 많다.
+```
+c = 0; f = 1;
+for i = k downto 0
+    do c = 2 * c
+        f = f * f mod n
+    if bi = 1
+        then c = c + 1
+             f = f * a mod n
+return f
+```
+a = 7, b = 560, n = 561인 a^b^ mod n에 대해서 
+|   i   |   9   |   8   |   7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+|  bi   |   1   |   0   |   0   |   0   |   1   |   1   |   0   |   0   |   0   |   0   |
+|   c   |   1   |   2   |   4   |   8   |  17   |  35   |  70   |  140  |  280  |  560  |
+|   f   |   7   |  49   |  157  |  526  |  160  |  241  |  198  |  166  |  67   |   1   |
+
+위 방식을 이용하여도 4096bits를 다루는 공개키 알고리즘의 연산은 매우 오래걸린다. 학자들이 이런 한계를 보완하는 방법으로 만든 것이 공개키 ***e = 2^16^ + 1 = 0b10000000000000001*** 로 고정하는 방식이다. 공개키는 대중에 공개되는 key이기 떄문에 값이 큰 것과 보안성이 뛰어난 것은 연관성이 없다. 따라서 알고리즘의 속도를 높이기 위해 e를 적절한 값으로 설정하면 알고리즘의 속도 개선에 큰 영향이 있을 수 있다. e = 2^16^ + 1에 대해서 Fast Modular Exponentiation Algorithm을 사용하면 약 19번의 연산이 일어난다. 이는 e가 임의의 숫자일 때 보다 평균적으로 200배 정도 빠르게 동작하면서 공개키 암호의 보안적인 측면도 문제가 없다.
+
+## Security of RSA
+
+RSA를 공격하기 위해 가능한 방법은 Brute Force, Mathmetical attacks, Chosen cipher attack, implementation attacks등이 있다. 
+
+**Brute force**
+모든 존재가능한 경우의 수에 대해 살펴보는 방식이다. 4096bits를 이용하는 공개키암호는 2^4096^가지의 경우의 수가 있고 2^4096^ = 1.044 * 10^1233^가지의 경우의 수가 있으므로 이를 살펴보는 것은 현실적으로 불가능하다.
+
+**Mathmetical attacks**
+공격자는 공개키인 PU = {e, n}을 알고 있다. 이때 PR = {d, n}중에서 d만 구하면 된다. 공격자가 e * d mod $\phi$(n) = 1을 만족하는 d를 구할 수 있다면 공개키암호는 무너진다. d를 구하기 위해서는 두가지 방법중 하나라도 통하면된다.
+1. n = p * q에서 p, q를 구하지 않고도 $\phi$(n)을 구하는 방법
+2. $\phi$(n)을 알지 못해도 d를 구하는 방법
+  
+하지만 이를 구하는 방법은 현재까지 알려진바가 없다. 위에서 보는 것처럼 공개키 암호는 어떤 수 n을 소인수 분해를 하는 것이 매우 어렵다는 것을 이용하여 만들어졌다. 
+
+
