@@ -32,42 +32,46 @@
     - [Parameters Correspoding to the Key Size](#parameters-correspoding-to-the-key-size)
     - [SPN(Substitution-Permutation Network)](#spnsubstitution-permutation-network)
   - [Detailed Structure](#detailed-structure)
-- [AES Transformation Function](#aes-transformation-function)
-  - [Substitute Bytes](#substitute-bytes)
-    - [Rationale for S Box](#rationale-for-s-box)
-  - [Shift Rows](#shift-rows)
-  - [Mix Columns](#mix-columns)
-  - [Add Round Key](#add-round-key)
-- [AES Key Expansion](#aes-key-expansion)
-  - [Key Expansion Algorithm](#key-expansion-algorithm)
-    - [Rationale for Key Expansion](#rationale-for-key-expansion)
-- [Block Cipher Operation](#block-cipher-operation)
-  - [Multiple encryption and triple DES](#multiple-encryption-and-triple-des)
-    - [Double DES](#double-des)
-    - [Triple DES](#triple-des)
-  - [Modes of Operation](#modes-of-operation)
-    - [ECB Mode (Electronic Codebook Mode)](#ecb-mode-electronic-codebook-mode)
-    - [CBC Mode (Cipher block Chaining Mode)](#cbc-mode-cipher-block-chaining-mode)
-    - [CFB Mode (Cipher FeedBack Mode)](#cfb-mode-cipher-feedback-mode)
-    - [OFB Mode (Output FeedBack Mode)](#ofb-mode-output-feedback-mode)
-    - [CTR Mode (Counter Mode)](#ctr-mode-counter-mode)
-  - [comparision of feedback characteristic](#comparision-of-feedback-characteristic)
-    - [AES-CCMP](#aes-ccmp)
-    - [TLS (Transport Layer Security)](#tls-transport-layer-security)
+  - [AES Transformation Function](#aes-transformation-function)
+    - [Substitute Bytes](#substitute-bytes)
+      - [Rationale for S Box](#rationale-for-s-box)
+    - [Shift Rows](#shift-rows)
+    - [Mix Columns](#mix-columns)
+    - [Add Round Key](#add-round-key)
+  - [AES Key Expansion](#aes-key-expansion)
+    - [Key Expansion Algorithm](#key-expansion-algorithm)
+      - [Rationale for Key Expansion](#rationale-for-key-expansion)
+  - [Block Cipher Operation](#block-cipher-operation)
+    - [Multiple encryption and triple DES](#multiple-encryption-and-triple-des)
+      - [Double DES](#double-des)
+      - [Triple DES](#triple-des)
+    - [Modes of Operation](#modes-of-operation)
+      - [ECB Mode (Electronic Codebook Mode)](#ecb-mode-electronic-codebook-mode)
+      - [CBC Mode (Cipher block Chaining Mode)](#cbc-mode-cipher-block-chaining-mode)
+      - [CFB Mode (Cipher FeedBack Mode)](#cfb-mode-cipher-feedback-mode)
+      - [OFB Mode (Output FeedBack Mode)](#ofb-mode-output-feedback-mode)
+      - [CTR Mode (Counter Mode)](#ctr-mode-counter-mode)
+    - [comparision of feedback characteristic](#comparision-of-feedback-characteristic)
+      - [AES-CCMP](#aes-ccmp)
+      - [TLS (Transport Layer Security)](#tls-transport-layer-security)
 - [PUBLIC KEY CRYPTOSYSTEM](#public-key-cryptosystem)
   - [Motivation](#motivation)
   - [Terminology](#terminology)
   - [Applications](#applications)
   - [Public-key Requirements](#public-key-requirements)
-- [the RSA(Rivest-Shamir-Adleman) Algorithm](#the-rsarivest-shamir-adleman-algorithm)
-  - [Description of the Algorithm](#description-of-the-algorithm)
-    - [Key Generation](#key-generation)
-    - [Encryption](#encryption)
-    - [Decryption](#decryption)
-  - [RSA Example](#rsa-example)
-  - [Computational Aspects](#computational-aspects)
-    - [Fast Modular Exponentiation Algorithm](#fast-modular-exponentiation-algorithm)
-  - [Security of RSA](#security-of-rsa)
+  - [the RSA(Rivest-Shamir-Adleman) Algorithm](#the-rsarivest-shamir-adleman-algorithm)
+    - [Description of the Algorithm](#description-of-the-algorithm)
+      - [Key Generation](#key-generation)
+      - [Encryption](#encryption)
+      - [Decryption](#decryption)
+    - [RSA Example](#rsa-example)
+    - [Computational Aspects](#computational-aspects)
+      - [Fast Modular Exponentiation Algorithm](#fast-modular-exponentiation-algorithm)
+    - [Security of RSA](#security-of-rsa)
+    - [Misconceptions Concerning Public-key Encryption](#misconceptions-concerning-public-key-encryption)
+  - [Diffie-Hellman Key Exchange](#diffie-hellman-key-exchange)
+    - [Elliptic Curve Enctyption](#elliptic-curve-enctyption)
+      - [Elliptic Curve Arithmatic](#elliptic-curve-arithmatic)
 
 
 # CLASSICAL ENCRYPTION
@@ -294,40 +298,40 @@ AES는 전체적인 data block을 각 round마다 substitution과 permutation을
 
 <img src="https://user-images.githubusercontent.com/44011462/95808649-e625ad00-0d47-11eb-9ad6-6a64216f2bb3.png" width=300px>
 
-# AES Transformation Function
+## AES Transformation Function
 <img src="https://user-images.githubusercontent.com/44011462/95812769-1160ca00-0d51-11eb-985e-abe802d54784.png" width=300px><img src="https://user-images.githubusercontent.com/44011462/95813071-f773b700-0d51-11eb-96a2-7d88648fe556.png" width=300px>  
 
 하나의 round가 subBytes, shiftRows, mixColumns, addRoundKey의 4가지 연산으로 구성된다. 각각의 연산이 어떤일을 하는지는 아래에서 자세히 알아보자.
 
-## Substitute Bytes
+### Substitute Bytes
 <img src="https://user-images.githubusercontent.com/44011462/95808842-559b9c80-0d48-11eb-92d1-5394840e935d.png" width=300px>  
 
 <img src="https://user-images.githubusercontent.com/44011462/95809119-f8ecb180-0d48-11eb-827b-814878001ff9.png" width=300px>
 
-### Rationale for S Box
+#### Rationale for S Box
 Sbox는 암호학적 공격에 대해 안전하도록 설계되어 있다. 암호학적 공격에 대해 안전하다는 것은 통계적인 방법이나 brute force attack에 의한 공격에 대비가 되어있다는 의미이다. 또한 input과 output간의 linear mathematical관계를 찾기 어렵다는 의미이기도 하다. 이런 특성을 갖게 하는 방식이 multiplication inverse를 이용하는 방법이고 substitution box(S Box)는 이러한 특징을 잘 반영하고 있다. 이러한 특성이 안전성으로 이어지는 이유는 만약에 공격자가 plaintext와 ciphertext를 알게 된다고 하여도 암호화에 사용된 key를 알아내는것이 매우매우 어렵고 이는 256! = 8.57 * 10^506^의 경우의 수를 살펴봐야 한다는 것을 의미한다. 만약 암호화에 이용된 방법이 선형적이라면(linear mathematical function) 수학적인 계산에 의한 방법으로 deterministic하게 알아 낼 수 있다.
 
 <img src="https://user-images.githubusercontent.com/44011462/95810709-9ac1cd80-0d4c-11eb-84bf-a0544fbc611c.png" width=200px>
 
 
-## Shift Rows
+### Shift Rows
 <img src="https://user-images.githubusercontent.com/44011462/95811352-107a6900-0d4e-11eb-91d3-835a6febf207.png" width=200px>
 
 state는 plaintext, ciphertext, intermediatetext를 모두 표현하여 4행의 4열짜리 행렬로 다루게 된다. shift연산을 통해서 input이 output의 여러 부분에 분산하여 영향을 주도록 하여 input와 output의 연관관계를 복잡하게 형성하도록 만들어주는 역할을 한다. 
 
-## Mix Columns
+### Mix Columns
 <img src="https://user-images.githubusercontent.com/44011462/95811387-21c37580-0d4e-11eb-95af-fc07e207e2e3.png" width=200px>
 
 > Coefficients of a matrix based on a linear code with maximal distance between code words ensures a good mixing among the bytes of each column
 
 간단히 축약하여 이야기하면 곱셈이 일어나는 과정에서 각각의 row에 있는 원소들이 모든 column에 영향을 주면서 결과적으로 input과 output간의 연관관계를 복잡하게 형성하도록 만들어주는 역할을 한다.
 
-## Add Round Key
+### Add Round Key
 <img src="https://user-images.githubusercontent.com/44011462/95811352-107a6900-0d4e-11eb-91d3-835a6febf207.png" width=200px>
 
 단순히 XOR하는 연산이다. 하지만 round key expansion의 과정을 거치면서 key의 부분이 cipher text의 전체에 영향을 주도록 하는 역할을 한다.
 
-# AES Key Expansion
+## AES Key Expansion
 <img src="https://user-images.githubusercontent.com/44011462/95812769-1160ca00-0d51-11eb-985e-abe802d54784.png" width=300px>  
 
 위에서 살펴본 그림을 다시 살펴보자. 각 round에서 과정을 일어나는 과정이 하는 역할을 구분해보면 누구라도 같은 결과를 얻게되는 constant input부분과 variable input부분을 나누어서 생각할 수 있다. constant input에서 하는 역할은 그 자체가 암호화의 과정이 아니라 암호화의 결과를 쉽게 유추할 수 없도록 input과 output의 상관관계를 복잡하게 만드는 역할을 한다. 따라서 실제로 plaintext를 ciphertext로 만드는데 중요한 역할을 하는 것은 round key이다. 
@@ -336,14 +340,14 @@ state는 plaintext, ciphertext, intermediatetext를 모두 표현하여 4행의 
 
 위의 과정을 보면 한번의 round를 거쳐 나온 intermediate text가 다음 round에서 모든 bit에 영향을 주고 있다. 따라서 bit하나가 바뀐 결과가 다음에 모든 결과에 영향을 주기 때문에 공격자가 plain text와 cipher text를 알더라도 그 non-linear하지 않은 과정을 유추하기는 매우 어렵다.
 
-## Key Expansion Algorithm
+### Key Expansion Algorithm
 AES-128을 기준으로 key가 어떻게 생성되는지 확인해보자. 128bits는 10round를 실행하도록 설계되어 있고 마지막에 1개의 round를 추가로 활용하므로 입력받은 16bytes(4words)의 key가 11개의 rounds, 즉 44개의 words로 변환되는 과정을 살펴보자. 
 
 <img src="https://user-images.githubusercontent.com/44011462/95814178-b7fa9a00-0d54-11eb-8aa7-f34ed453dc1e.png" width=300px> 
 
 위에 그림에는 key가 들어와서 11개의 round를 만드는 과정이 나와있다. 매번 round를 만들어낼 때마다 g라는 암호화함수를 거친다. 그 결과를 Feistel cipher를 이용하여 다음 round를 구하고 그 결과를 다시 다음 round에 이용한다. 그렇다면 g함수에서는 무슨일을 할까? RC에는 10개의 polynomial with modular가 담겨있고 modular는 앞서 말한것 처럼 irreducible인 x^8^ + x^4^ + x^3^ + x + 1 으로 정해져 있다. 위 도표의 흐름을 따라가면 round가 반복될때마다 key의 각 bit가 다음 round에서 활용하는 key의 모든 bit에 영향을 주도록 설계되어 있다. 따라서 입력으로 들어가는 key값이 무엇인지를 알아내는 것은 굉장히 어렵다.
 
-### Rationale for Key Expansion
+#### Rationale for Key Expansion
 
 여러 round에 사용된 key중 일부를 알게 되어도 다른 key는 알기 매우 어렵게 되어 있다. 하지만 구현하는 측면에서는 매우 간단한 연산을 이용하므로 일반적인 cpu를 이용하여 충분히 구현가능하다. Diffusion(확산, 어느 한 bit의 변화가 모든 round에 확산되어 영향을 주는 것을 의미)이 발생하는 nonlinearity가 발생하여 plaintext와 ciphertext를 알아도 key를 알아내거나 방식을 유추하는 것은 매우 어렵다.
 
@@ -361,12 +365,12 @@ AES는 구현적인 측면에서도 상당히 효율적인 암호체계이다. �
 
 
 
-# Block Cipher Operation
+## Block Cipher Operation
 
-## Multiple encryption and triple DES
+### Multiple encryption and triple DES
 **DES는 56bits의 key를 이용하는 암호체계**이다. 시간이 지나면서 공격자들의 계산능력이 개선되고 DES를 공격하는 전용 Hardware를 이용하면 하루안에 KEY를 알아내기에 이르렀다. DES를 강화하는 방법으로 **반복적인 DES를 이용**하는 것으로 어느정도 해결한다.
 
-### Double DES
+#### Double DES
 <img src="https://user-images.githubusercontent.com/44011462/96530390-4fff0300-12c2-11eb-862a-0fcfdb3318c5.png" width=300px>
 
 기본적으로 DES가 2번 반복되면 KEY를 해독하는데 필요한 경우의 수는 2^56^에서 2^112^으로 증가된다. 그러면 실제로 **Double DES는 2^56^에서 2^112^로 증가한 만큼 안전할까?** 그렇지 않다. Meet-in-the Middle Attack을 이용하면 Encryption할때와 Decryption의 중간단계가 동일한지 확인하여 빠르게 공격가능하다. 우선 아래의 시나리오는 공격자가 plaintext와 ciphertext를 모두 알고 있고 KEY를 알아내는 공격의 시나리오이다.
@@ -380,7 +384,7 @@ AES는 구현적인 측면에서도 상당히 효율적인 암호체계이다. �
 
 계산량과 메모리량이 **Tradeoff인 점을 절충하여 적당한 부분을 설정하여 공격하면 Double DES가 의도한 것보다 훨씬 빠르게 공격**할 수 있다.
 
-### Triple DES
+#### Triple DES
 
 <img src="https://user-images.githubusercontent.com/44011462/96532276-8179cd80-12c6-11eb-9086-8fd19e5b3d3e.png" width=300px>  
 
@@ -389,10 +393,10 @@ Double DES가 부족하다면 Triple을 시도하는 방법을 생각하는 것�
 **보안성이 더 개선된 triple DES는 계산량이 많아서 효율성이 떨어**지는 방식이었다. 결국 새로운 암호체계의 도입 필요성을 느낀 NIST는 **AES**를 만들게 된다.
 
 
-## Modes of Operation
+### Modes of Operation
 특정 암호화 알고리즘에만 적용되는 것이 아닌 모든 Block cipher에 이용되는 연산을 살펴보자.
 
-### ECB Mode (Electronic Codebook Mode)
+#### ECB Mode (Electronic Codebook Mode)
 
 <img src="https://user-images.githubusercontent.com/44011462/96536480-28626780-12cf-11eb-97cd-fd19ac4e4330.png" width=300px>  
 
@@ -402,7 +406,7 @@ Symetric cipher에서 사용되는 형식으로, plaintext를 특정한 4bytes �
 
 같은 pixel단위는 같은 결과로 나오기  때문에 만약 이미지에 담긴 내용에 친숙한 공격자라면 특별한 복호화과정이 없더라도 내용을 유추할 수도 있다. 이런 유형의 한계는 Caesor Cipher나 permutation Cipher등의 **한 글자씩 변형하는 암호화 방식에서 공통적으로 나타나는 유형의 문제점**이다. 마치 '미리 정해진 책'과 같은 형식의 암호연산을 ECB Mode라고 한다. 따라서 양이 아주 많은 유형의 plaintext는 추천되지 않는 방식이며 암호문이 매우짧은 경우에 유용하게 사용가능하다. 아래에 등장하는 4가지의 방법은 ECB의 문제점을 해결한 방식이다.
 
-### CBC Mode (Cipher block Chaining Mode)
+#### CBC Mode (Cipher block Chaining Mode)
 <img src="https://user-images.githubusercontent.com/44011462/96537075-62803900-12d0-11eb-85f4-39519cf0b0a0.png" width=300px>  
 
 키와 암호화 알고리즘을 이용하여 나온 결과를 **feedback하여 다음 block의 암호화에 활용**하는 방식이다. 앞서 암호화된 block의 결과에 영향을 받기 때문에 같은 block이라도 다른 결과가 나온다. 이런 알고리즘은 **Error Propagation**이라는 문제점을 갖는다. 어떤 외부적인 요인으로 인해서 plaintext의 아주 일부 bit라도 변형되었다면, AES의 Diffusion특성 중의 하나인 Avalonche Effect와 같이 결과적으로 내용을 파악하기 어려워 질 수 있다.  
@@ -410,23 +414,23 @@ Symetric cipher에서 사용되는 형식으로, plaintext를 특정한 4bytes �
 이는 **네트워크의 parity check**와 유사한 기능이다. 그렇다면 그냥 parity를 쓰면 안되나? 안된다. 다르다. MAC에는 Authentication기능이 추가되어있다. 만약 MAC이 아닌 parity를 보낸다면 일반적인 bit 오류는 검출할 수 있지만 공격자가 text를 가로채고 parity만 맞도록 보낸다면 parity만으로는 이를 확인할 방법이 없다. CBC를 응용한 **MAC을 사용한다면 integrity와 Authentication** 기능까지 제공가능하다. 
 
 
-### CFB Mode (Cipher FeedBack Mode)
+#### CFB Mode (Cipher FeedBack Mode)
 <img src="https://user-images.githubusercontent.com/44011462/96540109-c0fce580-12d7-11eb-84a9-9aa48449eb2a.png" width=300px><img src="https://user-images.githubusercontent.com/44011462/96540535-fa822080-12d8-11eb-844c-660c7698b0d1.png" width=300px> 
 
 CFB는 CBC와 비슷해보이지만 block cipher가아닌 stream cipher방식을 취하는 연산이다. 따라서 block자체를 암호화 하지 않고 **key와 vector를 암호화한 결과에 XOR** 시키는 연산이다. 이 방식도 Avalanche effect로 error propagation이 발생하여 MAC을 만드는 연산으로 사용할 수 있다. CFB는 plain text block과 cipher block을 XOR한 결과를 다음의 cipher block를 만드는 vector로 활용한다. 때문에 plain text block이 주어지지 않는다면 **암호화전체가 지연(stall)**되는 특징이 있다. 이런 특징은 plain text가 들어올 때 순차적으로 암호화 알고리즘을 사용해야하므로 암호화 알고리즘을 전처리하지 못하여 효율성이 떨어지는 결과를 낳는다.
 
-### OFB Mode (Output FeedBack Mode)
+#### OFB Mode (Output FeedBack Mode)
 <img src="https://user-images.githubusercontent.com/44011462/96540325-5dbf8300-12d8-11eb-81d6-c03ca2c24f04.png" width=300px>  
 
 CFB에서 plain text block에 따라 암호화 과정이 **지연되는 문제를 해결**한 방식이 OFB이다. 이전 단계의 cipher block을 암호화 알고리즘의 input으로 사용하지 않고, 이전 암호화 알고리즘의 결과를 input으로 사용한다. 이런 특징 때문에 **stall의 특징이 없고, error propagation도 일어나지 않**는다. 만약 plaintext의 길이가 상당히 길다면 암호화 알고리즘의 전처리(preprocess)과정도 시간이 매우 오래걸리는 특징이 있다. 이전의 결과가 다음에 사용되어야 하므로 병렬적인 연산수행(Parallelism)이 불가능하기 때문이다.
 
 
-### CTR Mode (Counter Mode)
+#### CTR Mode (Counter Mode)
 <img src="https://user-images.githubusercontent.com/44011462/96541314-b1cb6700-12da-11eb-89ba-d880254fe1aa.png" width=300px> 
 
 CTR은 **parallelism**이 가능한 구조를 가지고 있으면서 ECB방식이 갖는 한계를 모두 극복한 암호방식이다. CBC, CFB, OFB과 다르게 앞선 계산 결과가 다음에 영향을 주지 않아서 병렬적으로 처리가능하고 counter를 일정한 연관관계를 주어 다르게 사용하기 때문에 **Ramdom access**도 가능하다. 즉 150번째 cipher text를 먼저 수행할 수 있다는 뜻이다. 
 
-## comparision of feedback characteristic
+### comparision of feedback characteristic
 
 <img src="https://user-images.githubusercontent.com/44011462/96541845-d6740e80-12db-11eb-9c91-e0bfc5173eb8.png" width=300px>
 
@@ -438,12 +442,12 @@ CTR은 **parallelism**이 가능한 구조를 가지고 있으면서 ECB방식�
 |  OFB  | <img src="https://user-images.githubusercontent.com/44011462/96540325-5dbf8300-12d8-11eb-81d6-c03ca2c24f04.png" width=200px> |     stream      |      X      |            X            |       O       |      X      |       X       |
 |  CTR  | <img src="https://user-images.githubusercontent.com/44011462/96541845-d6740e80-12db-11eb-9c91-e0bfc5173eb8.png" width=200px> |     stream      |      X      |            X            |       O       |      O      |       O       |
 
-### AES-CCMP
+#### AES-CCMP
 
 위 표를 보면 stream/block, propagation/no propagation등의 기준에서 어떤 것이 좋고 나쁘다고 말하기는 어렵지만 text의 길이가 충분히 길다면 **CTR이 가장 효과적**이다. 그러면서 인증과 무결성을 보장해야한다면 **CRT을 기반으로 CBC-MAC**을 사용하는데 이를 CTR with CBC-MAC이라고 부르며 줄여서 **CCM**이라고 부른다. CCM은 굉장히 효과적이고 믿을 수 있는 암호방식이며 **IEEE 802.11(WPA2/3)의 일부를 구현하는데 사용**되어있다. OSI 7 Layer에서 Data Link layer와 **Physical Layer를 구성하는데 AES-CCMP(CCM)이 이용**되었다. 
 
 
-### TLS (Transport Layer Security)  
+#### TLS (Transport Layer Security)  
 **SSL(Secure Socket Layer)**로 시작했으며 버전이 올라가면서 **TLS**로 변경되었다. 지금쓰이는 TLS는 2018년 8월에 나온 v1.3(IERF RFC 8446)이다. 보통 HTTPS로 접속하는 페이지에 적용된 보안방식이다. **RFC 8446**의 9.1절을 보면 TLS를 이용하기 위해서는 반드시 **TLS_AES-128-GCM-SHA256**을 구현해서 사용해야 한다고 나와있다. 이때 GCM이 갈루아 카운터 모드를 뜻하며 **CCM과 유사한 역할을 하는 암호화 알고리즘**이다. HTTPS를 이용하면 AES-GCM을 이용하여 패킷을 암호화하여 접근 권한이 없는 사용자가 패킷을 해석하지 못하도록 한 것이다.  
 
 <img src="https://user-images.githubusercontent.com/44011462/96543788-1937e580-12e0-11eb-8201-d3f5e4386352.png" width=300px>
@@ -505,8 +509,7 @@ ciphertext를 받은 수신자가 private key를 이용하여 plaintext를 만�
 public key를 알고 있지만 private key를 알아내는 것이 불가능하거나 현실적으로 매우 어려워야한다.
 public key와 ciphertext를 알더라도 private key, 혹은 plaintext를 알아내는 것이 불가능하거나 현실적으로 매우 어려워야한다.
 
-
-# the RSA(Rivest-Shamir-Adleman) Algorithm
+## the RSA(Rivest-Shamir-Adleman) Algorithm
 1977년에 MIT에서 Ron Rivest, Adi Shamir 그리고 Len Adleman이 만들어낸 암호체계이다. 현재까지 알려진 공개키 암호중에서 가장 널리 사용되고 있는 공개키 암호체계이다. 컴퓨터가 보내는 정보는 binary정보로 0, 1로 구성이 되는데 이를 작게는 2048, 3072 또는 많게는 4096bits 단위로 나머지 연산을 통해 암호화하는 방식을 취한다.  
 
 Ciphertext block을 C, plaintext block을 M이라고 할때, 아래와 같은 방식으로 RSA는 동작한다.  
@@ -519,13 +522,13 @@ M = C<sup>d</sup> mod n = (M<sup>e</sup>)<sup>d</sup> mod n = M<sup>ed</sup> mod
 RSA가 동작하기 위해서는 아래와 같은 몇가지 조건이 만족되어야 한다.
 1. 모든 e, d, n에 대해서 M<sup>ed</sup> mod n = M이면서 M < n을 만족해야 한다.
 2. M < n인 모든 M에 대해서  M<sup>e</sup> mod n, 그리고 C<sup>d</sup> mod n을 계산하는 것이 어렵지 않아야한다.
-3. e와 n이 정해질 떄 d를 유일하게 결정하는 것이 불가능해야한다.
+3. e와 n이 정해질 때 d를 유일하게 결정하는 것이 불가능해야한다.
 
-## Description of the Algorithm
+### Description of the Algorithm
 
 RSA는 아래와 같은 방식을 통해 구현이 되어있다.
 
-### Key Generation
+#### Key Generation
 1. 소수이면서 서로 다른 값을 가지는 p, q를 찾는다.
    1. 임의의 홀수를 생성하여 **Miller-Rabin test** 를 통해 소수인지 확인한다.
    2. Miller-Rabin test를 통과할 때까지 임의의 수를 생성하여 소수를 만든다.
@@ -544,13 +547,13 @@ RSA는 아래와 같은 방식을 통해 구현이 되어있다.
    1. ***PU = {e, n}***  
    2. ***PR = {d, n}*** 
 
-### Encryption
+#### Encryption
 1. 보내고 싶은 plaintext인 M은 n보다 크기가 작다.
    1. M < n
 2. ciphertext C는 상대방의 public key, ***PU = {e, n}*** 를 이용하여 얻는다.
    1. C = M<sup>e</sup> mod n을 계산한다.
 
-### Decryption
+#### Decryption
 1. ciphertext C는 자신의 private key, ***PR = {d, n}*** 를 이용하여 decryption 가능하다.
    1. M = C<sup>d</sup> mod n
 2. M = C<sup>d</sup> mod n은 아래와 같이 증명 가능하다.  
@@ -563,15 +566,15 @@ C<sup>d</sup> mod n
 = M (by M < n)  
 
 
-## RSA Example
+### RSA Example
 실제로 RSA가 사용하는 p, q는 매우 큰 숫자임을 감안하자. p = 11, q = 17을 이용하여 RSA의 흐름을 따라가보자. PU와 PR에 포함될 ***n = 187*** 으로 계산된다. ϕ(n)의 값은 (11 - 1) * (17 - 1) = 160이며, 160과 서로소인 값으로 7을 선택하여 ***e = 7*** 이다. mod 187에 대해 7의 역원인 ***d = 23*** 이다. 따라서 ***PU = {7, 187}, PR = {23, 187}*** 이다. 이 값을 이용하여 진행되는 RSA는 아래와 같이 도식화 가능하다.  
 
 <img src="https://user-images.githubusercontent.com/44011462/97948847-202d2080-1dd5-11eb-9cad-2f47bccc917f.png" width=300px>
 
 
-## Computational Aspects
+### Computational Aspects
 
-### Fast Modular Exponentiation Algorithm
+#### Fast Modular Exponentiation Algorithm
 a<sup>b</sup> mod n에서 a를 b-1번을 곱하는 방법을 사용할 수도 있다. 하지만 매우 오래걸린다. Fast Modular Exponentiation Algorithm은 O(2log b)의 연산만으로 결과를 얻을 수 있으므로 빠르다. 특히 4096bits의 숫자만큼 제곱하는 경우에는 반드시 필요한 알고리즘이다. 하지만 자릿수 자체가 커서 연산의 양은 여전히 많다.
 ```
 c = 0; f = 1;
@@ -583,27 +586,117 @@ for i = k downto 0
              f = f * a mod n
 return f
 ```
-a = 7, b = 560, n = 561인 ab mod n에 대해서 
-|   i   |   9   |   8   |   7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-|  bi   |   1   |   0   |   0   |   0   |   1   |   1   |   0   |   0   |   0   |   0   |
-|   c   |   1   |   2   |   4   |   8   |  17   |  35   |  70   |  140  |  280  |  560  |
-|   f   |   7   |  49   |  157  |  526  |  160  |  241  |  198  |  166  |  67   |   1   |
+a = 7, b = 560, n = 561인 a<sup>b</sup> mod n에 대해서 
+|       i       |   9   |   8   |   7   |   6   |   5   |   4   |   3   |   2   |   1   |   0   |
+| :-----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| b<sub>i</sub> |   1   |   0   |   0   |   0   |   1   |   1   |   0   |   0   |   0   |   0   |
+|       c       |   1   |   2   |   4   |   8   |  17   |  35   |  70   |  140  |  280  |  560  |
+|       f       |   7   |  49   |  157  |  526  |  160  |  241  |  198  |  166  |  67   |   1   |
 
-위 방식을 이용하여도 4096bits를 다루는 공개키 알고리즘의 연산은 매우 오래걸린다. 학자들이 이런 한계를 보완하는 방법으로 만든 것이 공개키 ***e = 2<sup>16</sup> + 1 = 0b10000000000000001*** 로 고정하는 방식이다. 공개키는 대중에 공개되는 key이기 떄문에 값이 큰 것과 보안성이 뛰어난 것은 연관성이 없다. 따라서 알고리즘의 속도를 높이기 위해 e를 적절한 값으로 설정하면 알고리즘의 속도 개선에 큰 영향이 있을 수 있다. e = 2<sup>16</sup> + 1에 대해서 Fast Modular Exponentiation Algorithm을 사용하면 약 19번의 연산이 일어난다. 이는 e가 임의의 숫자일 때 보다 평균적으로 200배 정도 빠르게 동작하면서 공개키 암호의 보안적인 측면도 문제가 없다.
+위 방식을 이용하여도 4096bits를 다루는 공개키 알고리즘의 연산은 매우 오래걸린다. 학자들이 이런 한계를 보완하는 방법으로 만든 것이 공개키 ***e = 2<sup>16</sup> + 1 = 0b10000000000000001*** 로 고정하는 방식이다. 공개키는 대중에 공개되는 key이기 때문에 값이 큰 것과 보안성이 뛰어난 것은 연관성이 없다. 따라서 알고리즘의 속도를 높이기 위해 e를 적절한 값으로 설정하면 알고리즘의 속도 개선에 큰 영향이 있을 수 있다. e = 2<sup>16</sup> + 1에 대해서 Fast Modular Exponentiation Algorithm을 사용하면 약 19번의 연산이 일어난다. 이는 e가 임의의 숫자일 때 보다 평균적으로 200배 정도 빠르게 동작하면서 공개키 암호의 보안적인 측면도 문제가 없다.
 
-## Security of RSA
+### Security of RSA
 
 RSA를 공격하기 위해 가능한 방법은 Brute Force, Mathmetical attacks, Chosen cipher attack, implementation attacks등이 있다. 
 
-**Brute force**
+**Brute Force**
 모든 존재가능한 경우의 수에 대해 살펴보는 방식이다. 4096bits를 이용하는 공개키암호는 2<sup>4096</sup>가지의 경우의 수가 있고 2<sup>4096</sup> = 1.044 * 10<sup>1233</sup>가지의 경우의 수가 있으므로 이를 살펴보는 것은 현실적으로 불가능하다.
 
-**Mathmetical attacks**
+**Mathmetical Attacks**
 공격자는 공개키인 PU = {e, n}을 알고 있다. 이때 PR = {d, n}중에서 d만 구하면 된다. 공격자가 e * d mod ϕ(n) = 1을 만족하는 d를 구할 수 있다면 공개키암호는 무너진다. d를 구하기 위해서는 두가지 방법중 하나라도 통하면된다.
 1. n = p * q에서 p, q를 구하지 않고도 ϕ(n)을 구하는 방법
 2. ϕ(n)을 알지 못해도 d를 구하는 방법
   
 하지만 이를 구하는 방법은 현재까지 알려진바가 없다. 위에서 보는 것처럼 공개키 암호는 어떤 수 n을 소인수 분해를 하는 것이 매우 어렵다는 것을 이용하여 만들어졌다. 
 
+**Chosen Ciphertext Attack**   
+
+0. 공격을 당하는 주체는 특수한 이유로 공격자가 요청하는 decryption에 응답하는 상황이다.
+   1. 휴대폰, 노트북등의 기기를 이용하다가 잠시 자리를 비운 경우
+   2. 생년월일, 주소 매칭 등 매우 간단한 인증으로 보안 과정이 진행되는 경우
+2. 공격자가 자기의 임의로 선택한 `Chosen Ciphertext`를 private key주인에게 Decrypt를 요청한다. 
+   1. 임의의 decryption요청을 통해, 결과적으로 decryption을 요청하지 않고도 결과를 알수 있게되면 보안이 무너진다
+3. 공격자는 `C`를 이용하여 `C'`을 구하는 시도를 위해 `C'` = `C` * 2<sup>e</sup> mod n을 만족하도록 구성한다.
+   1. `C'`<sup>d</sup> mod n =  (`C`*2<sup>e</sup>)<sup>d</sup> mod n = `C`<sup>d</sup> *2 mod n
+   2. 결과적으로 `C`에 2가 곱해진 형태를 얻을 수 있다.
+4. 이런 안전성의 문제가 있다는 것이 밝혀져서 **Optimal Asymmetric Encryption Padding(OAEP)** 를 사용한다.
+
+**Side Channel Attacks**
+
+암호화를 실시하는 기계가 부수적으로 발생시키는 연산물을 바탕으로 공격하는 방식이다. 암호화에 필요한 알고리즘, 공개키등의 정보는 쉽게 얻을 수 있고 개인키에 해당하는 값만 모르는 상태이다. 
+C<sup>d<sub>i</sub></sup> mod n에 대해서 
+d<sub>1</sub> = 1000000000
+d<sub>2</sub> = 1111111111
+위 두개의 d<sub>1</sub>와 d<sub>2</sub>의 결과가 거치는 연산의 과정이 다르다는 것을 이용한 방식이다. 
+```
+c = 0; f = 1;
+for i = k downto 0
+    do c = 2 * c
+        f = f * f mod n
+    if bi = 1
+        then c = c + 1
+             f = f * a mod n
+return f
+```
+
+위와 같은 알고리즘을 사용할 때, 아래와 같은 분석을 이용하여 개인키에 대한 유추가 가능해진다.
+1. 걸리는 시간(Timing Attack)
+2. 전기 소모량 분석(Power Analysis)
+3. 전자기파 분석(Electromagnetic Analysis)
+
+연산에 소요되는 시간을 분석하는 방법은 비트가 1, 0일때 관계없이 항상 동일한 연산을 하도록 하는 방식으로 방어할 수 있다.
+```
+c = 0; f = 1;
+for i = k downto 0
+    do c = 2 * c
+        x[0] = f * f mod n
+        x[1] = x[0] * a mod n
+        f = x[bi]
+return f
+```
+
+### Misconceptions Concerning Public-key Encryption
+
+2048bits를 쓰는 공개키 알고리즘은 128bits를 쓰는 AES보다 안전하다는 것은 옳지 않다. 두 알고리즘을 공격하는 방식은 서로 완전히 다르기 때문에 정량적인 분석은 논리적이지 않다.
+
+공개키 암호가 생겨나면서 대칭 알고리즘(Symmetric encryption)은 필요가 없어졌다는 것은 옳지 않다. 성능적인 측면에 있어서 대칭형 알고리즘이 더 뛰어나므로 공개키 알고리즘과 대칭형 알고리즘을 서로 상호 보완적으로 사용하는 형식이 널리 퍼져있다.
+
+공개키 암호는 널리 공개되기 때문에 사용이 편리하다는 것은 옳지 않다. 이 공개키가 누구의 것인지 확신할 수 있는 방법을 이용해야한다. 이를 보증하는 방법으로 사용하는 방식이 정부에서 운영하는 공인인증서 제도이다.
+
+
+## Diffie-Hellman Key Exchange
+diffie hellman 알고리즘은 discrete logarithm을 계산하는 것이 매우 어렵다는 것을 이용한 알고리즘이다. 실제로 https를 이루는 TLS에서 사용하는 방법이며 범용적인 사용보다는 key를 교환하는 방법으로 이용한다. Alice와 Bob이 디피헬만 알고리즘을 이용하는 시나리오를 살펴보자. 이 두사람을 비롯한 모든 사람은 대중에 공개된 매개변수, **Global Parameter** 를 가지고 있다. 그 키는 Descrete Logarithm에서 primitive root에 해당하는 값과 그때의 modular값을 의미한다. 아래서 보는 2와 19, 또는 3과 19가 그런 값이다.
+<img src="https://user-images.githubusercontent.com/44011462/98621991-dcde2f00-234b-11eb-9edd-ba3f0ac1be6c.png" width=300px>
+
+
+|                                                            | Alice                                             | Bob                                               |
+| ---------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
+| discrete log에서 primitive root를 만족하는 q, α를 공유한다 | q = 19, α = 2                                     | q = 19, α = 2                                     |
+| 각자 q보다 작은 자연수에서 임의의 값을 고른다              | X<sub>A</sub> < q                                 | X<sub>B</sub> < q                                 |
+| 공개키를 계산한다.       Y = α<sup>X</sup> mod q           | Y<sub>A</sub> = α<sup>X<sub>A</sub></sup> mod q   | Y<sub>B</sub> = α<sup>X<sub>B</sub></sup> mod q   |
+| 각각의 공개키를 서로 공유한다.                             | Y<sub>B</sub> 를 받음                             | Y<sub>A</sub> 를 받음                             |
+| 비밀키를 계산한다. 이 두 값은 서로 같다.                   | K = (Y<sub>B</sub>)<sup>X<sub>A</sub></sup> mod q | K = (Y<sub>A</sub>)<sup>X<sub>B</sub></sup> mod q |
+
+Diffie-Hellman 알고리즘은 discrete log 문제가아닌 **Diffie-hellman problem** 이 푸는 것이 어렵다는 것에 근간을 두는 알고리즘이다. 즉 공격자는 K가 무엇인지 알아내는 것이 목표인데 K = Y<sup>X</sup>에서 **X를 알지 못하더라도 K만 구할 수 있는 방법** 이 있다면 알고리즘을 무력화 시킬수 있다. 하지만 현재로써는 Discrete Logarithm problem을 해결하여 X를 구하는 방법 이외에는 알려진 방법이 없고, 이때 **X를 구하는 방법이 매우 어렵기 때문** 에 Diffie-hellman 알고리즘은 안전하게 사용되고 있다. 
+
+이런 논리적 안전성에 기초를 둔 Diffie-hellman 알고리즘이지만 X를 어떻게 생성하는지에 따라 알고리즘이 무력화된 사례가 다수 있다. 난수 발생기를 이용하는 방법에서 X의 결과값이 유한한 범위를 갖게 된다면 X를 추측하는 것이 가능하다. 일반적으로 **표준화된 난수발생기는 시간값을 seed값으로 사용** 하는데, 시간은 표준화되어 있기 때문에 **X가 만들어진 시간을 추측** 할 수 있다면 공격자는 seed값을 예측 할 수 있다. **특정 시간대에서 생성된 난수** 는 추측할 수 있는 X를 만들기 때문에 α<sup>X</sup> mod q  = Y인 X값을 찾을 수 있다면 Diffie-hellman problem은 풀리게 된다.  
+
+### Elliptic Curve Enctyption
+
+대부분의 공개키 암호를 쓰는 제품이나 표준에서는 RES를 사용하고 있다. 하지만 RSA의 키의 길이는 안전성 요구 조건에 따라서 매우 길어지는데, 일반적으로 알려져 있는 것으로는 AES-128과 3072bits RSA와 비슷한 안전성을 가지고 있다. 하지만 3072bits의 긴 길이의 내용을 다루게 되면 계산도 많이, 메모리도 많이, 통신의 bandwidth도 커지게 되어 결과적으로 효용성이 낮아지게 된다.
+
+최근에 Elliptic Curve Enctyption(ECC)는 IEEE에서 국제 표준으로 많이 사용되고 있다. 특히 **[IEEE P1363a-2004 Standard for Public-key Cryptography](https://standards.ieee.org/standard/1363a-2004.html)** 와 **[IEEE 1609 Standard for Wireless Access in Vehicular](https://standards.ieee.org/standard/1609_12-2019.html)** 는 공개키 암호 알고리즘으로 **Elliptic Curve Enctyption** 만을 사용하도록 표준화 되어있다. 같은 안전성을 갖기 위해서 더 짧은 길이의 key를 쓸 수 있다. 이는 곧 같은 길이라면 ECC가 훨씬 더 안전하다는 의미이다. 특히 
+IEEE 1609는 자동차간의 무선통신의 표준을 정한 것인데, 100km/h로 달리는 자동차는 매우 짧은 시간에 서로 통신해야 하므로 3072bits의 키보다는 더 짧으면서 비슷한 안전성을 갖는 256bit의 ECC를 사용하는 것이 더 바람직하다.
+
+
+#### Elliptic Curve Arithmatic
+
+<img src="https://user-images.githubusercontent.com/44011462/98628068-06ea1e00-2359-11eb-8d0a-29a0291d4a89.png" width=300px>  
+
+y<sup>2</sup> = x<sup>3</sup> - x의 두 점 P, Q를 이용하여 P + Q는 다음과 같의 정의된다.
+
+>두점 P, Q를 기울기로 갖는 선분을 그어 만나는 y<sup>2</sup> = x<sup>3</sup> - x위의 또다른 점
+
+이런 정의를 가지고 P<sub>1</sub>, P<sub>2</sub>, ..., P<sub>n</sub>을 찾다보면 P<sub>n + 1</sub> = P<sub>1</sub>이 되어 cycle을 갖고, 이는 **Abelian Group이면서 Cyclic Group을 만족하는 Finite Field를 만족** 한다. 이때 kP를 알면 Q를 구하는 것은 매우 간단한 문제가 되지만 kP = Q를 만족하는 k를 찾는 문제가 매우 어렵다는 점을 이용한 것이 **Elliptic Curve Enctyption(ECC)** 이다.
+위와 같은 문제를 **the Clliptic Curve Discrete Logarithm Problem(ECDLP)** 라고 부른다. ECDLP는 일반적인 discrete logarithm problem보다 상당히 더 어려운 문제이다. 이런 배경덕분에 ECC는 훨씬 더 작은 key를 이용하여 discrete logarithm problem을 이용하는 알고리즘보다 효율적으로 이용가능하다.
 
