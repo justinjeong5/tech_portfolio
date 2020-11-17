@@ -32,6 +32,8 @@
   - [Number Theory Finite Fields](https://github.com/justinjeong5/tech_portfolio/wiki/NUMBER-THEORY---FINITE-FIELDS)  
   - [Number Theory Primality Test Implementation](https://github.com/justinjeong5/tech_portfolio/wiki/NUMBER-THEORY---PRIMALITY-TEST)  
   - [Steganograhpy Implementation](https://github.com/justinjeong5/tech_portfolio/wiki/SECURITY---STEGANOGRAPHY)  
+  - [RSA Implementation](https://github.com/justinjeong5/tech_portfolio/wiki/RSA-Implementation)
+  - [Post Quantum Cryptography(PQC)](https://github.com/justinjeong5/tech_portfolio/wiki/Post-Quantum-Cryptography(PQC))
 
 
 ## contributor
